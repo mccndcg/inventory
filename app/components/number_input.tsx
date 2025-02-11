@@ -17,7 +17,7 @@ interface InputProps {
 
 function InputButton({ number, onClick }: InputProps) {
     return <div>
-        <Button className="text-xl border-b-4 border-black/20 p-10" size="icon" variant="outline" onClick={() => onClick(number)}>{number}</Button>
+        <Button className="text-xl border-b-4 border-black/20 p-9" size="icon" variant="outline" onClick={() => onClick(number)}>{number}</Button>
     </div>
 }
 
@@ -32,7 +32,7 @@ function InputCategory({ isActive, number, label }: InputCategoryProps) {
     return (
         <div className="flex flex-col">
             <div className={`${isActive ? "font-bold" : ""} text-center`}>{label}</div>
-            <div className={`${isActive ? "border-2 border-black/80" : "border-black/40"} p-4 border rounded-md text-2xl grid place-items-center`} >
+            <div className={`${isActive ? "border-2 border-black/80" : "border-black/40"} p-3.5 border rounded-md text-2xl grid place-items-center`} >
                 <div>{number == -1 ? "-" : number}</div>
             </div>
         </div>
@@ -103,13 +103,13 @@ export function NumberInput({ props, onAccept }: {
                 </div>
 
             </div>
-            <div className="grid grid-cols-3 gap-2 w-[280px]">
+            <div className="grid grid-cols-3 gap-2 ">
                 {[...Array(9)].map((_, i) => i + 1).map(ele => <InputButton number={ele} onClick={setNumber} key={ele} />)}
-                <Button className="[&_svg]:size-8 border-b-4 border-black/40 p-10" size="icon" variant="outline" onClick={resetButton}>
+                <Button className="[&_svg]:size-8 border-b-4 border-black/40 p-9" size="icon" variant="outline" onClick={resetButton}>
                     <ArrowLeft />
                 </Button>
                 <InputButton number={0} onClick={() => setNumber(0)} />
-                <Button className="border-b-4 border-black/40 p-10 text-xl" size="icon" onClick={() => onAccept(price, qty, total)}>OK</Button>
+                <Button className="border-b-4 border-black/40 p-9 text-xl" size="icon" onClick={() => onAccept(price, qty, total)}>OK</Button>
             </div>
         </div>
     )

@@ -85,7 +85,7 @@ export default function Inventory() {
                 <div className="flex gap-2 flex-wrap justify-center">
                     {
                         ["all", ...categories].map((ele, index) => <div
-                            className={`${catFilter == ele ? 'bg-foreground text-background ' : 'shadow-md'} border rounded-lg py-0.5 px-2`}
+                            className={`${catFilter == ele ? 'bg-foreground text-background ' : 'shadow-md'} cursor-pointer border rounded-lg py-0.5 px-2`}
                             onClick={() => setCatFilter(ele)}
                             key={index}
                         >

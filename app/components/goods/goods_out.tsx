@@ -88,6 +88,12 @@ const GoodsOutView = forwardRef(({ itemSelector, editObject, isGoodIn }: Props, 
                 .finally(() => resettter && resettter())
         }
     }
+    function onIncreaseQuantity(index: number, quantity: number, increase?: boolean) {
+        update(index, {
+            ...fields[index],
+            quantity: quantity + (increase ? 1 : -1)
+        })
+    }
     function onEntry(price: number, qty: number, total: number) {
         setDefaultInputs(undefined)
         setNumberInput(false)
@@ -124,27 +130,24 @@ const GoodsOutView = forwardRef(({ itemSelector, editObject, isGoodIn }: Props, 
                     </div>
                     <div className="flex gap-2">
                         {itemSelector}
-                        <ProductSearch onSelectProd={onProductSelect} />
+                        {/* <ProductSearch onSelectProd={onProductSelect} /> */}
 
                     </div>
 
                 </div>
-                {/* <ScrollArea className="h-[calc(100dvh-460px)] border"> */}
                 <ScrollArea className="h-[calc(100dvh-460px)] border">
 
-                    <div className="flex flex-col  rounded p-2 shadow-md">
+                    {fields.length > 0 && <div className="flex flex-col  rounded p-2 shadow-md">
 
-                        {fields.length > 0 && <>
-                            <Separator className="my-4" />
-                            <div className={`${grid_class} grid mb-4`}>
-                                <div></div>
-                                <Label className="font-bold">Product</Label>
-                                <Label className="font-bold ">Price</Label>
-                                <Label className="font-bold">Qty</Label>
-                                <Label className="text-right font-bold">Total</Label>
-                                <div></div>
-                            </div>
-                        </>}
+                        <Separator className="my-4" />
+                        <div className={`${grid_class} grid mb-4`}>
+                            <div></div>
+                            <Label className="font-bold">Product</Label>
+                            <Label className="font-bold ">Price</Label>
+                            <Label className="font-bold">Qty</Label>
+                            <Label className="text-right font-bold">Total</Label>
+                            <div></div>
+                        </div>
 
                         {fields.map((field, index) => {
                             return (
@@ -153,14 +156,15 @@ const GoodsOutView = forwardRef(({ itemSelector, editObject, isGoodIn }: Props, 
                                     <div
                                         key={`${field.id}-product`}
                                         className={`${index % 2 == 0 ? "" : "border-black/40"} border-b-2 border-dashed`}
-                                        onClick={() => openNumberInput(field.price || 0, field.quantity, field.product, index)}
+
                                     >
-                                        <div>
+                                        <div onClick={() => onIncreaseQuantity(index, field.quantity, false)}>
                                             {field.product}
                                         </div>
+                                        <div></div>
                                     </div>
                                     <div className={`${index % 2 == 0 ? "" : "border-black/40"} border-b-2 border-dashed flex space-x-1.5`}
-                                        onClick={() => openNumberInput(field.price || 0, field.quantity, field.product, index)}
+                                        onClick={() => openNumberInput(field.selling_price || 0, field.quantity, field.product, index)}
                                     >
                                         {/* <input
                                             autoComplete="off"
@@ -175,8 +179,7 @@ const GoodsOutView = forwardRef(({ itemSelector, editObject, isGoodIn }: Props, 
                                     </div>} */}
                                     </div>
                                     <div className={`${index % 2 == 0 ? "" : "border-black/40"}  border-b-2 border-dashed flex space-x-1.5 pr-1 `}
-                                        onClick={() => openNumberInput(field.price || 0, field.quantity, field.product, index)}
-                                    >
+                                        onClick={() => onIncreaseQuantity(index, field.quantity, true)}                                    >
                                         {/* <input
                                             autoComplete="off"
                                             {...form.register(`products.${index}.quantity` as const,)}
@@ -190,7 +193,10 @@ const GoodsOutView = forwardRef(({ itemSelector, editObject, isGoodIn }: Props, 
 
                                     </div>} */}
                                     </div>
-                                    <div className={`${index % 2 == 0 ? "" : "border-black/40"} text-right mr-2 border-l-4 rounded-bl-lg border-b-2`}>
+                                    <div className={`${index % 2 == 0 ? "" : "border-black/40"} 
+                                        text-right mr-2 border-l-4 rounded-bl-lg border-b-2`}
+                                        onClick={() => openNumberInput(field.selling_price || 0, field.quantity, field.product, index)}
+                                    >
                                         ₱ {field.sold_price ? field.quantity * field.sold_price : 0.00}
                                     </div>
                                     <Button variant="outline" size="icon" onClick={() => remove(index)}>
@@ -201,6 +207,7 @@ const GoodsOutView = forwardRef(({ itemSelector, editObject, isGoodIn }: Props, 
                             )
                         })}
                     </div>
+                    }
                 </ScrollArea>
 
 

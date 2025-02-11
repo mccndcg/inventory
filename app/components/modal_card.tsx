@@ -66,7 +66,7 @@ export function ResponsiveDialog({ title, children, hide_trigger }: Props) {
             </Dialog>)
     }
     return (
-        <Drawer open={open} onOpenChange={setOpen}>
+        <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
             <DrawerTrigger>
                 {!hide_trigger && <FrontCard title={title} />}
             </DrawerTrigger>

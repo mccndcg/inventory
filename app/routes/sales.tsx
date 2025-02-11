@@ -29,6 +29,7 @@ interface Props {
 }
 
 function SalesView({ date, isGoodsIn, filter_direction }: Props) {
+    const [editType, setEditType] = useState<'physical' | 'good'>('physical')
     const [salesDict, setSalesDict] = useState<SalesObject>({})
     const [dexieSale, setDexieSale] = useState<any | undefined>()
     const [oldDate, setOldDate] = useState<Date>()
@@ -101,7 +102,7 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
                                     {formatDate(date)}
                                 </div>
                                 <div className="space-x-2">
-                                    <span>Sales: </span>
+                                    <span className="italic">Sales: </span>
                                     <span className="text-foreground/60">Php</span>
                                     <span className="text-green-700 font-bold">
                                         {sales_arr.reduce((sum, curr) => sum +
@@ -110,7 +111,7 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
                                     </span>
                                 </div>
                                 <div className="space-x-2">
-                                    <span>COH: </span>
+                                    <span className="italic">COH: </span>
                                     <span className="text-foreground/60">Php</span>
                                     <span className="text-green-700 font-bold">
                                         {dexieCOH[stringDateToNumberDate(date)].current_coh.toLocaleString("en-us")}

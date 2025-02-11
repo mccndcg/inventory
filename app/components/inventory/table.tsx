@@ -28,13 +28,12 @@ export function TableDemo({ data, filter_string, setGood, catString }: Props) {
   const navigate = useNavigate();
   return (
     <Table>
-      {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
+      {/* <TableCaption></TableCaption> */}
       <TableHeader>
         <TableRow>
           <TableHead className="w-[200px]">Name</TableHead>
           <TableHead>Quantity</TableHead>
-          {/* <TableHead>Prefix</TableHead> */}
-
+          <TableHead>Categories</TableHead>
           <TableHead className="text-right">Price</TableHead>
           <TableHead className="text-right">Actions</TableHead>
 
@@ -44,6 +43,7 @@ export function TableDemo({ data, filter_string, setGood, catString }: Props) {
         {data
           .filter((val) => filter_string.length > 2 ? val.name.toLowerCase().includes(filter_string) : true)
           .filter((val) => catString == "all" ? true : val.categories.includes(catString))
+          .sort((a, b) => a.name.localeCompare(b.name))
           .map((subdata, index) => (
             <TableRow key={subdata.id} className="cursor-pointer" onClick={() => false && navigate(`./${subdata.id}`)}>
               <TableCell className="font-medium flex flex-col">
@@ -52,7 +52,7 @@ export function TableDemo({ data, filter_string, setGood, catString }: Props) {
 
               </TableCell>
               <TableCell>{subdata.physical.reduce((sum, item) => sum + item.quantity, 0)}</TableCell>
-              {/* <TableCell className="text-right">{subdata.name_prefix}</TableCell> */}
+              <TableCell>{subdata.categories}</TableCell>
               <TableCell className="text-right">{subdata.selling_price}</TableCell>
               <TableCell className="text-right space-x-1.5">
                 <Button variant="outline" size="icon" onClick={() => subdata.id && deleteGood(subdata.id)}><Trash /></Button>
