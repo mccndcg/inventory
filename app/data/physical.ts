@@ -11,14 +11,15 @@ const physicalSchema = z.object({
     physical: z.array(physical)
 })
 export type PhysicalProp = z.infer<typeof physicalSchema>
+export type SinglePhysicalProp = z.infer<typeof physical>
 
-export function form_physical() {
+export function form_physical(physical: SinglePhysicalProp[]) {
     const form = useForm<PhysicalProp>({
         resolver: zodResolver(physicalSchema),
         mode: "onChange",
         reValidateMode: "onChange",
         defaultValues: {
-            physical: []
+            physical: physical
         },
     })
     const { fields, append, remove, update } = useFieldArray({

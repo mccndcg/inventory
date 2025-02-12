@@ -28,7 +28,7 @@ interface InputCategoryProps {
     label: string
 }
 
-function InputCategory({ isActive, number, label }: InputCategoryProps) {
+export function InputCategory({ isActive, number, label }: InputCategoryProps) {
     return (
         <div className="flex flex-col">
             <div className={`${isActive ? "font-bold" : ""} text-center`}>{label}</div>
@@ -39,27 +39,22 @@ function InputCategory({ isActive, number, label }: InputCategoryProps) {
     )
 }
 
+interface KeyboardProps {
+    onKeyPress?: (val: number) => any
+    onBackPress?: (new_val: number) => any
+    onOkay: () => any
+    inputDispatch: Dispatch<SetStateAction<number>>
+    inputValue: number
+}
 
-export function NumberInput({ props, onAccept }: {
-    props: NumberInputProps,
-    onAccept: (val: number, val1: number, val2: number) => any
-}) {
-    const { defaultPrice, defaultQuantity, productName } = props
-    const defaultTotal = defaultPrice * defaultQuantity
-    const [price, setPrice] = useState(defaultPrice)
-    const [qty, setQty] = useState(defaultQuantity)
-    const [total, setTotal] = useState(defaultTotal)
-
-    const [activeInput, setActiveInput] = useState('price')
-    function setNumber(new_number: number) {
-        function getNewNumber(old: number) {
-            return parseInt(`${old.toString()}${new_number.toString()}`)
+export function NumberKeyboard({ onKeyPress, onBackPress, onOkay, inputDispatch, inputValue }: KeyboardProps) {
+    function setNumber(val: number) {
+        function getNewNumber() {
+            return parseInt(`${inputValue.toString()}${val.toString()}`)
         }
-        switch (activeInput) {
-            case "price": setPrice(getNewNumber(price)); setTotal(getNewNumber(price) * qty); break;
-            case "quantity": setQty(getNewNumber(qty)); setTotal(price * getNewNumber(qty)); break;
-            case "total": setTotal(getNewNumber(total)); break;
-        }
+        const new_val = getNewNumber()
+        inputDispatch(new_val)
+        onKeyPress && onKeyPress(new_val)
     }
     function resetButton() {
         function removeFirstDigit(num: number) {
@@ -69,17 +64,52 @@ export function NumberInput({ props, onAccept }: {
             }
             return Math.floor(num / 10);
         }
+        const new_val = removeFirstDigit(inputValue)
+        inputDispatch(new_val)
+        onBackPress && onBackPress(new_val)
+    }
+    return <div className="grid grid-cols-3 gap-2 ">
+        {[...Array(9)].map((_, i) => i + 1).map(ele => <InputButton number={ele} onClick={setNumber} key={ele} />)}
+        <Button className="[&_svg]:size-8 border-b-4 border-black/40 p-9" size="icon" variant="outline" onClick={resetButton}>
+            <ArrowLeft />
+        </Button>
+        <InputButton number={0} onClick={() => setNumber(0)} />
+        <Button className="border-b-4 border-black/40 p-9 text-xl" size="icon" onClick={onOkay}>OK</Button>
+    </div>
+}
+export function NumberInput({ props, onAccept }: {
+    props: NumberInputProps,
+    onAccept: (val: number, val1: number, val2: number) => any
+}) {
+    const { defaultPrice, defaultQuantity, productName } = props
+    const defaultTotal = defaultPrice * defaultQuantity
+    const [price, setPrice] = useState(defaultPrice)
+    const [qty, setQty] = useState(defaultQuantity)
+    const [total, setTotal] = useState(defaultTotal)
+    const [activeInput, setActiveInput] = useState('price')
+    const inputDispatch = activeInput == "price" ? setPrice : activeInput == "quantity" ? setQty : setTotal
+    const inputValue = activeInput == "price" ? price : activeInput == "quantity" ? qty : total
+    function setNumber(new_number: number) {
+        switch (activeInput) {
+            case "price": setTotal(new_number * qty); break;
+            case "quantity": setTotal(price * new_number); break;
+        }
+    }
+    function resetButton(new_val: number) {
+        function removeFirstDigit(num: number) {
+            const numStr = num.toString();
+            if (numStr.length === 1) {
+                return 0;
+            }
+            return Math.floor(num / 10);
+        }
         switch (activeInput) {
             case "price": {
-                const new_price = removeFirstDigit(price)
-                setPrice(new_price);
-                setTotal(new_price * qty)
+                setTotal(new_val * qty)
             }
                 break;
             case "quantity": {
-                const new_qty = removeFirstDigit(qty)
-                setQty(new_qty);
-                setTotal(price * new_qty)
+                setTotal(price * new_val)
             } break;
             case "total": { setTotal(removeFirstDigit(total)); setPrice(-1); } break;
         }
@@ -103,14 +133,11 @@ export function NumberInput({ props, onAccept }: {
                 </div>
 
             </div>
-            <div className="grid grid-cols-3 gap-2 ">
-                {[...Array(9)].map((_, i) => i + 1).map(ele => <InputButton number={ele} onClick={setNumber} key={ele} />)}
-                <Button className="[&_svg]:size-8 border-b-4 border-black/40 p-9" size="icon" variant="outline" onClick={resetButton}>
-                    <ArrowLeft />
-                </Button>
-                <InputButton number={0} onClick={() => setNumber(0)} />
-                <Button className="border-b-4 border-black/40 p-9 text-xl" size="icon" onClick={() => onAccept(price, qty, total)}>OK</Button>
-            </div>
+            <NumberKeyboard
+                onKeyPress={setNumber}
+                onBackPress={resetButton}
+                onOkay={() => onAccept(price, qty, total)}
+                inputDispatch={inputDispatch} inputValue={inputValue} />
         </div>
     )
 }

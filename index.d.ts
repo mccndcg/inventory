@@ -7,11 +7,8 @@ interface Product {
 }
 
 interface PhysicalGood {
-    date_added: Date
     expiration_date?: Date
-    orig_price: number
     quantity: number
-    sale_id?: number
 }
 
 interface DexieGood {
@@ -48,7 +45,7 @@ interface InventoryTable {
 interface UpdateInput {
     selling_price: number
     name: string
-    id?: string
+    id?: number
     physical: PhysicalGood
 }
 

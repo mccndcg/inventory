@@ -99,8 +99,6 @@ export async function dexieSalesIn(values: GoodInProp, onSubmit: CallableFunctio
             selling_price: val.selling_price,
             name: val.product,
             physical: {
-                date_added: new Date(),
-                orig_price: val.price,
                 quantity: val.quantity,
             }
         };

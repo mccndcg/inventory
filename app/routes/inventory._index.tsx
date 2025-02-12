@@ -15,6 +15,8 @@ import { debounce } from "~/lib/utils";
 import { z } from "zod";
 import { categories, registerGoodsSchema } from "~/components/register_goods/schema";
 import toast from "react-hot-toast"
+import { PhysicalForm } from "~/components/physical/physical_container";
+import { PhysicalProp } from "~/data/physical";
 
 
 export const links: LinksFunction = () => [
@@ -25,12 +27,27 @@ function InventoryTable({ filterString, catString }: { filterString: string, cat
     const [tableData, setTableData] = useState<DexieGood[]>([])
     const { open, setOpen } = useContext(MenuContext)
     const [selGood, setSelGood] = useState<undefined | DexieGood>()
+    const [editMode, setEditMode] = useState<'good' | 'physical'>('good')
 
     useEffect(() => {
         getInventoryData().then(val => setTableData(val))
     }, [])
 
-    function editSales(val: z.infer<typeof registerGoodsSchema>) {
+    function openGoodEditor(good: DexieGood) {
+        setSelGood(good)
+        setEditMode('good')
+    }
+
+    function openPhysicalEditor(good: DexieGood) {
+        setSelGood(good)
+        setEditMode('physical')
+    }
+
+    function editPhysicalFunc(val: PhysicalProp) {
+        console.log(val)
+    }
+
+    function editGoodFunc(val: z.infer<typeof registerGoodsSchema>) {
         selGood !== undefined && selGood.id && editGood(
             selGood.id, selGood, val)
             .then(() => {
@@ -44,10 +61,19 @@ function InventoryTable({ filterString, catString }: { filterString: string, cat
 
     return (<>
         <ResponsiveDialog title="Modify Good" hide_trigger={true}>
-            {selGood !== undefined && <RegisterGoods def={selGood} onSubmitProp={editSales} />}
+            {
+                editMode == 'good' ?
+                    (selGood !== undefined && <RegisterGoods def={selGood} onSubmitProp={editGoodFunc} />) :
+                    (selGood !== undefined && <PhysicalForm dexie_good={selGood} onSubmitProp={editPhysicalFunc} />)
+            }
         </ResponsiveDialog>
 
-        <TableDemo data={tableData} filter_string={filterString} setGood={setSelGood} catString={catString} />
+        <TableDemo
+            data={tableData}
+            filter_string={filterString}
+            setGood={openGoodEditor}
+            catString={catString}
+            setPhysical={openPhysicalEditor} />
     </>)
 }
 

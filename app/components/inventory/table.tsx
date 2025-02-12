@@ -19,11 +19,12 @@ import { MenuContext } from "~/lib/open_provider";
 interface Props {
   data: DexieGood[]
   filter_string: string
-  setGood: Dispatch<SetStateAction<DexieGood | undefined>>
+  setGood: (val: DexieGood) => any
+  setPhysical: (val: DexieGood) => any
   catString: string
 }
 
-export function TableDemo({ data, filter_string, setGood, catString }: Props) {
+export function TableDemo({ data, filter_string, setGood, catString, setPhysical }: Props) {
   const { setOpen } = useContext(MenuContext)
   const navigate = useNavigate();
   return (
@@ -51,7 +52,9 @@ export function TableDemo({ data, filter_string, setGood, catString }: Props) {
                 <div className="text-sm text-foreground/60">{subdata?.size}</div>
 
               </TableCell>
-              <TableCell>{subdata.physical.reduce((sum, item) => sum + item.quantity, 0)}</TableCell>
+              <TableCell
+                onClick={() => { setOpen(true); setPhysical(subdata); }}
+              >{subdata.physical.reduce((sum, item) => sum + item.quantity, 0)}</TableCell>
               <TableCell>{subdata.categories}</TableCell>
               <TableCell className="text-right">{subdata.selling_price}</TableCell>
               <TableCell className="text-right space-x-1.5">
