@@ -106,7 +106,7 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
                                     <span className="text-foreground/60">Php</span>
                                     <span className="text-green-700 font-bold">
                                         {sales_arr.reduce((sum, curr) => sum +
-                                            curr.items.reduce((inner_sum, inner_cur) => inner_sum + inner_cur.quantity * (inner_cur.sold_price || 0), 0),
+                                            curr.items.reduce((inner_sum, inner_cur) => inner_sum + inner_cur.quantity * (inner_cur.sold_price), 0),
                                             0).toLocaleString("en-us")}
                                     </span>
                                 </div>

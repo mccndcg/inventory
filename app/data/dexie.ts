@@ -16,12 +16,17 @@ export const db = new Dexie('goods', { addons: [dexieCloud] }) as Dexie & {
     dexieCOH: EntityTable<
         DexieCOH,
         "id"
+    >,
+    dexieGoodSales: EntityTable<
+        ItemSaleIndividual,
+        "id"
     >
 };
-db.version(2).stores({
+db.version(3).stores({
     dexieGoods: '@id,name,selling_price,categories,physical,name_prefix', // Primary key is 'id' (auto-incremented)
     dexieSales: '@id,tx_date,type,items,tx_date_idx', // Primary key is 'id' (auto-incremented)
-    dexieCOH: '@id,date,total_sales,current_coh'
+    dexieCOH: '@id,date,total_sales,current_coh',
+    dexieGoodSales: '@id,prod_id,sold_price,quantity,date,operation,tx_date_idx'
 });
 
 

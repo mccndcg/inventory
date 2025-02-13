@@ -1,13 +1,8 @@
 import type { MetaFunction } from "@remix-run/node";
 import { FrontCard, ModalCard } from "~/components/modal_card";
-import { GoodsInForm } from "~/components/goods/goods_in";
 import { GoodsOutForm } from "~/components/goods/goods_out";
 import { Link } from "@remix-run/react";
-import InventoryModalContent from "~/components/inventory/inventory_modal";
 import RegisterGoods from "~/components/register_goods/register_goods";
-import { Button } from "~/components/ui/button";
-import { addManual, addPrefix } from "~/components/register_goods/manual";
-import { NumberInput } from "~/components/number_input";
 
 
 
@@ -43,8 +38,6 @@ export default function Index() {
         <Link to="/sales">
           <FrontCard title="Sales" />
         </Link>
-        {/* <Button onClick={addManual}>Manual</Button>
-        <Button onClick={addPrefix}>Add Prefix</Button> */}
       </div>
     </div >
   );

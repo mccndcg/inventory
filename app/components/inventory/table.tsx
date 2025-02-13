@@ -14,6 +14,7 @@ import { Button } from "../ui/button";
 import { Pencil, Trash } from "lucide-react";
 import { Dispatch, SetStateAction, useContext } from "react";
 import { MenuContext } from "~/lib/open_provider";
+import { useSidebar } from "../ui/sidebar";
 
 
 interface Props {
@@ -26,14 +27,16 @@ interface Props {
 
 export function TableDemo({ data, filter_string, setGood, catString, setPhysical }: Props) {
   const { setOpen } = useContext(MenuContext)
+  const { setOpen: openSidebar, open, toggleSidebar } = useSidebar()
   const navigate = useNavigate();
   return (
     <Table>
-      {/* <TableCaption></TableCaption> */}
+      {/* <TableCaption>
+      </TableCaption> */}
       <TableHeader>
         <TableRow>
           <TableHead className="w-[200px]">Name</TableHead>
-          <TableHead>Quantity</TableHead>
+          <TableHead>Qty</TableHead>
           <TableHead>Categories</TableHead>
           <TableHead className="text-right">Price</TableHead>
           <TableHead className="text-right">Actions</TableHead>
@@ -47,18 +50,18 @@ export function TableDemo({ data, filter_string, setGood, catString, setPhysical
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((subdata, index) => (
             <TableRow key={subdata.id} className="cursor-pointer" onClick={() => false && navigate(`./${subdata.id}`)}>
-              <TableCell className="font-medium flex flex-col">
+              <TableCell className="font-medium flex flex-col" onClick={() => {toggleSidebar(); console.log('open')}}>
                 <div>{subdata.name}</div>
                 <div className="text-sm text-foreground/60">{subdata?.size}</div>
 
               </TableCell>
               <TableCell
-                onClick={() => { setOpen(true); setPhysical(subdata); }}
+                onClick={() => { toggleSidebar(); setPhysical(subdata); }}
               >{subdata.physical.reduce((sum, item) => sum + item.quantity, 0)}</TableCell>
-              <TableCell>{subdata.categories}</TableCell>
+              <TableCell>{subdata.categories.join(", ")}</TableCell>
               <TableCell className="text-right">{subdata.selling_price}</TableCell>
               <TableCell className="text-right space-x-1.5">
-                <Button variant="outline" size="icon" onClick={() => subdata.id && deleteGood(subdata.id)}><Trash /></Button>
+                {/* <Button variant="outline" size="icon" onClick={() => subdata.id && deleteGood(subdata.id)}><Trash /></Button> */}
                 <Button variant="outline" size="icon" onClick={() => { subdata.id && setOpen(true); setGood(subdata); }}><Pencil /></Button>
               </TableCell>
 

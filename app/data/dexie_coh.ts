@@ -36,7 +36,7 @@ export async function recompute_coh_from_sales() {
             const coh = Object.values(sortObjectByDate(groupByDate(sales), true)).reduce<DexieCOH[]>((prev, ele, index) => {
                 const { date, sales_arr } = ele
                 const total_sales = sales_arr.reduce((sum, curr) => sum +
-                    curr.items.reduce((inner_sum, inner_cur) => inner_sum + inner_cur.quantity * (inner_cur.sold_price || 0), 0),
+                    curr.items.reduce((inner_sum, inner_cur) => inner_sum + inner_cur.quantity * (inner_cur.sold_price), 0),
                     0)
                 prev.push({
                     date: stringDateToNumberDate(date),

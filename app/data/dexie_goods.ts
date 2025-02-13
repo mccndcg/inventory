@@ -9,3 +9,14 @@ export async function getSalesByCategory(category: string) {
         console.log(error)
     }
 }
+
+export async function updatePhysicalGood(id: string, physical: PhysicalGood[]) {
+    try {
+        await db.dexieGoods.update(id, {
+            physical
+        })
+        console.log(`Sales ID physical good:${id} updated.`)
+    } catch (error) {
+        console.log(error)
+    }
+}

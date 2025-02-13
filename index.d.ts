@@ -25,14 +25,22 @@ interface DexieGood {
 interface ItemSale {
     name: string
     id?: string
-    orig_price: number
     selling_price: number
-    sold_price?: number
+    sold_price: number
     quantity: number
 }
 
+interface ItemSaleIndividual {
+    id?: string
+    prod_id: string
+    sold_price: number
+    quantity: number
+    date: Date
+    operation: SalesType
+    tx_date_idx: number
+}
 
-type SalesType = 'sales' | 'stock_in' | 'stock_in' | 'saleless_stock_in' | 'personal_use' | 'spoilage'
+type SalesType = 'sales' | 'stock_in' | 'stock_in' | 'saleless_stock_in' | 'personal_use' | 'spoilage' | 'set_manual'
 
 interface InventoryTable {
     id?: string
@@ -45,7 +53,7 @@ interface InventoryTable {
 interface UpdateInput {
     selling_price: number
     name: string
-    id?: number
+    id?: string
     physical: PhysicalGood
 }
 
@@ -76,4 +84,15 @@ interface DexieCOH {
 
 interface SalesObject {
     [key: string]: DexieSales[];
+}
+
+interface GoodOperation {
+    op: 'out' | 'in' | 'manual' | 'sales_modify'
+    value: number
+    sales_id: string
+}
+
+interface GoodHistory {
+    good_id: string
+    history: GoodOperation[]
 }

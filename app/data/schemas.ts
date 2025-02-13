@@ -8,9 +8,8 @@ const productSchema = z.object({
     quantity: z.coerce.number().gt(0, "Invalid"),
     price: z.coerce.number().gt(0, "Invalid"),
     selling_price: z.coerce.number().gt(0, "Invalid"),
-    id: z.coerce.number().optional(),
+    id: z.coerce.string().optional(),
     sold_price: z.coerce.number().optional(),
-    orig_selling_price: z.coerce.number().optional()
 })
 
 export const goodInSchema = z.object({

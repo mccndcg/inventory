@@ -26,7 +26,7 @@ export default function DailySales({ sales_arr, setIndex, deleteIndex, addItem }
                         <div className="flex space-x-1.5 ml-2 border-b-2 border-dashed py-2">
                             <div>{item.quantity}</div><span className="text-primary/40">x</span><div>{item.sold_price}</div>
                         </div>
-                        <div className="text-right mr-4 border-b-2 border-dashed py-2"><span className="text-primary/40">Php</span> {item.quantity * (item?.sold_price || 0)}</div>
+                        <div className="text-right mr-4 border-b-2 border-dashed py-2"><span className="text-primary/40">Php</span> {item.quantity * (item.sold_price)}</div>
                         <div className={`${superindex % 2 == 0 ? "bg-foreground/5" : ""} grid place-items-center`}>
                             {index == 0 &&
                                 <div>

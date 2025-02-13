@@ -17,6 +17,10 @@ import { categories, registerGoodsSchema } from "~/components/register_goods/sch
 import toast from "react-hot-toast"
 import { PhysicalForm } from "~/components/physical/physical_container";
 import { PhysicalProp } from "~/data/physical";
+import { updatePhysicalGood } from "~/data/dexie_goods";
+import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
+import { SidebarGoods } from "~/components/good_sidebar/sidebar";
+
 
 
 export const links: LinksFunction = () => [
@@ -24,6 +28,8 @@ export const links: LinksFunction = () => [
 ];
 
 function InventoryTable({ filterString, catString }: { filterString: string, catString: string }) {
+    const { setOpen: openSidebar, open: isOpenSidebar } = useSidebar()
+
     const [tableData, setTableData] = useState<DexieGood[]>([])
     const { open, setOpen } = useContext(MenuContext)
     const [selGood, setSelGood] = useState<undefined | DexieGood>()
@@ -44,7 +50,16 @@ function InventoryTable({ filterString, catString }: { filterString: string, cat
     }
 
     function editPhysicalFunc(val: PhysicalProp) {
-        console.log(val)
+        selGood !== undefined && selGood.id && updatePhysicalGood(
+            selGood.id,
+            val.physical
+        )
+            .then(() => {
+                toast.success("Product Updated")
+                getInventoryData().then(val => setTableData(val))
+            })
+            .catch(() => toast.error("Something happened."))
+            .finally(() => setOpen(false))
     }
 
     function editGoodFunc(val: z.infer<typeof registerGoodsSchema>) {
@@ -67,7 +82,6 @@ function InventoryTable({ filterString, catString }: { filterString: string, cat
                     (selGood !== undefined && <PhysicalForm dexie_good={selGood} onSubmitProp={editPhysicalFunc} />)
             }
         </ResponsiveDialog>
-
         <TableDemo
             data={tableData}
             filter_string={filterString}
@@ -76,6 +90,8 @@ function InventoryTable({ filterString, catString }: { filterString: string, cat
             setPhysical={openPhysicalEditor} />
     </>)
 }
+
+
 
 export default function Inventory() {
     const [filterString, setFilterString] = useState("")
@@ -86,45 +102,48 @@ export default function Inventory() {
         setCatFilter("all")
     }
     return (
-        <>
-            <div className="sticky top-0 z-10 p-2 bg-background flex flex-col space-y-4 shadow-md">
-                <div className="flex">
-                    <Link to="/">
-                        <Button size="icon" variant="outline">
-                            <ChevronLeft />
-                        </Button>
+        <SidebarProvider>
+            <SidebarGoods />
+            <main>
+                <div className="sticky top-0 z-10 p-2 bg-background flex flex-col space-y-4 shadow-md">
+                    <div className="flex">
+                        <Link to="/">
+                            <Button size="icon" variant="outline">
+                                <ChevronLeft />
+                            </Button>
 
-                    </Link>
-                    <h2 className="text-3xl font-bold tracking-tight ml-4">Inventory</h2>
+                        </Link>
+                        <h2 className="text-3xl font-bold tracking-tight ml-4">Inventory</h2>
 
-                </div>
-                <div className="p-2 border rounded flex space-x-4">
-                    <Input type="email" placeholder="Product Name" onChange={(e) => setFilterString(e.target.value)} value={filterString} />
-                    {/* <DatePickerDemo /> */}
-                    {/* <Button size="icon">
+                    </div>
+                    <div className="p-2 border rounded flex space-x-4">
+                        <Input type="email" placeholder="Product Name" onChange={(e) => setFilterString(e.target.value)} value={filterString} />
+                        {/* <DatePickerDemo /> */}
+                        {/* <Button size="icon">
                         <Search />
                     </Button> */}
-                    <Button size="icon" variant="outline" onClick={() => reset()}>
-                        <Trash />
-                    </Button>
+                        <Button size="icon" variant="outline" onClick={() => reset()}>
+                            <Trash />
+                        </Button>
+                    </div>
+                    <div className="flex gap-2 flex-wrap justify-center">
+                        {
+                            ["all", ...categories].map((ele, index) => <div
+                                className={`${catFilter == ele ? 'bg-foreground text-background ' : 'shadow-md'} cursor-pointer border rounded-lg py-0.5 px-2`}
+                                onClick={() => setCatFilter(ele)}
+                                key={index}
+                            >
+                                {ele}
+                            </div>)
+                        }
+                    </div>
                 </div>
-                <div className="flex gap-2 flex-wrap justify-center">
-                    {
-                        ["all", ...categories].map((ele, index) => <div
-                            className={`${catFilter == ele ? 'bg-foreground text-background ' : 'shadow-md'} cursor-pointer border rounded-lg py-0.5 px-2`}
-                            onClick={() => setCatFilter(ele)}
-                            key={index}
-                        >
-                            {ele}
-                        </div>)
-                    }
-                </div>
-            </div>
-            <div className="p-4 flex flex-col space-y-4">
-                <OpenProvider>
-                    <InventoryTable filterString={filterString} catString={catFilter} />
-                </OpenProvider>
+                <div className="p-4 flex flex-col space-y-4">
+                    <OpenProvider>
+                        <InventoryTable filterString={filterString} catString={catFilter} />
+                    </OpenProvider>
 
-            </div>
-        </>)
+                </div>
+            </main>
+        </SidebarProvider>)
 }
