@@ -1,8 +1,6 @@
 import { z } from "zod"
 
 
-type SalesType = 'sales' | 'stock_in' | 'stock_in' | 'saleless_stock_in' | 'personal_use' | 'spoilage'
-
 const productSchema = z.object({
     product: z.coerce.string().min(3, "Product too short"),
     quantity: z.coerce.number().gt(0, "Invalid"),
@@ -27,7 +25,7 @@ export const productOutSchema = z.object({
     quantity: z.coerce.number().gt(0),
     price: z.coerce.number().gt(0).optional(),
     selling_price: z.coerce.number().gt(0).optional(),
-    id: z.coerce.string().optional(),
+    prod_id: z.coerce.string(),
     sold_price: z.coerce.number(),
     stock_quantity: z.coerce.number().optional()
 })

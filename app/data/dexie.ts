@@ -22,11 +22,11 @@ export const db = new Dexie('goods', { addons: [dexieCloud] }) as Dexie & {
         "id"
     >
 };
-db.version(3).stores({
+db.version(4).stores({
     dexieGoods: '@id,name,selling_price,categories,physical,name_prefix', // Primary key is 'id' (auto-incremented)
     dexieSales: '@id,tx_date,type,items,tx_date_idx', // Primary key is 'id' (auto-incremented)
     dexieCOH: '@id,date,total_sales,current_coh',
-    dexieGoodSales: '@id,prod_id,sold_price,quantity,date,operation,tx_date_idx'
+    dexieGoodSales: '@id,prod_id,sold_price,quantity,date,operation,tx_date_idx,sale_ref'
 });
 
 
@@ -121,16 +121,6 @@ export async function updatePhysicalRemove(id: string, quantity: number) {
     await db.dexieGoods.update(id, { physical: new_physical });
 }
 
-export async function insertSales(sales: DexieSales) {
-    try {
-        const id = await db.dexieSales.add(sales)
-        await recompute_coh_from_sales()
-        console.log(`Sales ID:${id} added.`)
-        return id
-    } catch (error) {
-        console.log(error)
-    }
-}
 
 export async function deleteGood(id: string) {
     await db.dexieGoods.delete(id)

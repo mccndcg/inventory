@@ -1,6 +1,6 @@
 interface Props {
     dexieGoods: DexieGood[]
-    onProductSelect: (val: DexieGood) => any
+    onProductSelect: (val: DexieGood) => void
 }
 
 export function GoodsList({ dexieGoods, onProductSelect }: Props) {
@@ -10,7 +10,7 @@ export function GoodsList({ dexieGoods, onProductSelect }: Props) {
             {
                 dexieGoods.sort((a, b) => a.name.localeCompare(b.name)).map((ele) => <div
                     className="border rounded-md p-2 border-b-2 cursor-pointer hover:bg-primary-foreground hover:border-l-2 hover:border-l-black"
-                    key={ele.name}
+                    key={ele.id}
                     onClick={() => onProductSelect(ele)}
                 >
                     {ele.name}

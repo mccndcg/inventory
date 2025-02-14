@@ -1,26 +1,28 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function closePopover() {
-  const escapeEvent = new KeyboardEvent('keydown', {
-    key: 'Escape',        // The key value ('Escape')
-    code: 'Escape',       // The physical key code
-    keyCode: 27,          // Key code for 'Escape' (legacy)
-    which: 27,            // Which code for 'Escape' (legacy)
-    bubbles: true,        // Allows event propagation
-    cancelable: true      // Allows event cancellation
+  const escapeEvent = new KeyboardEvent("keydown", {
+    key: "Escape", // The key value ('Escape')
+    code: "Escape", // The physical key code
+    keyCode: 27, // Key code for 'Escape' (legacy)
+    which: 27, // Which code for 'Escape' (legacy)
+    bubbles: true, // Allows event propagation
+    cancelable: true, // Allows event cancellation
   });
 
   // Dispatch the event on the document
   document.dispatchEvent(escapeEvent);
 }
 
-
-export function removeQuantities(inventory: PhysicalGood[], quantityToRemove: number) {
+export function removeQuantities(
+  inventory: PhysicalGood[],
+  quantityToRemove: number
+) {
   // Sort the array by expirationDate, treating null as the latest date
   inventory.sort((a, b) => {
     if (a.expiration_date === null) return 1;
@@ -57,38 +59,49 @@ export function removeQuantities(inventory: PhysicalGood[], quantityToRemove: nu
   return inventory;
 }
 
-
 export function groupByDate(array: DexieSales[]) {
   return array.reduce((acc: any, obj) => {
     // Convert the date string to a Date object if it's a string
     const date = new Date(obj.tx_date);
 
     // Extract year, month, and day
-    const dateKey = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    const dateKey = `${date.getFullYear()}-${
+      date.getMonth() + 1
+    }-${date.getDate()}`;
 
     // Group by the dateKey
     if (!acc[dateKey]) {
-      acc[dateKey] = [];  // Initialize the array for the date group if not exists
+      acc[dateKey] = []; // Initialize the array for the date group if not exists
     }
-    acc[dateKey].push(obj);  // Add the current object to the corresponding group
+    acc[dateKey].push(obj); // Add the current object to the corresponding group
 
     return acc;
   }, {});
 }
 
 export function formatDate(dateString: string) {
-  const date = new Date(dateString);  // Parse the date string
+  const date = new Date(dateString); // Parse the date string
 
   // Create an array of month names
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   // Get the month, day, and year from the Date object
-  const month = months[date.getMonth()];  // `getMonth()` returns 0-based index (0 = January)
-  const day = date.getDate();             // `getDate()` returns the day of the month
-  const year = date.getFullYear();        // `getFullYear()` returns the full 4-digit year
+  const month = months[date.getMonth()]; // `getMonth()` returns 0-based index (0 = January)
+  const day = date.getDate(); // `getDate()` returns the day of the month
+  const year = date.getFullYear(); // `getFullYear()` returns the full 4-digit year
 
   // Return the formatted string
   return `${month} ${day}, ${year}`;
@@ -99,23 +112,22 @@ export function stringDateToNumberDate(dateString: string) {
   const date = new Date(dateString);
   // Format the year, month, and day
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+  const day = String(date.getDate()).padStart(2, "0");
 
   // Combine into the desired format and convert to a number
   const formattedDate = `${year}${month}${day}`;
   const result = Number(formattedDate);
-  return result
+  return result;
 }
 
 export function formatDateToNumber(date: Date) {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');  // Add 1 because months are 0-indexed
-  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Add 1 because months are 0-indexed
+  const day = String(date.getDate()).padStart(2, "0");
 
   return Number(`${year}${month}${day}`);
 }
-
 
 export function getNamePrefix(name: string) {
   return name.slice(0, 6).toLowerCase();
@@ -132,12 +144,11 @@ export function getChangedKeys(oldObj: GenericObject, newObj: GenericObject) {
   for (let key in newObj) {
     // Check if the key exists in the old object and the values are different
     if (oldObj.hasOwnProperty(key)) {
-      if (key == 'categories') {
+      if (key == "categories") {
         if (JSON.stringify(oldObj[key]) !== JSON.stringify(newObj[key])) {
           result[key] = newObj[key]; // Add the key and its new value to the result object
         }
-      }
-      else if (oldObj[key] !== newObj[key]) {
+      } else if (oldObj[key] !== newObj[key]) {
         result[key] = newObj[key];
       }
     }
@@ -161,18 +172,29 @@ export function debounce(func: Function, delay: number) {
   };
 }
 
-
 export function sortObjectByDate(obj: SalesObject, direction: boolean) {
   // Get the keys and sort them in ascending order
   const sortedKeys = Object.keys(obj).sort((a, b) => {
-      const dateA = new Date(a);
-      const dateB = new Date(b);
-      return (dateA.getTime() - dateB.getTime()) * (direction ? 1 : -1); // Compare dates
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return (dateA.getTime() - dateB.getTime()) * (direction ? 1 : -1); // Compare dates
   });
 
   // Create an array with the key and value, preserving the order
-  return sortedKeys.map(key => ({
-      date: key,      // include the key
-      sales_arr: obj[key]  // include the value
+  return sortedKeys.map((key) => ({
+    date: key, // include the key
+    sales_arr: obj[key], // include the value
   }));
+}
+
+export function sales_type_to_is_good_in(type: SalesType) {
+  const out = [
+    "sales"
+    // , "stock_in"
+    // , "saleless_stock_in"
+    , "personal_use"
+    , "spoilage"
+    // , "set_value"
+  ]
+  return !out.includes(type)
 }

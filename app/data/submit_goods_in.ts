@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { db, insertSales } from "./dexie";
 import {
   GoodInProp,
   goodInSchema,
@@ -10,8 +9,7 @@ import {
   goodOutSchema,
   ProductProp,
 } from "./schemas";
-import { formatDateToNumber } from "~/lib/utils";
-import { add_good_sales } from "./dexie_good_sales";
+
 
 export function useSubmitGoodsOut(products?: ProductProp, date?: Date) {
   const form = useForm<GoodOutProp>({
@@ -63,67 +61,7 @@ export function submit_goods_in() {
 
 export async function dexieSalesUpdate() {}
 
-export function sales2items(values: GoodOutProp) {
-  return values.products.map((val) => {
-    return {
-      name: val.product,
-      id: val.id,
-      // orig_price: val.price || 0,
-      selling_price: val.selling_price || 0,
-      sold_price: val.sold_price,
-      quantity: val.quantity,
-    };
-  });
-}
 
-function sales2gooditems(values: GoodOutProp, id: string): ItemSaleIndividual[] {
-  return values.products.map((ele) => {
-    if (!ele.id) {
-        throw Error
-    }
-    return {
-      prod_id: ele.id,
-      sold_price: ele.sold_price,
-      quantity: ele.quantity,
-      date: values.date,
-      tx_date_idx: formatDateToNumber(values.date),
-      operation: values.reason,
-      sale_ref: id
-    };
-  });
-}
-
-export async function dexieSalesOut(
-  values: GoodOutProp,
-  onSubmit: CallableFunction,
-  is_good_in: boolean
-) {
-  try {
-    await db.transaction("rw", db.dexieSales, db.dexieGoodSales, async () => {
-      const items = sales2items(values);
-      const salesUpdate: DexieSales = {
-        tx_date: values.date,
-        tx_date_idx: formatDateToNumber(values.date),
-        type: values.reason,
-        items,
-        is_good_in,
-      };
-      const sale_id = await insertSales(salesUpdate);
-      if (!sale_id) {
-        throw Error
-      }
-      const goodsitem = sales2gooditems(values, sale_id);
-      console.log(goodsitem)
-      for (const gooditem of goodsitem) {
-        add_good_sales(gooditem);
-      }
-      onSubmit(true);
-    });
-  } catch (error) {
-    onSubmit(false);
-    console.error("Transaction failed:", error);
-  }
-}
 
 // export async function dexieSalesIn(values: GoodInProp, onSubmit: CallableFunction) {
 //     const newUpdates = values.products.map((val): UpdateInput => {

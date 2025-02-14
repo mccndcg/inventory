@@ -1,4 +1,4 @@
-const path = require("path");
+
 /**
  * This is intended to be a basic starting point for linting in your app.
  * It relies on recommended configs out of the box for simplicity, but you can
@@ -60,6 +60,8 @@ module.exports = {
       
       rules: {
         "import/no-unresolved": "off",
+        "jsx-a11y/click-events-have-key-events": "off",
+        "jsx-a11y/no-static-element-interactions": "off"
       },
       files: ["**/*.{ts,tsx}"],
       plugins: ["@typescript-eslint", "import"],

@@ -13,6 +13,7 @@ export function SidebarSales({ id }: Props) {
   >();
   useEffect(() => {
     get_good_sales(id).then((val) => {
+      console.log(val)
       setItemSales(val);
     });
   }, [id]);
@@ -28,7 +29,7 @@ export function SidebarSales({ id }: Props) {
             Total
           </div>
           {itemSales.map((item) => (
-            <div key={item.tx_date_idx} className="contents">
+            <div key={item.id} className="contents">
               <div className="bg-primary-foreground/20 border-b-2 border-dashed py-2 border-r-2">
                 {format(item.date, "MM/dd/yy")}
               </div>

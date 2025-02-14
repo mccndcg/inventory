@@ -4,7 +4,6 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Dispatch, ReactNode, SetStateAction, useState } from "react"
 import { Button } from "./ui/button"
@@ -12,7 +11,7 @@ import { ArrowLeft } from "lucide-react"
 
 interface InputProps {
     number: number
-    onClick: (val: number) => any
+    onClick: (val: number) => void
 }
 
 function InputButton({ number, onClick }: InputProps) {
@@ -33,16 +32,17 @@ export function InputCategory({ isActive, number, label }: InputCategoryProps) {
         <div className="flex flex-col">
             <div className={`${isActive ? "font-bold" : ""} text-center`}>{label}</div>
             <div className={`${isActive ? "border-2 border-black/80" : "border-black/40"} p-3.5 border rounded-md text-2xl grid place-items-center`} >
-                <div>{number == -1 ? "-" : number}</div>
+                {/* <div>{number == -1 ? "-" : number}</div> */}
+                <div>{number}</div>
             </div>
         </div>
     )
 }
 
 interface KeyboardProps {
-    onKeyPress?: (val: number) => any
-    onBackPress?: (new_val: number) => any
-    onOkay: () => any
+    onKeyPress?: (val: number) => void
+    onBackPress?: (new_val: number) => void
+    onOkay: () => void
     inputDispatch: Dispatch<SetStateAction<number>>
     inputValue: number
 }
@@ -58,7 +58,7 @@ export function NumberKeyboard({ onKeyPress, onBackPress, onOkay, inputDispatch,
     }
     function resetButton() {
         function removeFirstDigit(num: number) {
-            const numStr = num.toString();
+            const numStr = Math.abs(num).toString();
             if (numStr.length === 1) {
                 return 0;
             }
@@ -79,7 +79,7 @@ export function NumberKeyboard({ onKeyPress, onBackPress, onOkay, inputDispatch,
 }
 export function NumberInput({ props, onAccept }: {
     props: NumberInputProps,
-    onAccept: (val: number, val1: number, val2: number) => any
+    onAccept: (val: number, val1: number, val2: number) => void
 }) {
     const { defaultPrice, defaultQuantity, productName } = props
     const defaultTotal = defaultPrice * defaultQuantity

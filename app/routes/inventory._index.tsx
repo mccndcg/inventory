@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { ChevronLeft, Trash } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { TableDemo } from "~/components/inventory/table";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -26,6 +26,7 @@ import {
 import { SidebarGoods } from "~/components/good_sidebar/sidebar";
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
+import { useLiveQuery } from "dexie-react-hooks";
 
 function InventoryTable({
   filterString,
@@ -34,16 +35,17 @@ function InventoryTable({
   filterString: string;
   catString: string;
 }) {
-  const [tableData, setTableData] = useState<DexieGood[]>([]);
+  // const [tableData, setTableData] = useState<DexieGood[]>([]);
   const context = useContext(MenuContext);
   if (!context) throw Error
   const { setOpen } = context
   const [selGood, setSelGood] = useState<undefined | DexieGood>();
   const [editMode, setEditMode] = useState<"good" | "physical">("good");
 
-  useEffect(() => {
-    getInventoryData().then((val) => setTableData(val));
-  }, []);
+  // useEffect(() => {
+  //   getInventoryData().then((val) => setTableData(val));
+  // }, []);
+  const tableData = useLiveQuery(getInventoryData)
 
   function openGoodEditor(good: DexieGood) {
     setSelGood(good);
@@ -61,7 +63,7 @@ function InventoryTable({
       updatePhysicalGood(selGood.id, val.physical)
         .then(() => {
           toast.success("Product Updated");
-          getInventoryData().then((val) => setTableData(val));
+          // getInventoryData().then((val) => setTableData(val));
         })
         .catch(() => toast.error("Something happened."))
         .finally(() => setOpen(false));
@@ -73,7 +75,7 @@ function InventoryTable({
       editGood(selGood.id, selGood, val)
         .then(() => {
           toast.success("Product Updated");
-          getInventoryData().then((val) => setTableData(val));
+          // getInventoryData().then((val) => setTableData(val));
         })
         .catch(() => toast.error("Something happened."))
         .finally(() => setOpen(false));
@@ -93,13 +95,13 @@ function InventoryTable({
               />
             )}
       </ResponsiveDialog>
-      <TableDemo
+      {tableData && <TableDemo
         data={tableData}
         filter_string={filterString}
         setGood={openGoodEditor}
         catString={catString}
         setPhysical={openPhysicalEditor}
-      />
+      />}
     </>
   );
 }

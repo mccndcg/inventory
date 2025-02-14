@@ -3,9 +3,7 @@ import { Form } from "../ui/form"
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -19,7 +17,7 @@ import { format } from "date-fns"
 
 interface Props {
     dexie_good: DexieGood
-    onSubmitProp: (val: PhysicalProp) => any
+    onSubmitProp: (val: PhysicalProp) => void
 
 }
 

@@ -20,7 +20,7 @@ export function SidebarGoods() {
       {dexieGood && dexieGood.id ? (
         <>
           <SidebarHeader className="text-2xl font-bold">
-            {dexieGood.name}
+            {dexieGood.name} 
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>

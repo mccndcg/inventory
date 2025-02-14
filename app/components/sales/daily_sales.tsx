@@ -1,13 +1,12 @@
 import { Link } from "@remix-run/react";
 import { Button } from "../ui/button";
 import { Pencil, Plus, Trash } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   sales_arr: DexieSales[];
-  setIndex: (val: DexieSales) => any;
-  deleteIndex: (val: DexieSales) => any;
-  addItem: () => any;
+  setIndex: (val: DexieSales) => void;
+  deleteIndex: (val: DexieSales) => void;
+  addItem: () => void;
 }
 export default function DailySales({
   sales_arr,
@@ -57,7 +56,7 @@ export default function DailySales({
                     >
                       <Pencil />
                     </Button>
-                    {/* <Button variant="ghost" size="icon" onClick={() => deleteIndex(sale)}><Trash /></Button> */}
+                    <Button variant="ghost" size="icon" onClick={() => deleteIndex(sale)}><Trash /></Button>
                   </div>
                 )}
               </div>
