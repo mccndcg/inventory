@@ -1,3 +1,4 @@
+const path = require("path");
 /**
  * This is intended to be a basic starting point for linting in your app.
  * It relies on recommended configs out of the box for simplicity, but you can
@@ -27,6 +28,10 @@ module.exports = {
   overrides: [
     // React
     {
+      
+      rules: {
+        "import/no-unresolved": "off",
+      },
       files: ["**/*.{js,jsx,ts,tsx}"],
       plugins: ["react", "jsx-a11y"],
       extends: [
@@ -52,6 +57,10 @@ module.exports = {
 
     // Typescript
     {
+      
+      rules: {
+        "import/no-unresolved": "off",
+      },
       files: ["**/*.{ts,tsx}"],
       plugins: ["@typescript-eslint", "import"],
       parser: "@typescript-eslint/parser",

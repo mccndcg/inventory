@@ -3,6 +3,7 @@ import { FrontCard, ModalCard } from "~/components/modal_card";
 import { GoodsOutForm } from "~/components/goods/goods_out";
 import { Link } from "@remix-run/react";
 import RegisterGoods from "~/components/register_goods/register_goods";
+import { QuickReport } from "~/components/quick_report";
 
 
 
@@ -21,8 +22,7 @@ export default function Index() {
         <ModalCard title="Register Goods">
           <RegisterGoods />
         </ModalCard>
-        <div className="size-32 rounded ">
-        </div>
+        <QuickReport/>
         <ModalCard title="Goods In">
           <GoodsOutForm isGoodIn />
         </ModalCard>

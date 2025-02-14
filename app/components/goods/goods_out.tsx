@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import {
     Form,
 } from "@/components/ui/form"
-import { dexieSalesOut, sales2items, submit_goods_out } from "~/data/submit_goods_in";
+import { dexieSalesOut, sales2items, useSubmitGoodsOut } from "~/data/submit_goods_in";
 import { DateComp } from "./date";
 import { ReasonComp } from "./reason"
 import { forwardRef, ReactNode, useContext, useImperativeHandle, useRef, useState } from "react";
@@ -27,7 +27,6 @@ const selection_props = {
 }
 
 
-const input_class = "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
 const grid_class = "grid-cols-[25px_1fr_60px_60px_80px_40px]"
 
 interface Editable {
@@ -44,8 +43,9 @@ interface Props {
 }
 
 const GoodsOutView = forwardRef(({ itemSelector, editObject, isGoodIn }: Props, ref) => {
+    
     const { products, date, oldId, resettter } = editObject || { products: undefined, date: undefined, oldId: undefined, resettter: undefined }
-    const { form, fields, append, update, remove } = submit_goods_out(products, date)
+    const { form, fields, append, update, remove } = useSubmitGoodsOut(products, date)
     const product_watcher = form.watch("products")
     const total_price = product_watcher?.reduce((sum, item) => sum + (item.sold_price * item.quantity), 0);
     const { open, setOpen } = useContext(MenuContext)
@@ -130,7 +130,7 @@ const GoodsOutView = forwardRef(({ itemSelector, editObject, isGoodIn }: Props, 
                     </div>
                     <div className="flex gap-2">
                         {itemSelector}
-                        {/* <ProductSearch onSelectProd={onProductSelect} /> */}
+                        <ProductSearch onSelectProd={onProductSelect} />
 
                     </div>
 
@@ -246,3 +246,5 @@ export function GoodsOutForm({ editObject, isGoodIn }: Props) {
         </div>
     </>
 }
+
+GoodsOutView.displayName = "GoodsOutView"

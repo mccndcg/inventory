@@ -68,8 +68,8 @@ export const addDexieGood = async (inputGood: DexieGood) => {
         console.log(`New DexieGood added with ID: ${id}`);
         return id
     } catch (error) {
-        throw error
         console.error('Error adding DexieGood:', error);
+        throw error
     }
 };
 
@@ -126,7 +126,7 @@ export async function insertSales(sales: DexieSales) {
         const id = await db.dexieSales.add(sales)
         await recompute_coh_from_sales()
         console.log(`Sales ID:${id} added.`)
-
+        return id
     } catch (error) {
         console.log(error)
     }

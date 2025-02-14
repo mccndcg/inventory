@@ -33,7 +33,7 @@ export const productOutSchema = z.object({
 })
 
 export const goodOutSchema = z.object({
-    reason: z.enum(['sales', 'stock_in','stock_in', 'saleless_stock_in', 'personal_use','spoilage']),
+    reason: z.enum(['sales', 'stock_in','stock_in', 'saleless_stock_in', 'personal_use','spoilage','set_value']),
     date: z.date({
         required_error: "A date of birth is required.",
     }),
