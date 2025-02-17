@@ -13,7 +13,7 @@ interface Props {
 }
 export function ExpirationTable({ dexieGood }: Props) {
   return (
-    <Table className="border rounded">
+    <Table className="border rounded bg-background">
       <TableHeader>
         <TableRow>
           <TableHead>Expiration</TableHead>

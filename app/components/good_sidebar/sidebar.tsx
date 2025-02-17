@@ -16,7 +16,7 @@ export function SidebarGoods() {
   if (!context) throw Error;
   const { dexieGood } = context;
   return (
-    <Sidebar>
+    <Sidebar variant="inset">
       {dexieGood && dexieGood.id ? (
         <>
           <SidebarHeader className="text-2xl font-bold">

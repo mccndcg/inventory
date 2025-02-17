@@ -20,9 +20,7 @@ import toast from "react-hot-toast";
 import { PhysicalForm } from "~/components/physical/physical_container";
 import { PhysicalProp } from "~/data/physical";
 import { updatePhysicalGood } from "~/data/dexie_goods";
-import {
-  SidebarProvider,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { SidebarGoods } from "~/components/good_sidebar/sidebar";
 
 export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }];
@@ -37,15 +35,15 @@ function InventoryTable({
 }) {
   // const [tableData, setTableData] = useState<DexieGood[]>([]);
   const context = useContext(MenuContext);
-  if (!context) throw Error
-  const { setOpen } = context
+  if (!context) throw Error;
+  const { setOpen } = context;
   const [selGood, setSelGood] = useState<undefined | DexieGood>();
   const [editMode, setEditMode] = useState<"good" | "physical">("good");
 
   // useEffect(() => {
   //   getInventoryData().then((val) => setTableData(val));
   // }, []);
-  const tableData = useLiveQuery(getInventoryData)
+  const tableData = useLiveQuery(getInventoryData);
 
   function openGoodEditor(good: DexieGood) {
     setSelGood(good);
@@ -95,13 +93,15 @@ function InventoryTable({
               />
             )}
       </ResponsiveDialog>
-      {tableData && <TableDemo
-        data={tableData}
-        filter_string={filterString}
-        setGood={openGoodEditor}
-        catString={catString}
-        setPhysical={openPhysicalEditor}
-      />}
+      {tableData && (
+        <TableDemo
+          data={tableData}
+          filter_string={filterString}
+          setGood={openGoodEditor}
+          catString={catString}
+          setPhysical={openPhysicalEditor}
+        />
+      )}
     </>
   );
 }
@@ -116,60 +116,61 @@ export default function Inventory() {
   }
   return (
     <OpenProvider>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={false}>
         <SidebarGoods />
-        <main>
-          <div className="sticky top-0 z-10 p-2 bg-background flex flex-col space-y-4 shadow-md">
-            <div className="flex">
-              <Link to="/">
-                <Button size="icon" variant="outline">
-                  <ChevronLeft />
+        <SidebarInset className="m-0 p-0">
+          <main>
+            <div className="sticky top-0 z-10 p-2 bg-background flex flex-col space-y-4 shadow-md">
+              <div className="flex">
+                <Link to="/">
+                  <Button size="icon" variant="outline">
+                    <ChevronLeft />
+                  </Button>
+                </Link>
+                <h2 className="text-3xl font-bold tracking-tight ml-4">
+                  Inventory
+                </h2>
+              </div>
+              <div className="p-2 border rounded flex space-x-4">
+                <Input
+                  type="email"
+                  placeholder="Product Name"
+                  onChange={(e) => setFilterString(e.target.value)}
+                  value={filterString}
+                />
+                <Button size="icon" variant="outline" onClick={() => reset()}>
+                  <Trash />
                 </Button>
-              </Link>
-              <h2 className="text-3xl font-bold tracking-tight ml-4">
-                Inventory
-              </h2>
-            </div>
-            <div className="p-2 border rounded flex space-x-4">
-              <Input
-                type="email"
-                placeholder="Product Name"
-                onChange={(e) => setFilterString(e.target.value)}
-                value={filterString}
-              />
-              {/* <DatePickerDemo /> */}
-              {/* <Button size="icon">
-                        <Search />
-                    </Button> */}
-              <Button size="icon" variant="outline" onClick={() => reset()}>
-                <Trash />
-              </Button>
-            </div>
-            <div className="flex gap-2 flex-wrap justify-center">
-              {["all", ...categories].map((ele, index) => (
-                <Button
-                  variant="ghost"
-                  className="p-0 hover:bg-transparent"
-                  key={index}
-                  onClick={() => setCatFilter(ele)}
-                >
-                  <div
-                    className={`${
-                      catFilter == ele
-                        ? "bg-foreground text-background "
-                        : "shadow-md hover:bg-primary-foreground"
-                    } cursor-pointer border rounded-lg py-0.5 px-2 `}
+              </div>
+              <div className="flex gap-2 flex-wrap justify-center">
+                {["all", ...categories].map((ele, index) => (
+                  <Button
+                    variant="ghost"
+                    className="p-0 hover:bg-transparent"
+                    key={index}
+                    onClick={() => setCatFilter(ele)}
                   >
-                    {ele}
-                  </div>
-                </Button>
-              ))}
+                    <div
+                      className={`${
+                        catFilter == ele
+                          ? "bg-foreground text-background "
+                          : "shadow-md hover:bg-primary-foreground"
+                      } cursor-pointer border rounded-lg py-0.5 px-2 `}
+                    >
+                      {ele}
+                    </div>
+                  </Button>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="p-4 flex flex-col space-y-4">
-            <InventoryTable filterString={filterString} catString={catFilter} />
-          </div>
-        </main>
+            <div className="p-4 flex flex-col space-y-4">
+              <InventoryTable
+                filterString={filterString}
+                catString={catFilter}
+              />
+            </div>
+          </main>
+        </SidebarInset>
       </SidebarProvider>
     </OpenProvider>
   );

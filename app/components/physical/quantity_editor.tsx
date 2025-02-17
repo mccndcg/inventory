@@ -16,7 +16,7 @@ import {
 
 interface Props {
     product: string
-    onOk: (val: number, expiration_date?: Date) => any
+    onOk: (val: number, expiration_date?: Date) => void
     initial: SinglePhysicalProp
     editExpiration: boolean
 
@@ -29,8 +29,8 @@ interface DateProps {
 
 function DatePicker({ date, setDate }: DateProps) {
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-    return <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-        <PopoverTrigger asChild>
+    return <Popover>
+        <PopoverTrigger>
             <Button
                 variant={"outline"}
                 className={cn(
@@ -46,7 +46,7 @@ function DatePicker({ date, setDate }: DateProps) {
             <Calendar
                 mode="single"
                 selected={date}
-                onSelect={(e)=> {setDate(e); setIsCalendarOpen(false)}}
+                // onSelect={(e)=> {setDate(e); setIsCalendarOpen(false)}}
                 initialFocus
             />
         </PopoverContent>

@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { isSameDay, isSameMonth, isSameYear } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -156,7 +157,7 @@ export function getChangedKeys(oldObj: GenericObject, newObj: GenericObject) {
   return result;
 }
 
-export function debounce(func: Function, delay: number) {
+export function debounce(func: CallableFunction, delay: number) {
   let timer: ReturnType<typeof setTimeout> | null = null;
 
   return function (...args: any[]) {
@@ -189,12 +190,21 @@ export function sortObjectByDate(obj: SalesObject, direction: boolean) {
 
 export function sales_type_to_is_good_in(type: SalesType) {
   const out = [
-    "sales"
+    "sales",
     // , "stock_in"
     // , "saleless_stock_in"
-    , "personal_use"
-    , "spoilage"
+    "personal_use",
+    "spoilage",
     // , "set_value"
-  ]
-  return !out.includes(type)
+  ];
+  return !out.includes(type);
+}
+
+export function isSameDate(dateA?: Date, dateB?: Date) {
+  if (!dateA || !dateB) return false
+  return (
+    isSameYear(dateA, dateB) &&
+    isSameMonth(dateA, dateB) &&
+    isSameDay(dateA, dateB)
+  );
 }

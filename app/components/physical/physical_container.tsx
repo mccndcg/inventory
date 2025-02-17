@@ -14,6 +14,7 @@ import { ModalNumberInput } from "../number_input"
 import { NumberInput } from "./quantity_editor"
 import { useState } from "react"
 import { format } from "date-fns"
+import { isSameDate } from "~/lib/utils"
 
 interface Props {
     dexie_good: DexieGood
@@ -35,10 +36,18 @@ export function PhysicalForm({ dexie_good, onSubmitProp }: Props) {
     const [isEditingExp, setEditExp] = useState(false)
     const [isNew, setIsNew] = useState(false)
     function updateQuantity(number: number, expiration_date?: Date) {
-        console.log(isNew)
+        // isNew: true - for new expirations
         setOpenForm(false)
         if (isNew) {
-            console.log(expiration_date)
+            for(const [index, field] of fields.entries()) {
+                if (isSameDate(field.expiration_date, expiration_date)) {
+                    update(index, {
+                        ...field,
+                        quantity: field.quantity + number,
+                    })
+                    return
+                }
+            }
             append({
                 quantity: number,
                 ...(isEditingExp && { expiration_date })

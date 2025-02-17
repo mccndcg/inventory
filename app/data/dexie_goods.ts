@@ -1,5 +1,5 @@
+import { isSameDate } from "~/lib/utils";
 import { db } from "./dexie";
-import { isSameYear, isSameMonth, isSameDay } from "date-fns";
 
 export async function getSalesByCategory(category: string) {
   try {
@@ -46,9 +46,7 @@ export async function addExpiration(
     else {
       const physical_item = physical.find((ele) =>
         expiration && ele?.expiration_date
-          ? isSameYear(expiration, ele.expiration_date) &&
-            isSameMonth(expiration, ele.expiration_date) &&
-            isSameDay(expiration, ele.expiration_date)
+          ? isSameDate(expiration, ele.expiration_date)
           : !Object.hasOwn(ele, "expiration_date") ||
             ele?.expiration_date === undefined
       );

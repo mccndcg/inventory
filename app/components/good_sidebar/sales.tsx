@@ -20,11 +20,11 @@ export function SidebarSales({ id }: Props) {
   return (
     <>
       {itemSales && itemSales.length > 0 ? (
-        <div className="grid grid-cols-[1fr_80px_100px]  w-full border rounded pb-2">
-          <div className="text-primary/80 bg-primary-foreground p-2 border-b">
+        <div className="grid grid-cols-[1fr_80px_1fr]  w-full border rounded pb-2 bg-background">
+          <div className="text-primary/80 bg-primary-foreground p-2 border-b border-r-2">
             Date
           </div>
-          <div className="text-primary/60 p-2 border-b">Qty*Prc</div>
+          <div className="text-primary/60 p-2 border-b border-r-2">Qty*Prc</div>
           <div className="text-primary/60 p-2 text-right mr-2 border-b">
             Total
           </div>
