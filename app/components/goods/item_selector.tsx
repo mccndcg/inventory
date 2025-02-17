@@ -7,8 +7,8 @@ import { ArrowLeft } from "lucide-react";
 import { GoodsList } from "./goods_list";
 
 interface Props {
-    onProductSelect: (val: DexieGood) => any
-    onClick: () => any
+    onProductSelect: (val: DexieGood) => void
+    onClick: () => void
 }
 
 export function ItemSelector({ onProductSelect, onClick }: Props) {

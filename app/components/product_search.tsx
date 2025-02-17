@@ -45,7 +45,7 @@ export default function ProductSearch({ onSelectProd, labelString }: Props) {
         onSelectProd(found_product)
     }
     return <>
-        <div>
+        <div className="grow">
             <Label>{labelString || "Add new product:"}</Label>
             <div>
                 <Popover>

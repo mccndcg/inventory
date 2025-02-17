@@ -18,7 +18,10 @@ export const goodInSchema = z.object({
     products: z.array(productSchema)
 })
 
-
+export const physicalSchema = z.object({
+    expiration_date: z.date().optional(),
+    quantity: z.number()
+})
 
 export const productOutSchema = z.object({
     product: z.coerce.string().min(3, "Product too short"),
@@ -27,7 +30,9 @@ export const productOutSchema = z.object({
     selling_price: z.coerce.number().gt(0).optional(),
     prod_id: z.coerce.string(),
     sold_price: z.coerce.number(),
-    stock_quantity: z.coerce.number().optional()
+    stock_quantity: z.coerce.number().optional(),
+    physical: z.array(physicalSchema).optional(),
+    desired_physical: z.array(physicalSchema)
 })
 
 export const goodOutSchema = z.object({
@@ -43,3 +48,4 @@ export const goodOutSchema = z.object({
 export type ProductProp = z.infer<typeof productOutSchema>[]
 export type GoodOutProp = z.infer<typeof goodOutSchema>
 export type GoodInProp = z.infer<typeof goodInSchema>
+export type PhysicalProp = z.infer<typeof physicalSchema>[]

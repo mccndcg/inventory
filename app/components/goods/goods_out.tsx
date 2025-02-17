@@ -3,9 +3,7 @@ import { Button } from "~/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Form } from "@/components/ui/form";
-import {
-  useSubmitGoodsOut,
-} from "~/data/submit_goods_in";
+import { useSubmitGoodsOut } from "~/data/submit_goods_in";
 import { DateComp } from "./date";
 import { ReasonComp } from "./reason";
 import {
@@ -26,6 +24,7 @@ import { ItemSelector } from "./item_selector";
 import { editSales } from "~/data/dexie";
 import { ModalNumberInput, NumberInput } from "../number_input";
 import { record_dexie_sale, sales2items } from "~/data/dexie_sales";
+import { ExpirationSelector } from "./expiration_selector";
 
 const selection_props = {
   sales: "Sales",
@@ -82,17 +81,30 @@ const GoodsOutView = forwardRef(
       //         return
       //     }
       // }
-      found_product.id && append({
-        product: found_product.name,
-        price: 12,
-        selling_price: found_product.selling_price,
-        quantity: 1,
-        prod_id: found_product.id,
-        sold_price: found_product.selling_price,
-        stock_quantity: found_product?.physical
-          ? found_product.physical.reduce((sum, item) => sum + item.quantity, 0)
-          : 0,
-      });
+      found_product.id &&
+        append({
+          desired_physical: found_product?.physical
+            ? found_product?.physical.map((ele, index) => {
+                return {
+                  expiration_date: ele.expiration_date,
+                  quantity: index === 0 ? 1 : 0,
+                };
+              })
+            : [],
+          product: found_product.name,
+          price: 12,
+          selling_price: found_product.selling_price,
+          quantity: 1,
+          physical: found_product.physical,
+          prod_id: found_product.id,
+          sold_price: found_product.selling_price,
+          stock_quantity: found_product?.physical
+            ? found_product.physical.reduce(
+                (sum, item) => sum + item.quantity,
+                0
+              )
+            : 0,
+        });
     }
     function closeDialog(success: boolean) {
       setOpen(false);
@@ -101,6 +113,7 @@ const GoodsOutView = forwardRef(
     useImperativeHandle(ref, () => ({
       onProductSelect,
     }));
+
     function onSubmitValid(sales: GoodOutProp) {
       if (oldId) {
         editSales(
@@ -123,16 +136,61 @@ const GoodsOutView = forwardRef(
         quantity: quantity + (increase ? 1 : -1),
       });
     }
+
+    function onPhysicalUpdate(
+      index: number,
+      desired_index: number,
+      is_increase: boolean,
+      physical_quantity: number
+    ) {
+      if (!fields[desired_index]?.physical) return;
+      const quantity = fields[desired_index].desired_physical.reduce(
+        (total, curr) => curr.quantity + total,
+        0
+      );
+      if (is_increase && physical_quantity <= quantity) return;
+      update(index, {
+        ...fields[desired_index],
+        desired_physical: fields[desired_index].desired_physical.map(
+          (ele, inner_index) => {
+            return inner_index == index
+              ? { ...ele, quantity: ele.quantity + (is_increase ? 1 : -1) }
+              : ele;
+          }
+        ),
+      });
+    }
     function onEntry(price: number, qty: number, total: number) {
       setDefaultInputs(undefined);
       setNumberInput(false);
-      selectedIndex !== undefined &&
-        update(selectedIndex, {
-          ...fields[selectedIndex],
-          quantity: qty,
-          sold_price: total,
-          price,
-        });
+      if (!selectedIndex) return;
+      const desired_physical = fields[selectedIndex].desired_physical;
+      const physical = fields[selectedIndex].physical
+      const dp_total = desired_physical ? desired_physical.reduce((total, curr) => total + curr.quantity, 0) : 0
+      let missing = qty - dp_total
+      const is_inc = missing > 0
+      missing = Math.abs(missing)
+      let running = 0
+      console.log(missing, running)
+      update(selectedIndex, {
+        ...fields[selectedIndex],
+        quantity: qty,
+        sold_price: total,
+        price,
+        desired_physical: (desired_physical && physical) ?  desired_physical.map((ele, idx) => {
+          if (missing > running) {
+            const diff = is_inc ? physical[idx].quantity - ele.quantity - (missing-running) :  ele.quantity - (missing-running)
+            running += diff
+            if (diff > 0){ return {...ele, quantity: is_inc ? ele.quantity + diff : ele.quantity - diff}}
+            else {
+              return ele
+            }
+          }
+          else {
+            return ele
+          }
+        }) : []
+      });
       setSelectedIndex(undefined);
     }
     function openNumberInput(
@@ -193,78 +251,91 @@ const GoodsOutView = forwardRef(
 
                   {fields.map((field, index) => {
                     return (
-                      <div
-                        key={field.prod_id}
-                        className={`${grid_class} grid gap-1 `}
-                      >
-                        <div className="font-bold">{`${index + 1}).`}</div>
+                      <>
                         <div
-                          key={`${field.prod_id}-product`}
-                          className={`${
-                            index % 2 == 0 ? "" : "border-black/40"
-                          } border-b-2 border-dashed`}
+                          key={field.prod_id}
+                          className={`${grid_class} grid gap-1 `}
                         >
+                          <div className="font-bold">{`${index + 1}).`}</div>
                           <div
+                            key={`${field.prod_id}-product`}
+                            className={`${
+                              index % 2 == 0 ? "" : "border-black/40"
+                            } border-b-2 border-dashed`}
+                          >
+                            <div
+                              onClick={() =>
+                                onIncreaseQuantity(index, field.quantity, false)
+                              }
+                            >
+                              {field.product}
+                            </div>
+                            <div></div>
+                          </div>
+                          <div
+                            className={`${
+                              index % 2 == 0 ? "" : "border-black/40"
+                            } border-b-2 border-dashed flex space-x-1.5`}
                             onClick={() =>
-                              onIncreaseQuantity(index, field.quantity, false)
+                              openNumberInput(
+                                field.selling_price || 0,
+                                field.quantity,
+                                field.product,
+                                index
+                              )
                             }
                           >
-                            {field.product}
+                            <div>{field.sold_price}</div>
                           </div>
-                          <div></div>
-                        </div>
-                        <div
-                          className={`${
-                            index % 2 == 0 ? "" : "border-black/40"
-                          } border-b-2 border-dashed flex space-x-1.5`}
-                          onClick={() =>
-                            openNumberInput(
-                              field.selling_price || 0,
-                              field.quantity,
-                              field.product,
-                              index
-                            )
-                          }
-                        >
-                          <div>{field.sold_price}</div>
-                        </div>
-                        <div
-                          className={`${
-                            index % 2 == 0 ? "" : "border-black/40"
-                          }  border-b-2 border-dashed flex space-x-1.5 pr-1 `}
-                          onClick={() =>
-                            onIncreaseQuantity(index, field.quantity, true)
-                          }
-                        >
-                          <div>{field.quantity}</div>
-                        </div>
-                        <div
-                          className={`${
-                            index % 2 == 0 ? "" : "border-black/40"
-                          } 
+                          <div
+                            className={`${
+                              index % 2 == 0 ? "" : "border-black/40"
+                            }  border-b-2 border-dashed flex space-x-1.5 pr-1 `}
+                            onClick={() =>
+                              onIncreaseQuantity(index, field.quantity, true)
+                            }
+                          >
+                            <div>{field.quantity}</div>
+                          </div>
+                          <div
+                            className={`${
+                              index % 2 == 0 ? "" : "border-black/40"
+                            } 
                                         text-right mr-2 border-l-4 rounded-bl-lg border-b-2`}
-                          onClick={() =>
-                            openNumberInput(
-                              field.selling_price || 0,
-                              field.quantity,
-                              field.product,
-                              index
-                            )
-                          }
-                        >
-                          ₱{" "}
-                          {field.sold_price
-                            ? field.quantity * field.sold_price
-                            : 0.0}
+                            onClick={() =>
+                              openNumberInput(
+                                field.selling_price || 0,
+                                field.quantity,
+                                field.product,
+                                index
+                              )
+                            }
+                          >
+                            ₱{" "}
+                            {field.sold_price
+                              ? field.quantity * field.sold_price
+                              : 0.0}
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => remove(index)}
+                          >
+                            <X />
+                          </Button>
                         </div>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => remove(index)}
-                        >
-                          <X />
-                        </Button>
-                      </div>
+                        <div className="border rounded mt-1">
+                          {field.physical && (
+                            <ExpirationSelector
+                              index={index}
+                              physical={field.physical}
+                              desired_physical={field.desired_physical}
+                              quantity={field.quantity}
+                              onIncrease={onPhysicalUpdate}
+                            />
+                          )}
+                        </div>
+                      </>
                     );
                   })}
                 </div>
