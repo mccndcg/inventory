@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 import { ChevronLeft, Trash } from "lucide-react";
 import { useContext, useState } from "react";
-import { TableDemo } from "~/components/inventory/table";
+import { TableDemo } from "~/components/inventory/table4";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import type { LinksFunction } from "@remix-run/node";
