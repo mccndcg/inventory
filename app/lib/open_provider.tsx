@@ -17,7 +17,7 @@ interface Props {
   children: ReactNode;
 }
 
-export const MenuContext = createContext<Context | undefined>(undefined);
+export const MenuContext = createContext<Context>(undefined!);
 
 export default function OpenProvider({ children }: Props) {
   const [open, setOpen] = useState(false);
