@@ -38,18 +38,15 @@ function InventoryTable({
   const { setOpen } = context;
   const [selGood, setSelGood] = useState<undefined | DexieGood>();
   const [editMode, setEditMode] = useState<"good" | "physical">("good");
-  const [test, setTest] = useState(0);
   // useEffect(() => {
   //   getInventoryData().then((val) => setTableData(val));
   // }, []);
   const tableData = useLiveQuery(getInventoryData);
 
   function openGoodEditor(good: DexieGood) {
-    console.log(good);
-    // setSelGood(good);
-    // setEditMode("good");
-    // setOpen(true)
-    setTest((e) => e + 1);
+    setSelGood(good);
+    setEditMode("good");
+    setOpen(true)
   }
 
   function openPhysicalEditor(good: DexieGood) {
@@ -95,9 +92,7 @@ function InventoryTable({
               />
             )}
       </ResponsiveDialog>
-      {test}
-      <Button>inc</Button>
-      {/* {tableData && (
+      {tableData && (
         <TableDemo
           data={tableData}
           filter_string={filterString}
@@ -105,7 +100,7 @@ function InventoryTable({
           catString={catString}
           setPhysical={openPhysicalEditor}
         />
-      )} */}
+      )}
     </>
   );
 }

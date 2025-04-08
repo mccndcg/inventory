@@ -101,9 +101,9 @@ export async function record_dexie_sale(
           add_good_sales(gooditem);
         }
         // 3. update goods
-        for (const item of items) {
-          item.id && addExpiration(item.id, item.quantity, is_good_in);
-        }
+        // for (const item of items) {
+        //   item.id && addExpiration(item.id, item.quantity, is_good_in);
+        // }
       }
     );
     await db.transaction("rw", db.dexieCOH, db.dexieSales, async () => {
@@ -186,9 +186,9 @@ export async function deleteSingleSales(sales_id: string) {
         if (!good_sales) throw Error;
         await db.dexieGoodSales.delete(good_sales.id);
         // 3. update dexie Goods
-        for (const item of sales_obj.items) {
-          item.id && addExpiration(item.id, item.quantity, !sales_type_to_is_good_in(sales_obj.type))
-        }
+        // for (const item of sales_obj.items) {
+        //   item.id && addExpiration(item.id, item.quantity, !sales_type_to_is_good_in(sales_obj.type))
+        // }
         // 4. update dexie coh
         await txless_recompute_coh();
         toast.success("Sales item deleted.");

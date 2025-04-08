@@ -32,7 +32,7 @@ db.version(4).stores({
 
 db.cloud.configure({
     databaseUrl: "https://zkl87x6n6.dexie.cloud",
-    requireAuth: true // optional
+    // requireAuth: true // optional
 });
 
 export const getDexieGoodById = async (id: string) => {

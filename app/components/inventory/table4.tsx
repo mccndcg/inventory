@@ -12,6 +12,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useInventoryTable } from "./column_def";
+import { useMemo } from "react";
 
 interface Props {
   data: DexieGood[];
@@ -30,19 +31,26 @@ export function TableDemo({
 }: Props) {
   const { navigate, inventoryColumns } = useInventoryTable({
     onClickQuantity: setPhysical,
-    onEditGood: setGood,
+    onEditGood: (good: DexieGood) => {
+      setGood(good);
+      console.log("Here");
+    },
   });
 
-  const transformed_data = data
-    .filter((val) =>
-      filter_string.length > 2
-        ? val.name.toLowerCase().includes(filter_string)
-        : true
-    )
-    .filter((val) =>
-      catString == "all" ? true : val.categories.includes(catString)
-    )
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const transformed_data = useMemo(
+    () =>
+      data
+        .filter((val) =>
+          filter_string.length > 2
+            ? val.name.toLowerCase().includes(filter_string)
+            : true
+        )
+        .filter((val) =>
+          catString == "all" ? true : val.categories.includes(catString)
+        )
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [data, catString, filter_string]
+  );
   const table = useReactTable({
     data: transformed_data,
     columns: inventoryColumns,
@@ -71,7 +79,7 @@ export function TableDemo({
           <TableRow
             key={row.id}
             data-state={row.getIsSelected() && "selected"}
-            onClick={() => false && navigate(`./${row.original.id}`)}
+            // onClick={() => false && navigate(`./${row.original.id}`)}
           >
             {row.getVisibleCells().map((cell) => (
               <TableCell key={cell.id}>

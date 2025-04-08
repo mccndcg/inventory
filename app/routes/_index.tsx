@@ -4,9 +4,7 @@ import { GoodsOutForm } from "~/components/goods/goods_out";
 import { Link } from "@remix-run/react";
 import RegisterGoods from "~/components/register_goods/register_goods";
 import { QuickReport } from "~/components/quick_report";
-
-
-
+import { SquareArrowDownRight, SquareArrowOutUpRight, SquareArrowUpRight } from "lucide-react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -22,12 +20,12 @@ export default function Index() {
         <ModalCard title="Register Goods">
           <RegisterGoods />
         </ModalCard>
-        <QuickReport/>
-        <ModalCard title="Goods In">
+        <QuickReport />
+        <ModalCard title="Goods In" icon={<SquareArrowDownRight />}>
           <GoodsOutForm isGoodIn />
         </ModalCard>
-        <ModalCard title="Goods Out">
-          <GoodsOutForm isGoodIn={false} />
+        <ModalCard title="Goods Out"  icon={<SquareArrowOutUpRight />} >
+          <GoodsOutForm isGoodIn={false}/>
         </ModalCard>
         {/* <ModalCard title="Inventory">
           <InventoryModalContent />
@@ -39,7 +37,6 @@ export default function Index() {
           <FrontCard title="Sales" />
         </Link>
       </div>
-    </div >
+    </div>
   );
 }
-

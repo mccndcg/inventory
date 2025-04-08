@@ -1,25 +1,16 @@
 import { Link } from "@remix-run/react";
-import {
-  ArrowDown,
-  ArrowUp,
-  ChevronLeft,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronLeft, Pencil } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
 import { controls, DatePickerDemo } from "~/components/datepicker";
 import { GoodsOutForm } from "~/components/goods/goods_out";
 import { ResponsiveDialog } from "~/components/modal_card";
 import DailySales from "~/components/sales/daily_sales";
+import { EditCOHDialog } from "~/components/sales/EditCOHDialog";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
-import {
-  get_all_coh,
-  recompute_coh_from_sales,
-} from "~/data/dexie_coh";
-import {
-  deleteSingleSales,
-  getSalesByDate,
-} from "~/data/dexie_sales";
+import { get_all_coh, recompute_coh_from_sales } from "~/data/dexie_coh";
+import { deleteSingleSales, getSalesByDate } from "~/data/dexie_sales";
 import { ProductProp } from "~/data/schemas";
 import OpenProvider, { MenuContext } from "~/lib/open_provider";
 import {
@@ -40,6 +31,7 @@ interface Props {
 }
 
 function SalesView({ date, isGoodsIn, filter_direction }: Props) {
+  const [dialogType, setDialogType] = useState<"sales" | "coh">("sales");
   const [salesDict, setSalesDict] = useState<SalesObject>({});
   const [dexieSale, setDexieSale] = useState<ProductProp | undefined>();
   const [oldDate, setOldDate] = useState<Date>();
@@ -48,8 +40,13 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
     undefined | { [key: number]: DexieCOH }
   >();
   const context = useContext(MenuContext);
-  if (!context) throw Error
-  const { setOpen } = context
+  if (!context) throw Error;
+  const { setOpen } = context;
+
+  function editCOH() {
+    setDialogType("coh");
+    setOpen(true);
+  }
 
   function resetState() {
     setOldId(undefined);
@@ -70,7 +67,7 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
     if (!val.id) return;
     setDexieSale(
       val.items.map((ele) => {
-        if (!ele.id) throw Error
+        if (!ele.id) throw Error;
         return { ...ele, product: ele.name, prod_id: ele.id };
       })
     );
@@ -80,6 +77,7 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
   }
 
   function deleteSales(val: DexieSales) {
+    console.log(val)
     val.id && deleteSingleSales(val.id);
   }
 
@@ -112,27 +110,31 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
       });
   }, [date, isGoodsIn]);
 
-
-
   function process_dict() {
     return sortObjectByDate(salesDict, filter_direction);
   }
 
   return (
     <>
-      <ResponsiveDialog title="Edit Sales" hide_trigger>
-        <GoodsOutForm
-          editObject={{
-            products: dexieSale,
-            oldId,
-            date: oldDate,
-            resettter: resetState,
-          }}
-          isGoodIn={isGoodsIn}
-        />
+      <ResponsiveDialog
+        title={dialogType == "sales" ? "Edit Sales" : "Edit COH"}
+        hide_trigger
+      >
+        {dialogType == "sales" ? (
+          <GoodsOutForm
+            editObject={{
+              products: dexieSale,
+              oldId,
+              date: oldDate,
+              resettter: resetState,
+            }}
+            isGoodIn={isGoodsIn}
+          />
+        ) : (
+          <EditCOHDialog />
+        )}
       </ResponsiveDialog>
       <div className="p-4 flex flex-col space-y-4 w-full">
-        <Button onClick={recompute_coh_from_sales}>update coh</Button>
         {/* <Button onClick={updateTxSales}>update tx</Button> */}
         {salesDict &&
           dexieCOH &&
@@ -178,6 +180,13 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
                         stringDateToNumberDate(date)
                       ].current_coh.toLocaleString("en-us")}
                     </span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => editCOH()}
+                    >
+                      <Pencil />
+                    </Button>
                   </div>
                 </div>
                 <Separator />
@@ -229,6 +238,7 @@ export default function Sales() {
           <Button onClick={recomputeDate} size="icon" variant="outline">
             {isDesc ? <ArrowUp /> : <ArrowDown />}
           </Button>
+          <Button onClick={recompute_coh_from_sales}>recompute coh</Button>
         </div>
       </div>
       <div className="grid place-items-center">

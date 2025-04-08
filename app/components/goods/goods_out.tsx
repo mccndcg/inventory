@@ -165,31 +165,45 @@ const GoodsOutView = forwardRef(
       setNumberInput(false);
       if (!selectedIndex) return;
       const desired_physical = fields[selectedIndex].desired_physical;
-      const physical = fields[selectedIndex].physical
-      const dp_total = desired_physical ? desired_physical.reduce((total, curr) => total + curr.quantity, 0) : 0
-      let missing = qty - dp_total
-      const is_inc = missing > 0
-      missing = Math.abs(missing)
-      let running = 0
-      console.log(missing, running)
+      const physical = fields[selectedIndex].physical;
+      const dp_total = desired_physical
+        ? desired_physical.reduce((total, curr) => total + curr.quantity, 0)
+        : 0;
+      let missing = qty - dp_total;
+      const is_inc = missing > 0;
+      missing = Math.abs(missing);
+      let running = 0;
+      console.log(missing, running);
       update(selectedIndex, {
         ...fields[selectedIndex],
         quantity: qty,
         sold_price: total,
         price,
-        desired_physical: (desired_physical && physical) ?  desired_physical.map((ele, idx) => {
-          if (missing > running) {
-            const diff = is_inc ? physical[idx].quantity - ele.quantity - (missing-running) :  ele.quantity - (missing-running)
-            running += diff
-            if (diff > 0){ return {...ele, quantity: is_inc ? ele.quantity + diff : ele.quantity - diff}}
-            else {
-              return ele
-            }
-          }
-          else {
-            return ele
-          }
-        }) : []
+        desired_physical:
+          desired_physical && physical
+            ? desired_physical.map((ele, idx) => {
+                if (missing > running) {
+                  const diff = is_inc
+                    ? physical[idx].quantity -
+                      ele.quantity -
+                      (missing - running)
+                    : ele.quantity - (missing - running);
+                  running += diff;
+                  if (diff > 0) {
+                    return {
+                      ...ele,
+                      quantity: is_inc
+                        ? ele.quantity + diff
+                        : ele.quantity - diff,
+                    };
+                  } else {
+                    return ele;
+                  }
+                } else {
+                  return ele;
+                }
+              })
+            : [],
       });
       setSelectedIndex(undefined);
     }
@@ -251,7 +265,7 @@ const GoodsOutView = forwardRef(
 
                   {fields.map((field, index) => {
                     return (
-                      <>
+                      <div className="contents" key={index}>
                         <div
                           key={field.prod_id}
                           className={`${grid_class} grid gap-1 `}
@@ -335,7 +349,7 @@ const GoodsOutView = forwardRef(
                             />
                           )}
                         </div>
-                      </>
+                      </div>
                     );
                   })}
                 </div>
