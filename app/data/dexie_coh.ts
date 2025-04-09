@@ -18,6 +18,40 @@ export async function recompute_coh(writable: DexieCOH[]) {
     }
   }
 }
+
+export async function delete_modifier(id: string) {
+  try {
+    db.transaction("rw", db.dexieCOH, async () => {
+      db.dexieCOH.update(id, {
+        modifier: undefined,
+      });
+    });
+    console.log("coh recomputed", id);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function add_modifier(
+  id: string,
+  type: ModifierLit,
+  value: number
+) {
+  try {
+    db.transaction("rw", db.dexieCOH, async () => {
+      db.dexieCOH.update(id, {
+        modifier: {
+          type,
+          amount: value,
+        },
+      });
+    });
+    console.log("coh recomputed", id, value);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function get_all_coh() {
   return await db.dexieCOH.toArray();
 }

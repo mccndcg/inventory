@@ -78,11 +78,19 @@ interface NumberInputProps {
   productName: string;
 }
 
+type ModifierLit =  "minus" | "plus" | "set"
+
+interface COHModifier {
+  type: ModifierLit
+  amount: number
+}
+
 interface DexieCOH {
   id?: string;
   date: number;
   total_sales: number;
   current_coh: number;
+  modifier?: COHModifier
 }
 
 interface SalesObject {

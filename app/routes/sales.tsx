@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { useSetAtom } from "jotai";
 import { ArrowDown, ArrowUp, ChevronLeft, Pencil } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -7,6 +8,7 @@ import { GoodsOutForm } from "~/components/goods/goods_out";
 import { ResponsiveDialog } from "~/components/modal_card";
 import DailySales from "~/components/sales/daily_sales";
 import { EditCOHDialog } from "~/components/sales/EditCOHDialog";
+import { editCohAtom } from "~/components/sales/sales_atoms";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { get_all_coh, recompute_coh_from_sales } from "~/data/dexie_coh";
@@ -39,11 +41,16 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
   const [dexieCOH, setDexieCoh] = useState<
     undefined | { [key: number]: DexieCOH }
   >();
+  const setEditCoh = useSetAtom(editCohAtom);
   const context = useContext(MenuContext);
   if (!context) throw Error;
   const { setOpen } = context;
 
-  function editCOH() {
+  function editCOH(coh: number, id: string) {
+    setEditCoh({
+      value: coh,
+      id,
+    });
     setDialogType("coh");
     setOpen(true);
   }
@@ -77,7 +84,7 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
   }
 
   function deleteSales(val: DexieSales) {
-    console.log(val)
+    console.log(val);
     val.id && deleteSingleSales(val.id);
   }
 
@@ -183,10 +190,17 @@ function SalesView({ date, isGoodsIn, filter_direction }: Props) {
                     <Button
                       variant="outline"
                       size="icon"
-                      onClick={() => editCOH()}
+                      onClick={() =>
+                        editCOH(
+                          dexieCOH[stringDateToNumberDate(date)].current_coh,
+                          dexieCOH[stringDateToNumberDate(date)].id
+
+                        )
+                      }
                     >
                       <Pencil />
                     </Button>
+                    {JSON.stringify(dexieCOH[stringDateToNumberDate(date)])}
                   </div>
                 </div>
                 <Separator />
