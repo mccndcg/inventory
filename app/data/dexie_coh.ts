@@ -26,6 +26,7 @@ export async function delete_modifier(id: string) {
         modifier: undefined,
       });
     });
+    await recompute_coh_from_sales();
     console.log("coh recomputed", id);
   } catch (error) {
     console.log(error);
@@ -35,17 +36,20 @@ export async function delete_modifier(id: string) {
 export async function add_modifier(
   id: string,
   type: ModifierLit,
-  value: number
+  value: number,
+  notes?: string
 ) {
   try {
     db.transaction("rw", db.dexieCOH, async () => {
       db.dexieCOH.update(id, {
         modifier: {
           type,
+          notes,
           amount: value,
         },
       });
     });
+    await recompute_coh_from_sales();
     console.log("coh recomputed", id, value);
   } catch (error) {
     console.log(error);
@@ -58,6 +62,7 @@ export async function get_all_coh() {
 
 export async function txless_recompute_coh() {
   const sales = await db.dexieSales.toArray();
+  const coh_arr = await db.dexieCOH.toArray();
   const coh = Object.values(sortObjectByDate(groupByDate(sales), true)).reduce<
     DexieCOH[]
   >((prev, ele, index) => {
@@ -72,11 +77,27 @@ export async function txless_recompute_coh() {
         ),
       0
     );
+    let current_coh =
+      index === 0 ? total_sales : prev[index - 1].current_coh + total_sales;
+    const date_object = stringDateToNumberDate(date);
+    const coh_object = coh_arr.find((ele) => ele.date == date_object);
+    if (coh_object && coh_object.modifier) {
+      switch (coh_object.modifier.type) {
+        case "minus":
+          current_coh -= coh_object.modifier.amount;
+          break;
+        case "plus":
+          current_coh += coh_object.modifier.amount;
+          break;
+        case "set":
+          current_coh = coh_object.modifier.amount;
+      }
+    }
+    current_coh;
     prev.push({
       date: stringDateToNumberDate(date),
       total_sales,
-      current_coh:
-        index === 0 ? total_sales : prev[index - 1].current_coh + total_sales,
+      current_coh,
     });
     return prev;
   }, []);

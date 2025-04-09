@@ -15,9 +15,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import { useMediaQuery } from "~/lib/mediaquery";
-import OpenProvider, { MenuContext } from "~/lib/open_provider";
+import { atom, useAtom } from "jotai";
 
 export function FrontCard({
   title,
@@ -41,28 +41,31 @@ interface Props {
   children: ReactNode;
   hide_trigger?: true;
   icon?: ReactNode;
+  id: string;
 }
 
-export function ModalCard({ title, children, icon }: Props) {
+export function ModalCard({ title, children, icon, id }: Props) {
   return (
-    <OpenProvider>
-      <ResponsiveDialog {...{ title, icon }}>{children}</ResponsiveDialog>
-    </OpenProvider>
+    <ResponsiveDialog {...{ title, icon, id }}>{children}</ResponsiveDialog>
   );
 }
+export const dialogAtom = atom(false);
+export const dialogIdAtom = atom("");
 
 export function ResponsiveDialog({
   title,
   children,
   hide_trigger,
   icon,
+  id,
 }: Props) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const { open, setOpen } = useContext(MenuContext);
+  const [open, setOpen] = useAtom(dialogAtom);
+  const [currId, setCurrId] = useAtom(dialogIdAtom);
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger>
+      <Dialog open={open && currId == id} onOpenChange={setOpen}>
+        <DialogTrigger onClick={() => setCurrId(id)}>
           {!hide_trigger && <FrontCard {...{ title, icon }} />}
         </DialogTrigger>
         <DialogContent className="max-h-[calc(100dvh)] min-w-[80dvw]">

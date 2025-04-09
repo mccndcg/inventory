@@ -83,6 +83,7 @@ type ModifierLit =  "minus" | "plus" | "set"
 interface COHModifier {
   type: ModifierLit
   amount: number
+  notes?: string
 }
 
 interface DexieCOH {

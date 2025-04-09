@@ -25,6 +25,8 @@ import { editSales } from "~/data/dexie";
 import { ModalNumberInput, NumberInput } from "../number_input";
 import { record_dexie_sale, sales2items } from "~/data/dexie_sales";
 import { ExpirationSelector } from "./expiration_selector";
+import { useSetAtom } from "jotai";
+import { dialogAtom } from "../modal_card";
 
 const selection_props = {
   sales: "Sales",
@@ -64,9 +66,7 @@ const GoodsOutView = forwardRef(
       (sum, item) => sum + item.sold_price * item.quantity,
       0
     );
-    const context = useContext(MenuContext);
-    if (!context) throw Error;
-    const { setOpen } = context;
+    const setOpen = useSetAtom(dialogAtom);
     const [numberInput, setNumberInput] = useState(false);
     const [defaultInputs, setDefaultInputs] = useState<
       NumberInputProps | undefined
