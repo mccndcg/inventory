@@ -1,5 +1,18 @@
 import { isSameDate } from "~/lib/utils";
 import { db } from "./dexie";
+import toast from "react-hot-toast";
+
+export async function syncGoods() {
+  try {
+    const res = await fetch("/goods.json");
+    const data = await res.json();
+    await db.dexieGoods.clear()
+    await db.dexieGoods.bulkAdd(data)
+    toast.success("Sync sucess.")
+  } catch (err) {
+    console.error("Error loading JSON:", err);
+  }
+}
 
 export async function getSalesByCategory(category: string) {
   try {

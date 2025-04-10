@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useAtomValue } from "jotai";
 import {
   Sidebar,
   SidebarContent,
@@ -6,21 +6,20 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
 } from "../ui/sidebar";
-import { MenuContext } from "~/lib/open_provider";
 import { ExpirationTable } from "./expiration_table";
 import { SidebarSales } from "./sales";
 import { TriangleAlertIcon } from "lucide-react";
+import { sidebar_good } from "./sidebar_atom";
 
 export function SidebarGoods() {
-  const context = useContext(MenuContext);
-  if (!context) throw Error;
-  const { dexieGood } = context;
+  const dexieGood = useAtomValue(sidebar_good);
+  if (!dexieGood) return;
   return (
     <Sidebar variant="inset">
       {dexieGood && dexieGood.id ? (
         <>
           <SidebarHeader className="text-2xl font-bold">
-            {dexieGood.name} 
+            {dexieGood.name}
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>

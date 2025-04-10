@@ -31,7 +31,7 @@ export const productOutSchema = z.object({
     prod_id: z.coerce.string(),
     sold_price: z.coerce.number(),
     stock_quantity: z.coerce.number().optional(),
-    physical: z.array(physicalSchema).optional(),
+    // physical: z.array(physicalSchema).optional(),
     // desired_physical: z.array(physicalSchema)
 })
 

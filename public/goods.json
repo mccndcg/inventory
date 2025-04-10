@@ -1,0 +1,1821 @@
+[
+  {
+    "id": "dxg0PJAaQWkHe6SAwiuRTxYechhzed",
+    "name": "GynePro",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "gynepr",
+    "selling_price": 1055
+  },
+  {
+    "id": "dxg0PJAaQWoUscU9fiwxtUmHM0ized",
+    "name": "Zoom C",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "name_prefix": "zoom c",
+    "selling_price": 10
+  },
+  {
+    "id": "dxg0PJEx09tVCh3xNwGxGL29YOrzed",
+    "name": "Ensure Gold",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "name_prefix": "ensure",
+    "selling_price": 1650
+  },
+  {
+    "id": "dxg0PJFhS9mTpYCUQDOkWabb7aDzed",
+    "name": "Bicycle Playing Cards",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "bicycl",
+    "selling_price": 160
+  },
+  {
+    "id": "dxg0PJFi3MsFMphhtAtxIbcdmTIzed",
+    "name": "Milk 1/4",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "milk 1",
+    "selling_price": 90
+  },
+  {
+    "id": "dxg0PJFiHKpg80j_DDRnY4G4CQVzed",
+    "name": "Milk 1/2",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "milk 1",
+    "selling_price": 175
+  },
+  {
+    "id": "dxg0PJFiKJqxg0hrxkNyzPJOz|Uzed",
+    "name": "Milk 1 kilo",
+    "size": "1 kilo",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "milk 1",
+    "selling_price": 350
+  },
+  {
+    "id": "dxg0PJFiYb82YNkG_LPbl2xdaSOzed",
+    "name": "Bear Brand Adult Plus",
+    "size": "600 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "bear b",
+    "selling_price": 240
+  },
+  {
+    "id": "dxg0PJFikHDSPb|9ubR4jisbWOmzed",
+    "name": "Bear Brand Fortified",
+    "size": "680 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "bear b",
+    "selling_price": 230
+  },
+  {
+    "id": "dxg0PJFisOkkV4k1QEwP8IlFAFXzed",
+    "name": "Bear Brand Adult Plus",
+    "size": "1 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "bear b",
+    "selling_price": 420
+  },
+  {
+    "id": "dxg0PJFiyAF6UoN8CJTa27xeZNKzed",
+    "name": "Coffee Mate",
+    "size": "1 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "coffee",
+    "selling_price": 280
+  },
+  {
+    "id": "dxg0PJFj6FMM6m0ORpjY0SZrg0pzed",
+    "name": "Milo",
+    "size": "1 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "milo",
+    "selling_price": 275
+  },
+  {
+    "id": "dxg0PJFjEytCaQftJ0hVs1lOXWLzed",
+    "name": "Gold Kili Ginger Lemon Drink",
+    "size": "360 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "gold k",
+    "selling_price": 280
+  },
+  {
+    "id": "dxg0PJFjOd2PYQSriBVUrPgWvxOzed",
+    "name": "Aik Cheong Matcha Latte",
+    "size": "12 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [
+      {
+        "quantity": 36
+      },
+      {
+        "quantity": 6,
+        "expiration_date": "2025-02-17T04:49:41.764Z"
+      }
+    ],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "aik ch",
+    "selling_price": 245
+  },
+  {
+    "id": "dxg0PJFjaRoztjZ2IoAebZcmIygzed",
+    "name": "Super Milk Tea Less Sugar",
+    "size": "25 sticks",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "super ",
+    "selling_price": 260
+  },
+  {
+    "id": "dxg0PJFvmWWwZe7PeBHT1y96j4Dcom",
+    "name": "Old Town White Coffee Less Sugar",
+    "size": "15 sticks",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "old to",
+    "selling_price": 265
+  },
+  {
+    "id": "dxg0PJG4rqq_EfNADNijQSC9bU2com",
+    "name": "Quaker Quick Cook",
+    "size": "1 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 280,
+    "name_prefix": "quaker"
+  },
+  {
+    "id": "dxg0PJG4rqrXqSRhY0HFVhf3E51com",
+    "name": "Quaker Instant Oatmeal",
+    "size": "1 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 280,
+    "name_prefix": "quaker"
+  },
+  {
+    "id": "dxg0PJG4rqsefndm1hU1ZvXtR_ncom",
+    "name": "Ocean Spray Cranberry",
+    "size": "3 L",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "selling_price": 480,
+    "name_prefix": "ocean "
+  },
+  {
+    "id": "dxg0PJG4rqtzofyb6ull8D9AizKcom",
+    "name": "Motts Apple Juice",
+    "size": "2.54 L",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 395,
+    "name_prefix": "motts "
+  },
+  {
+    "id": "dxg0PJG4rquDg5XJIujPVYDxntkcom",
+    "name": "Member's Value Himalayan Pink Salt",
+    "size": "530 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 380,
+    "name_prefix": "member"
+  },
+  {
+    "id": "dxg0PJG4rqvf7KQf8ldMc|wpbU2com",
+    "name": "Bragg Apple Cider Vinegar Large",
+    "size": "946 ml",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 450,
+    "name_prefix": "bragg "
+  },
+  {
+    "id": "dxg0PJG4rqwFh5EUSiHQojbPaK2com",
+    "name": "Bragg Apple Cider Vinegar Small",
+    "size": "473 ml",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 300,
+    "name_prefix": "bragg "
+  },
+  {
+    "id": "dxg0PJG4rqxQFInOA_u3z5JwbAhcom",
+    "name": "Golden Fiesta Canola Oil",
+    "size": "1 L",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 150,
+    "name_prefix": "golden"
+  },
+  {
+    "id": "dxg0PJG4rqyb4_ubdDUNMqVvwAkcom",
+    "name": "Dona Elena Olive Oil Pomace",
+    "size": "500 ml",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 350,
+    "name_prefix": "dona e"
+  },
+  {
+    "id": "dxg0PJG4rqzKp3PVPfuq5Jtkfh1com",
+    "name": "La Masia Extra Virgin Olive Oil",
+    "size": "500 ml",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 350,
+    "name_prefix": "la mas"
+  },
+  {
+    "id": "dxg0PJG4rq|0iXnGdb1YCQtCqyGcom",
+    "name": "La Masia Olive Oil Pomace",
+    "size": "500 ml",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 315,
+    "name_prefix": "la mas"
+  },
+  {
+    "id": "dxg0PJG4rr0eVXd1jrUoOa_6OrCcom",
+    "name": "Sue Bee Premium Honey",
+    "size": "680 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 350,
+    "name_prefix": "sue be"
+  },
+  {
+    "id": "dxg0PJG4rr1d6c7FE1NF9NnBnIncom",
+    "name": "Lotte Luncheon Meat",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 95,
+    "name_prefix": "lotte "
+  },
+  {
+    "id": "dxg0PJG4rr22e3ab22nhhCtHyGmcom",
+    "name": "Hansung Luncheon Meat",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 90,
+    "name_prefix": "hansun"
+  },
+  {
+    "id": "dxg0PJG4rr3xs_jhaEEPoHYBHu5com",
+    "name": "Spam Lite",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "selling_price": 200,
+    "name_prefix": "spam l"
+  },
+  {
+    "id": "dxg0PJG4rr4I9SXeUKWrL5wDK2wcom",
+    "name": "Spam Original",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 0,
+    "name_prefix": "spam o"
+  },
+  {
+    "id": "dxg0PJG4rr5DZ2EHHYT46fsqQ4bcom",
+    "name": "Ox And Palm Luncheon Meat",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "selling_price": 190,
+    "name_prefix": "ox and"
+  },
+  {
+    "id": "dxg0PJG4rr6jvWH3xGvdIjXSd_bcom",
+    "name": "Maling",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 0,
+    "name_prefix": "maling"
+  },
+  {
+    "id": "dxg0PJG4rr7Q7lCvz3KzgRp54c0com",
+    "name": "Palm Corned Beef",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 210,
+    "name_prefix": "palm c"
+  },
+  {
+    "id": "dxg0PJG4rr8OQZotDBS1rpOS|lBcom",
+    "name": "Libbys Vienna Sausage",
+    "size": "130 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 56,
+    "name_prefix": "libbys"
+  },
+  {
+    "id": "dxg0PJG4rr9IORGGcbg534xNBL8com",
+    "name": "Biscoff",
+    "size": "380 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "selling_price": 350,
+    "name_prefix": "biscof"
+  },
+  {
+    "id": "dxg0PJG4rrAn4glx|deA_04VbXjcom",
+    "name": "Herman Real Mayonnaise",
+    "size": "946 ml",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 275,
+    "name_prefix": "herman"
+  },
+  {
+    "id": "dxg0PJG4rrBB3ot4qiT0nw5hcZbcom",
+    "name": "Cheez Whiz Pimiento",
+    "size": "440 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 0,
+    "name_prefix": "cheez "
+  },
+  {
+    "id": "dxg0PJG4rrCLGfxkp16xWLV6yy3com",
+    "name": "Skippy Chunky",
+    "size": "1 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 400,
+    "name_prefix": "skippy"
+  },
+  {
+    "id": "dxg0PJG4rrDuXgiBT8GvH5xVGlicom",
+    "name": "Skippy Creamy",
+    "size": "1.36 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 500,
+    "name_prefix": "skippy"
+  },
+  {
+    "id": "dxg0PJG4rrEyGewiSf_gR6_qkvkcom",
+    "name": "Skippy Creamy",
+    "size": "462 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 230,
+    "name_prefix": "skippy"
+  },
+  {
+    "id": "dxg0PJG4rrFrIbEERS8M8y8ZW54com",
+    "name": "Skippy Super Chunk",
+    "size": "462 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 230,
+    "name_prefix": "skippy"
+  },
+  {
+    "id": "dxg0PJG4rrGfPXONaE8GimQ7vlTcom",
+    "name": "Good Life Sesame Oil",
+    "size": "420 ml",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 0,
+    "name_prefix": "good l"
+  },
+  {
+    "id": "dxg0PJG4rrHzuNEVW5oS0UTJOdQcom",
+    "name": "Nutella",
+    "size": "680 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 385,
+    "name_prefix": "nutell"
+  },
+  {
+    "id": "dxg0PJG4rrIViD_KokXx2WAUfqacom",
+    "name": "Nutella",
+    "size": "350 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 250,
+    "name_prefix": "nutell"
+  },
+  {
+    "id": "dxg0PJG4rrJ16Dts||aCIdzzTEdcom",
+    "name": "Full Cream Milk",
+    "size": "1 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 350,
+    "name_prefix": "full c"
+  },
+  {
+    "id": "dxg0PJG4rrKMncsSxQE2w6h4xHlcom",
+    "name": "Full Cream Milk",
+    "size": "1/2 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 175,
+    "name_prefix": "full c"
+  },
+  {
+    "id": "dxg0PJG4rrLCfCKcoOzOIlyzvQrcom",
+    "name": "Full Cream Milk",
+    "size": "1/4 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 90,
+    "name_prefix": "full c"
+  },
+  {
+    "id": "dxg0PJG4rrMxny58806hLM9izxXcom",
+    "name": "Alkaline Water Small",
+    "size": "Small",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "selling_price": 15,
+    "name_prefix": "alkali"
+  },
+  {
+    "id": "dxg0PJG4rrNmhJtzlCKUmssQedxcom",
+    "name": "Alkaline Water Large",
+    "size": "Large",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "selling_price": 20,
+    "name_prefix": "alkali"
+  },
+  {
+    "id": "dxg0PJG4rrOTAw3MIzuFOkg9QfRcom",
+    "name": "Fresh Tissue",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 130,
+    "name_prefix": "fresh "
+  },
+  {
+    "id": "dxg0PJG4rrP_LD_YadUy|5oSwlgcom",
+    "name": "Honey Citron",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 480,
+    "name_prefix": "honey "
+  },
+  {
+    "id": "dxg0PJG4rrQhlJR0B_kYe6rupoAcom",
+    "name": "Maltesers",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 150,
+    "name_prefix": "maltes"
+  },
+  {
+    "id": "dxg0PJG6SD1yMVU5z_mneIkrcETcom",
+    "name": "I Qure Herbal Coffee 18 in 1",
+    "size": "10 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 150,
+    "name_prefix": "i qure"
+  },
+  {
+    "id": "dxg0PJG6SD2Wavu1vx3thmp|0JVcom",
+    "name": "MX3 Coffee Mix",
+    "size": "10 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 170,
+    "name_prefix": "mx3 co"
+  },
+  {
+    "id": "dxg0PJG6SD3dMCuI497Grj961Zecom",
+    "name": "MX3 Mangosteen Capsules",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 0,
+    "name_prefix": "mx3 ma"
+  },
+  {
+    "id": "dxg0PJG6SD4cQ7tDh3TL|Hm|K7ccom",
+    "name": "Gluta Lipo Brand 13 in 1",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 0,
+    "name_prefix": "gluta "
+  },
+  {
+    "id": "dxg0PJG6SD5FYaYaP|tYoLYEIXacom",
+    "name": "Jimms 5 in 1 Coffee Mix",
+    "size": "20 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 235,
+    "name_prefix": "jimms "
+  },
+  {
+    "id": "dxg0PJG6SD6ib3y6couZOlUeM|Ycom",
+    "name": "Risen Coffee Mix",
+    "size": "10 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "selling_price": 360,
+    "name_prefix": "risen "
+  },
+  {
+    "id": "dxg0PJG6SD7XE8ApIOXpVPeWWMjcom",
+    "name": "Bona Vita",
+    "size": "10 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "selling_price": 160,
+    "name_prefix": "bona v"
+  },
+  {
+    "id": "dxg0PJG6SD81pCv4D6plN1_nF5Ccom",
+    "name": "Golden Moringa Malunggay Coffee",
+    "size": "12 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 135,
+    "name_prefix": "golden"
+  },
+  {
+    "id": "dxg0PJG6SD9ke2poDv8pH64KA42com",
+    "name": "Insulin Herb Cofee Mix",
+    "size": "10 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 150,
+    "name_prefix": "insuli"
+  },
+  {
+    "id": "dxg0PJG6SDABfQLsWcjMr01onRScom",
+    "name": "Davidoff Rich Aroma",
+    "size": "100 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 750,
+    "name_prefix": "davido"
+  },
+  {
+    "id": "dxg0PJG6SDBfis2nbJP16xCRPYXcom",
+    "name": "Pioir Ganoderma Coffee 3 in 1",
+    "size": "20 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "selling_price": 480,
+    "name_prefix": "pioir "
+  },
+  {
+    "id": "dxg0PJG6SDCNnZdM|xHuTlMv9Spcom",
+    "name": "Lorenzana's Mangosteen Coffee Mix",
+    "size": "12 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 160,
+    "name_prefix": "lorenz"
+  },
+  {
+    "id": "dxg0PJG6SDDvKSg4BMzq4NFkxiDcom",
+    "name": "Lorenzana's Mangosteen Guyabano Coffee Mix",
+    "size": "12 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 135,
+    "name_prefix": "lorenz"
+  },
+  {
+    "id": "dxg0PJG6SDEzpdYWWOhUYuezZ3ccom",
+    "name": "Lorenzana's Mangosteen Malunggay Coffee Mix",
+    "size": "12 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 0,
+    "name_prefix": "lorenz"
+  },
+  {
+    "id": "dxg0PJG6SDFeMKWyCJMFX6hTf0pcom",
+    "name": "Lishou Slimming Coffee",
+    "size": "15 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 250,
+    "name_prefix": "lishou"
+  },
+  {
+    "id": "dxg0PJG6SDGDbLLWSJE5e0k4FVIcom",
+    "name": "Diabetasol",
+    "size": "800 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 1150,
+    "name_prefix": "diabet"
+  },
+  {
+    "id": "dxg0PJG6SDHRLigwhfeFpwNA29acom",
+    "name": "Glucerna Gunger Smart",
+    "size": "635 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 1850,
+    "name_prefix": "glucer"
+  },
+  {
+    "id": "dxg0PJG6SDIVDcbOfdKG66nKFGucom",
+    "name": "Glucerna",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 1700,
+    "name_prefix": "glucer"
+  },
+  {
+    "id": "dxg0PJG6SDJeEhPonGP7Yu|xN5Tcom",
+    "name": "Ensure Gold",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 1700,
+    "name_prefix": "ensure"
+  },
+  {
+    "id": "dxg0PJG6SDKbYUmrCs8ksSj9UMucom",
+    "name": "Ensure Gold",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 2650,
+    "name_prefix": "ensure"
+  },
+  {
+    "id": "dxg0PJG6SDLfYMx5bp2xAAron9Ucom",
+    "name": "Markcafe 5 in 1",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "selling_price": 210,
+    "name_prefix": "markca"
+  },
+  {
+    "id": "dxg0PJG6SDMeAYn8jg2NfsSlXlfcom",
+    "name": "Primax",
+    "size": "12 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "selling_price": 250,
+    "name_prefix": "primax"
+  },
+  {
+    "id": "dxg0PJGCGVnrz2zaXYk2O9Y3aULcom",
+    "name": "Lix Detergent",
+    "size": "5 kg",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "lix de",
+    "selling_price": 450
+  },
+  {
+    "id": "dxg0PJGCKZpsxuv23r2xDOSbHJIcom",
+    "name": "Eco Bag Med",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "eco ba",
+    "selling_price": 15
+  },
+  {
+    "id": "dxg0PJGCuI6KYF7dIro5QAyvGUEcom",
+    "name": "Heartex",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "hearte",
+    "selling_price": 340
+  },
+  {
+    "id": "dxg0PJGD31OLvQ2A|XlbdEDbBnccom",
+    "name": "Eco Bag Lg",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [],
+    "name_prefix": "eco ba",
+    "selling_price": 30
+  },
+  {
+    "id": "dxg0PJJl0ASLNUttgeS0TzDu7mycom",
+    "name": "Cadbury Dairy Milk",
+    "size": "160 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "cadbur",
+    "selling_price": 115
+  },
+  {
+    "id": "dxg0PJJlAUXLIkMWYFWeGFCJXIPcom",
+    "name": "Goya ",
+    "size": "30 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "goya ",
+    "selling_price": 18
+  },
+  {
+    "id": "dxg0PJJlShAWRSXzkTC3NNzwCg9com",
+    "name": "Toblerone Tiny Dark",
+    "size": "200 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "tobler",
+    "selling_price": 195
+  },
+  {
+    "id": "dxg0PJJlknn0EsnVq|mfbQFgTlccom",
+    "name": "Toblerone Tiny Milk",
+    "size": "200 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "tobler",
+    "selling_price": 190
+  },
+  {
+    "id": "dxg0PJJlqDveIj17b69ZINLYBJScom",
+    "name": "Toblerone Tiny White",
+    "size": "200 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "tobler",
+    "selling_price": 190
+  },
+  {
+    "id": "dxg0PJJm3xYpcvLg3D29a28EwUrcom",
+    "name": "Mixed Roasted Nuts ",
+    "size": "150 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "mixed ",
+    "selling_price": 125
+  },
+  {
+    "id": "dxg0PJJmJfd29IoJ0Sa5ruLn8Frcom",
+    "name": "Blue Diamond Almonds Natural Salted",
+    "size": "400 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "blue d",
+    "selling_price": 480
+  },
+  {
+    "id": "dxg0PJJmU7kqbdguRi9m4b3|uVacom",
+    "name": "Blue Diamond Almonds Roasted Salted",
+    "size": "400 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "blue d",
+    "selling_price": 480
+  },
+  {
+    "id": "dxg0PJJmbvTZGaw3jshDciuYtTTcom",
+    "name": "Shinjiru Jsmooth",
+    "size": "180 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "beauty"
+    ],
+    "name_prefix": "shinji",
+    "selling_price": 245
+  },
+  {
+    "id": "dxg0PJJmv7fRVK_fYc3NtCzqothcom",
+    "name": "Zonrox ColorSafe",
+    "size": "3.6 L",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "zonrox",
+    "selling_price": 280
+  },
+  {
+    "id": "dxg0PJJn0lvRUBHGLQcpGTbSoBScom",
+    "name": "Zonrox Original",
+    "size": "3.6 L",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "zonrox",
+    "selling_price": 200
+  },
+  {
+    "id": "dxg0PJJnAIL2azBbGaq1cMuVX3ncom",
+    "name": "Zip Lemon ",
+    "size": "4 L",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "zip le",
+    "selling_price": 400
+  },
+  {
+    "id": "dxg0PJJnMR3BQclSHeMr2Z|Zhg5com",
+    "name": "Vunguard Dog Shampoo",
+    "size": "3.4 L",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "vungua",
+    "selling_price": 200
+  },
+  {
+    "id": "dxg0PJJnZK7AKVn5l|d7W7T0tw7com",
+    "name": "Lix Dishwashing",
+    "size": "400 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "lix di",
+    "selling_price": 30
+  },
+  {
+    "id": "dxg0PJP_7HUAknHxaO3JxL0FAqccom",
+    "name": "Toblerone Triangle",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "tobler",
+    "selling_price": 85
+  },
+  {
+    "id": "dxg0PJPc3WNQZR0O_kNOIe9F6T2com",
+    "name": "Golden Inscents",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "home"
+    ],
+    "name_prefix": "golden",
+    "selling_price": 35
+  },
+  {
+    "id": "dxg0PJPcjQ6Jsuc|6kg|gl6rO_Wcom",
+    "name": "Kirkland Chondroitin",
+    "size": "280 tablets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "medicine"
+    ],
+    "name_prefix": "chondr",
+    "selling_price": 1900
+  },
+  {
+    "id": "dxg0PJPcvJiHc43Ukyiylqvmr8bcom",
+    "name": "Nestle Cream",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "condiment"
+    ],
+    "name_prefix": "nestle",
+    "selling_price": 71
+  },
+  {
+    "id": "dxg0PJPdAsMFKG7i334ueS4X9Njcom",
+    "name": "Adora",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [
+      {
+        "quantity": 4
+      },
+      {
+        "quantity": 2,
+        "expiration_date": "2025-02-13T04:28:37.151Z"
+      }
+    ],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "adoru",
+    "selling_price": 85
+  },
+  {
+    "id": "dxg0PJPlHxl59naXYORihH8w1Wvcom",
+    "name": "Pistacio",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "pistac",
+    "selling_price": 485
+  },
+  {
+    "id": "dxg0PJPlVY2nDWU9vnh9kLWzxzJcom",
+    "name": "Kisses",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "food"
+    ],
+    "name_prefix": "kisses",
+    "selling_price": 160
+  },
+  {
+    "id": "dxg0PJPle_GGmxyOiY|SjZVYSMucom",
+    "name": "Twinnings Chamomile",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "twinni",
+    "selling_price": 250
+  },
+  {
+    "id": "dxg0PJQClJaLk1V1SPExh3PaKkIcom",
+    "name": "Eco Bag Sm",
+    "size": "",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "etc"
+    ],
+    "name_prefix": "eco ba",
+    "selling_price": 10
+  },
+  {
+    "id": "dxg0PJQDULD_DTxvdxHYfjm9QPLcom",
+    "name": "Nescafe Gold 5 Pouch",
+    "size": "170 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "nescaf",
+    "selling_price": 280
+  },
+  {
+    "name": "Arm And Hammer Deo Sport",
+    "selling_price": 180,
+    "categories": [
+      "beauty"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "arm an",
+    "id": "dxg0PJo4tW4obFrl_DpdItlSgHvcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Ensure Gold Wheat",
+    "selling_price": 1600,
+    "categories": [
+      "drink"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "ensure",
+    "id": "dxg0PJo54VhfGiqyLLMZXuLC9zMcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Nescafe Gold",
+    "selling_price": 475,
+    "categories": [
+      "drink"
+    ],
+    "size": "200 g",
+    "physical": [],
+    "name_prefix": "nescaf",
+    "id": "dxg0PJo5Kq4D1PKLLSa_KrkmDeGcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "id": "dxg0PJoS7EkTAJoQFPmdGE|eWL5com",
+    "name": "Alcoright Alcohol",
+    "size": "1 gal",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "home"
+    ],
+    "name_prefix": "alcori",
+    "selling_price": 200
+  },
+  {
+    "name": "Black Label",
+    "selling_price": 1300,
+    "categories": [
+      "drink"
+    ],
+    "size": "1L",
+    "physical": [],
+    "name_prefix": "black ",
+    "id": "dxg0PKMrJs4bd3jb|ZpeMLvkS0hcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Jims Sugarfree 5 in 1",
+    "selling_price": 300,
+    "categories": [
+      "drink"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "jims s",
+    "id": "dxg0PLF_Usvt77aYMMWyp_J3hZZcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Yamang Bukid Turmeric",
+    "selling_price": 450,
+    "categories": [
+      "drink"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "yamang",
+    "id": "dxg0PLF_bCW|SNYYkN42vtNYYR1com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Bebiko Wet Wipes",
+    "selling_price": 50,
+    "categories": [
+      "home"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "bebiko",
+    "id": "dxg0PLF_iFeIxXDGqMKsbjMELIZcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Colgate",
+    "selling_price": 150,
+    "categories": [
+      "home"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "colgat",
+    "id": "dxg0PLFa1vX5OqxDwSzMVRpqgy4com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Chamomile Twinnings",
+    "selling_price": 250,
+    "categories": [
+      "drink"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "chamom",
+    "id": "dxg0PLFa8OttoGLmkJ2jJ90kkL4com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Irish Spring",
+    "selling_price": 50,
+    "categories": [
+      "home"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "irish ",
+    "id": "dxg0PLFaDkPKbYyE|KPxpq3s|yucom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Linda Tissue",
+    "selling_price": 120,
+    "categories": [
+      "home"
+    ],
+    "size": "10 pcs",
+    "physical": [],
+    "name_prefix": "linda ",
+    "id": "dxg0PLFaRRO5I|DTIhpp7bNHyzhcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "St. Ives Renewing Body Lotion",
+    "selling_price": 340,
+    "categories": [
+      "home"
+    ],
+    "size": "621 ml",
+    "physical": [],
+    "name_prefix": "st. iv",
+    "id": "dxg0PLFb_XnE7LzmfHd_Edh4QH9com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Cream Silk Triple Keratin Rescue",
+    "selling_price": 120,
+    "categories": [
+      "home"
+    ],
+    "size": "150 ml",
+    "physical": [],
+    "name_prefix": "cream ",
+    "id": "dxg0PLFbg0X3DbfM3bTNI42fy|jcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Neutrogena Body Oil",
+    "selling_price": 360,
+    "categories": [
+      "home"
+    ],
+    "size": "250 ml",
+    "physical": [],
+    "name_prefix": "neutro",
+    "id": "dxg0PLFbmI2b4awc7Tvs5HomvD8com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Pantene Collagen Damage Repair",
+    "selling_price": 200,
+    "categories": [
+      "beauty"
+    ],
+    "size": "300 ml",
+    "physical": [],
+    "name_prefix": "panten",
+    "id": "dxg0PLFbwyeASSypa9mGNBLu7nCcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Darah Body Lotion",
+    "selling_price": 300,
+    "categories": [
+      "beauty"
+    ],
+    "size": "250 ml",
+    "physical": [],
+    "name_prefix": "darah ",
+    "id": "dxg0PLFcmE23i5lL51V14U0BY17com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Cream Silk Triple Keratin Bleach Enhaner",
+    "selling_price": 1,
+    "categories": [
+      "beauty"
+    ],
+    "size": "300 ml",
+    "physical": [],
+    "name_prefix": "cream ",
+    "id": "dxg0PLFdAA2BQvbHTkZJt0AnthIcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Vaseline Gluta-Hya Dewy Radiance",
+    "selling_price": 300,
+    "categories": [
+      "beauty"
+    ],
+    "size": "330 ml",
+    "physical": [],
+    "name_prefix": "vaseli",
+    "id": "dxg0PLFdFPlcpCkYcFKb5MJ33oHcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Myra Classic Moisturizing Lotion",
+    "selling_price": 140,
+    "categories": [
+      "beauty"
+    ],
+    "size": "200 ml",
+    "physical": [],
+    "name_prefix": "myra c",
+    "id": "dxg0PLFdMF2EkQoVwFRQ4XA0M2Ncom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "id": "dxg0PLFe5r34Px2i2MDiUpoFe2Rcom",
+    "name": "Sweet and Fit Stevia ",
+    "size": "30 sachets",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "sweet ",
+    "selling_price": 175
+  },
+  {
+    "id": "dxg0PLFeIC|w6rpMSbLgYF5V_THcom",
+    "name": "Kinoki Cleansing Detox Foot Pads",
+    "size": "10 pads",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "beauty"
+    ],
+    "name_prefix": "kinoki",
+    "selling_price": 300
+  },
+  {
+    "id": "dxg0PLFeUlp1SKu5oJ6fzlXcUgscom",
+    "name": "Biofitea Laxative",
+    "size": "30 teabags ",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "drink"
+    ],
+    "name_prefix": "biofit",
+    "selling_price": 170
+  },
+  {
+    "id": "dxg0PLFfFftukEbw3y5UymPXRITcom",
+    "name": "Old Spice High Endurance Dry Cream",
+    "size": "45 g",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com",
+    "physical": [],
+    "categories": [
+      "beauty"
+    ],
+    "name_prefix": "old sp",
+    "selling_price": 150
+  },
+  {
+    "name": "Jicsam 5 in 1 Malunggay & Banaba",
+    "selling_price": 130,
+    "categories": [
+      "drink"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "jicsam",
+    "id": "dxg0PLk3QgBLHKwGdpaisj|i8UGcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Golden Seed Serpentina",
+    "selling_price": 210,
+    "categories": [
+      "drink"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "golden",
+    "id": "dxg0PM4192OXARYWUowoV5NvqHKcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Dove Intensive Lotion",
+    "selling_price": 275,
+    "categories": [
+      "beauty"
+    ],
+    "size": "600 ml",
+    "physical": [],
+    "name_prefix": "dove i",
+    "id": "dxg0PM41JPuqw1xnFSb5Sx1M5Vccom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Sadoer Collagen Facecream",
+    "selling_price": 230,
+    "categories": [
+      "beauty"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "sadoer",
+    "id": "dxg0PM8iOon6mCrkJViZhq3223hcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Collagen Glow",
+    "selling_price": 350,
+    "categories": [
+      "beauty"
+    ],
+    "size": "60 gummies",
+    "physical": [],
+    "name_prefix": "collag",
+    "id": "dxg0PNWLEhw1KgmgUXJS92yOngMcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Neocell Super Collage",
+    "selling_price": 450,
+    "categories": [
+      "beauty"
+    ],
+    "size": "120 tablets",
+    "physical": [],
+    "name_prefix": "neocel",
+    "id": "dxg0PNWLLmSmPnIhSCeUS2|u8P8com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Neocell Super Collagen",
+    "selling_price": 950,
+    "categories": [
+      "beauty"
+    ],
+    "size": "250 tablets",
+    "physical": [],
+    "name_prefix": "neocel",
+    "id": "dxg0PNWLSn2cITK1Va6lMz6iZnpcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Kirkland Vitamin C",
+    "selling_price": 1150,
+    "categories": [
+      "medicine"
+    ],
+    "size": "500 tablets",
+    "physical": [],
+    "name_prefix": "kirkla",
+    "id": "dxg0PNWLecnDa81dmMMjK7kFVS|com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Kirkland Daily Multi",
+    "selling_price": 1400,
+    "categories": [
+      "medicine"
+    ],
+    "size": "500 tablets",
+    "physical": [],
+    "name_prefix": "kirkla",
+    "id": "dxg0PNWMR4K6bRDzuyH9hov5xngcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Kirkland Glucosamine",
+    "selling_price": 1900,
+    "categories": [
+      "beauty"
+    ],
+    "size": "280 tablets",
+    "physical": [],
+    "name_prefix": "kirkla",
+    "id": "dxg0PNWMWtZ1KhbCMKWRAXxhfdocom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Kirkland Calcium Magnesium and Zinc",
+    "selling_price": 1300,
+    "categories": [
+      "medicine"
+    ],
+    "size": "500 tablets",
+    "physical": [],
+    "name_prefix": "kirkla",
+    "id": "dxg0PNWMkzixZU|K|teYzJ3DBGacom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Kirkland Vitamin E",
+    "selling_price": 950,
+    "categories": [
+      "medicine"
+    ],
+    "size": "500 softgels",
+    "physical": [],
+    "name_prefix": "kirkla",
+    "id": "dxg0PNWN24wv5syPwytjpX_3GJycom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Alaska Garlic Oil",
+    "selling_price": 120,
+    "categories": [
+      "medicine"
+    ],
+    "size": "200 softgels",
+    "physical": [],
+    "name_prefix": "alaska",
+    "id": "dxg0PNWN7A3MKl_x3HpXGl|fp3Ccom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Alaska Fish Oil",
+    "selling_price": 120,
+    "categories": [
+      "medicine"
+    ],
+    "size": "100 softgels",
+    "physical": [],
+    "name_prefix": "alaska",
+    "id": "dxg0PNWNMz4VlTvvCSGYEPLcCA9com",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Prolife Vitamin E",
+    "selling_price": 120,
+    "categories": [
+      "medicine"
+    ],
+    "size": "100 softgels",
+    "physical": [],
+    "name_prefix": "prolif",
+    "id": "dxg0PNWNQ_3ARr8LWcxznQ3SehRcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Myra E Vitamin E",
+    "selling_price": 330,
+    "categories": [
+      "beauty",
+      "medicine"
+    ],
+    "size": "30 capsules",
+    "physical": [],
+    "name_prefix": "myra e",
+    "id": "dxg0PNWNeOiGD6nS0rC9iYqWMwPcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Scotts Vitamin C",
+    "selling_price": 230,
+    "categories": [
+      "medicine"
+    ],
+    "size": "30 pastilles",
+    "physical": [],
+    "name_prefix": "scotts",
+    "id": "dxg0PNWNugJCuXkmKFdo|T7ZhFIcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Barley Fitgum",
+    "selling_price": 275,
+    "categories": [
+      "drink"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "barley",
+    "id": "dxg0PNpJZo66T3BteDN_Kny_hKrcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  },
+  {
+    "name": "Smart Choice",
+    "selling_price": 340,
+    "categories": [
+      "home"
+    ],
+    "size": "",
+    "physical": [],
+    "name_prefix": "smart ",
+    "id": "dxg0PO3vkEHsI6wKEZcB49bP8mMcom",
+    "owner": "j.a.gempes@gmail.com",
+    "realmId": "j.a.gempes@gmail.com"
+  }
+]

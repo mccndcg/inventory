@@ -29,11 +29,10 @@ export function TableDemo({
   catString,
   setPhysical,
 }: Props) {
-  const { navigate, inventoryColumns } = useInventoryTable({
+  const { inventoryColumns } = useInventoryTable({
     onClickQuantity: setPhysical,
     onEditGood: (good: DexieGood) => {
       setGood(good);
-      console.log("Here");
     },
   });
 

@@ -180,31 +180,31 @@ const GoodsOutView = forwardRef(
         quantity: qty,
         sold_price: total,
         price,
-        desired_physical:
-          desired_physical && physical
-            ? desired_physical.map((ele, idx) => {
-                if (missing > running) {
-                  const diff = is_inc
-                    ? physical[idx].quantity -
-                      ele.quantity -
-                      (missing - running)
-                    : ele.quantity - (missing - running);
-                  running += diff;
-                  if (diff > 0) {
-                    return {
-                      ...ele,
-                      quantity: is_inc
-                        ? ele.quantity + diff
-                        : ele.quantity - diff,
-                    };
-                  } else {
-                    return ele;
-                  }
-                } else {
-                  return ele;
-                }
-              })
-            : [],
+        // desired_physical:
+        //   desired_physical && physical
+        //     ? desired_physical.map((ele, idx) => {
+        //         if (missing > running) {
+        //           const diff = is_inc
+        //             ? physical[idx].quantity -
+        //               ele.quantity -
+        //               (missing - running)
+        //             : ele.quantity - (missing - running);
+        //           running += diff;
+        //           if (diff > 0) {
+        //             return {
+        //               ...ele,
+        //               quantity: is_inc
+        //                 ? ele.quantity + diff
+        //                 : ele.quantity - diff,
+        //             };
+        //           } else {
+        //             return ele;
+        //           }
+        //         } else {
+        //           return ele;
+        //         }
+        //       })
+        //     : [],
       });
       setSelectedIndex(undefined);
     }
@@ -395,7 +395,10 @@ export function GoodsOutForm({ editObject, isGoodIn }: Props) {
   return (
     <>
       <div
-        className={cn("w-full h-0.5", isGoodIn ? " bg-red-500" : " bg-green-500")}
+        className={cn(
+          "w-full h-0.5",
+          isGoodIn ? " bg-red-500" : " bg-green-500"
+        )}
       ></div>
       <div className={`${!itemSelectorMode && "hidden"}`}>
         <GoodsOutView

@@ -1,6 +1,6 @@
 import { useSetAtom } from "jotai";
 import { Pencil } from "lucide-react";
-import { dialogAtom } from "~/components/modal_card";
+import { dialogAtom, dialogIdAtom } from "~/components/modal_card";
 import { Button } from "~/components/ui/button";
 import { formatDate } from "~/lib/utils";
 import { dialogTypeAtom, editCohAtom } from "../sales_atoms";
@@ -19,6 +19,8 @@ export function SaleItemHeader({
   const setDialogOpen = useSetAtom(dialogAtom);
   const setEditCoh = useSetAtom(editCohAtom);
   const setDialogType = useSetAtom(dialogTypeAtom);
+  const setDialogID = useSetAtom(dialogIdAtom);
+
   function editCOH(coh: number, id: string) {
     setEditCoh({
       value: coh,
@@ -26,6 +28,7 @@ export function SaleItemHeader({
       modifier: dexieCOH.modifier,
     });
     setDialogType("coh");
+    setDialogID("sales_edit");
     setDialogOpen(true);
   }
   const modifier_component = useMemo(() => {
