@@ -20,7 +20,7 @@ export function SalesHeader() {
   const [isDesc, setIsDesc] = useAtom(isDescFilterAtom);
 
   return (
-    <div className="sticky top-0 z-10 p-2 bg-background flex flex-col space-y-4 shadow-md">
+    <div className="sticky top-0 z-10 p-2 bg-background flex flex-col space-y-4 shadow-md w-dvw">
       <div className="flex gap-2 flex-wrap">
         <Link to="/">
           <Button size="icon" variant="outline">
@@ -35,16 +35,18 @@ export function SalesHeader() {
           <h2 className={!isGoodsOut ? activeClass : defaultClass}>Goods In</h2>
         </Button>
       </div>
-      <div className="p-2 border rounded flex space-x-4">
+      <div className="p-2 border rounded flex space-x-4 flex-wrap">
         <DatePickerDemo date={date} setDate={setDate} />
-        <Button
-          onClick={() => setIsDesc((e) => !e)}
-          size="icon"
-          variant="outline"
-        >
-          {isDesc ? <ArrowUp /> : <ArrowDown />}
-        </Button>
-        <Button onClick={recompute_coh_from_sales}>recompute coh</Button>
+        <div>
+          <Button
+            onClick={() => setIsDesc((e) => !e)}
+            size="icon"
+            variant="outline"
+          >
+            {isDesc ? <ArrowUp /> : <ArrowDown />}
+          </Button>
+        </div>
+        {/* <Button onClick={recompute_coh_from_sales}>recompute coh</Button> */}
       </div>
     </div>
   );

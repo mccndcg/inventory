@@ -81,8 +81,12 @@ export function ResponsiveDialog({
     );
   }
   return (
-    <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
-      <DrawerTrigger>
+    <Drawer
+      open={open && currId == id}
+      onOpenChange={setOpen}
+      repositionInputs={false}
+    >
+      <DrawerTrigger onClick={() => setCurrId(id)}>
         {!hide_trigger && <FrontCard {...{ title, icon }} />}
       </DrawerTrigger>
       <DrawerContent className="p-1">

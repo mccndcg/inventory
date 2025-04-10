@@ -27,6 +27,7 @@ import { record_dexie_sale, sales2items } from "~/data/dexie_sales";
 import { ExpirationSelector } from "./expiration_selector";
 import { useSetAtom } from "jotai";
 import { dialogAtom } from "../modal_card";
+import { cn } from "~/lib/utils";
 
 const selection_props = {
   sales: "Sales",
@@ -393,6 +394,9 @@ export function GoodsOutForm({ editObject, isGoodIn }: Props) {
   );
   return (
     <>
+      <div
+        className={cn("w-full h-0.5", isGoodIn ? " bg-red-500" : " bg-green-500")}
+      ></div>
       <div className={`${!itemSelectorMode && "hidden"}`}>
         <GoodsOutView
           ref={childRef}
