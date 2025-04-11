@@ -25,9 +25,10 @@ import { editSales } from "~/data/dexie";
 import { ModalNumberInput, NumberInput } from "../number_input";
 import { record_dexie_sale, sales2items } from "~/data/dexie_sales";
 import { ExpirationSelector } from "./expiration_selector";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { dialogAtom } from "../modal_card";
 import { cn } from "~/lib/utils";
+import { numberDialogAtom } from "./goods_atoms";
 
 const selection_props = {
   sales: "Sales",
@@ -68,7 +69,7 @@ const GoodsOutView = forwardRef(
       0
     );
     const setOpen = useSetAtom(dialogAtom);
-    const [numberInput, setNumberInput] = useState(false);
+    const [numberInput, setNumberInput] = useAtom(numberDialogAtom);
     const [defaultInputs, setDefaultInputs] = useState<
       NumberInputProps | undefined
     >();
@@ -162,23 +163,23 @@ const GoodsOutView = forwardRef(
       });
     }
     function onEntry(price: number, qty: number, total: number) {
+      console.log(price, qty, total);
       setDefaultInputs(undefined);
       setNumberInput(false);
-      if (!selectedIndex) return;
-      const desired_physical = fields[selectedIndex].desired_physical;
-      const physical = fields[selectedIndex].physical;
-      const dp_total = desired_physical
-        ? desired_physical.reduce((total, curr) => total + curr.quantity, 0)
-        : 0;
-      let missing = qty - dp_total;
-      const is_inc = missing > 0;
-      missing = Math.abs(missing);
-      let running = 0;
-      console.log(missing, running);
+      if (selectedIndex === undefined) return;
+      // const desired_physical = fields[selectedIndex].desired_physical;
+      // const physical = fields[selectedIndex].physical;
+      // const dp_total = desired_physical
+      //   ? desired_physical.reduce((total, curr) => total + curr.quantity, 0)
+      //   : 0;
+      // let missing = qty - dp_total;
+      // const is_inc = missing > 0;
+      // let running = 0;
+      // missing = Math.abs(missing);
       update(selectedIndex, {
         ...fields[selectedIndex],
         quantity: qty,
-        sold_price: total,
+        sold_price: price,
         price,
         // desired_physical:
         //   desired_physical && physical
@@ -224,10 +225,7 @@ const GoodsOutView = forwardRef(
     }
     return (
       <div>
-        <ModalNumberInput
-          dialogOpen={numberInput}
-          setDialogOpen={setNumberInput}
-        >
+        <ModalNumberInput>
           {defaultInputs && (
             <NumberInput props={defaultInputs} onAccept={onEntry} />
           )}
@@ -339,7 +337,7 @@ const GoodsOutView = forwardRef(
                             <X />
                           </Button>
                         </div>
-                        <div className="border rounded mt-1">
+                        {/* <div className="border rounded mt-1">
                           {field.physical && (
                             <ExpirationSelector
                               index={index}
@@ -349,7 +347,7 @@ const GoodsOutView = forwardRef(
                               onIncrease={onPhysicalUpdate}
                             />
                           )}
-                        </div>
+                        </div> */}
                       </div>
                     );
                   })}
