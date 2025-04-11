@@ -1,33 +1,28 @@
-import { Label } from "~/components/ui/label";
-import { Button } from "~/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
-import { Form } from "@/components/ui/form";
-import { useSubmitGoodsOut } from "~/data/submit_goods_in";
-import { DateComp } from "./date";
-import { ReasonComp } from "./reason";
+import { useAtomValue, useSetAtom } from "jotai";
+import { X } from "lucide-react";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import { dialogAtom } from "~/components/modal_card";
 import {
-  forwardRef,
-  ReactNode,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
-import { Separator } from "@/components/ui/separator";
-import ProductSearch from "../product_search";
+  ModalNumberInput,
+  NumberInput,
+} from "~/components/NumberInput/NumberInput";
+import { Button } from "~/components/ui/button";
+import { Form } from "~/components/ui/form";
+import { Label } from "~/components/ui/label";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { Separator } from "~/components/ui/separator";
+import { useSubmitGoodsOut } from "~/data/submit_goods_in";
+import { isGoodsInAtom, numberDialogAtom } from "../goods_atoms";
 import toast from "react-hot-toast";
-import { Plus, X } from "lucide-react";
-// import { MenuContext } from "~/lib/open_provider";
-// import { ExpirationSelector } from "./expiration_selector";
-import { GoodOutProp, ProductProp } from "~/data/schemas";
-import { ItemSelector } from "./item_selector";
+import { GoodsOutProps } from "./types";
+import { GoodOutProp } from "~/data/schemas";
+import { DateComp } from "../date";
+import { ReasonComp } from "../reason";
+import ProductSearch from "~/components/product_search";
 import { editSales } from "~/data/dexie";
 import { record_dexie_sale, sales2items } from "~/data/dexie_sales";
-import { useSetAtom } from "jotai";
-import { dialogAtom } from "../modal_card";
-import { cn } from "~/lib/utils";
-import { numberDialogAtom } from "./goods_atoms";
-import { ModalNumberInput, NumberInput } from "../NumberInput/NumberInput";
+
+const grid_class = "grid-cols-[25px_1fr_60px_60px_80px_40px]";
 
 const selection_props = {
   sales: "Sales",
@@ -35,23 +30,9 @@ const selection_props = {
   spoilage: "Spoilage",
 };
 
-const grid_class = "grid-cols-[25px_1fr_60px_60px_80px_40px]";
-
-interface Editable {
-  products?: ProductProp;
-  date?: Date;
-  oldId?: string;
-  resettter?: () => void;
-}
-
-interface Props {
-  itemSelector?: ReactNode;
-  editObject?: Editable;
-  isGoodIn: boolean;
-}
-
-const GoodsOutView = forwardRef(
-  ({ itemSelector, editObject, isGoodIn }: Props, ref) => {
+export const GoodsOutView = forwardRef(
+  ({ itemSelector, editObject }: GoodsOutProps, ref) => {
+    const isGoodIn = useAtomValue(isGoodsInAtom);
     const { products, date, oldId, resettter } = editObject || {
       products: undefined,
       date: undefined,
@@ -247,6 +228,7 @@ const GoodsOutView = forwardRef(
                 {itemSelector}
                 <ProductSearch onSelectProd={onProductSelect} />
               </div>
+              b
             </div>
             <ScrollArea className="h-[calc(100dvh-460px)] border">
               {fields.length > 0 && (
@@ -369,50 +351,5 @@ const GoodsOutView = forwardRef(
     );
   }
 );
-
-export function GoodsOutForm({ editObject, isGoodIn }: Props) {
-  const [itemSelectorMode, setItemSelectorMode] = useState(true);
-  const childRef = useRef<{ onProductSelect: (val: DexieGood) => void }>(null);
-  function selectItem(val: DexieGood) {
-    if (!childRef.current) return;
-    childRef.current.onProductSelect(val);
-    setItemSelectorMode(true);
-  }
-  const itemButtonSelector = (
-    <Button
-      className="mt-6"
-      type="button"
-      onClick={() => {
-        setItemSelectorMode(false);
-      }}
-    >
-      Select Item <Plus />
-    </Button>
-  );
-  return (
-    <>
-      <div
-        className={cn(
-          "w-full h-0.5",
-          isGoodIn ? " bg-red-500" : " bg-green-500"
-        )}
-      ></div>
-      <div className={`${!itemSelectorMode && "hidden"}`}>
-        <GoodsOutView
-          ref={childRef}
-          itemSelector={itemButtonSelector}
-          editObject={editObject}
-          isGoodIn={isGoodIn}
-        />
-      </div>
-      <div className={`${itemSelectorMode && "hidden"}`}>
-        <ItemSelector
-          onProductSelect={selectItem}
-          onClick={() => setItemSelectorMode(true)}
-        />
-      </div>
-    </>
-  );
-}
 
 GoodsOutView.displayName = "GoodsOutView";
