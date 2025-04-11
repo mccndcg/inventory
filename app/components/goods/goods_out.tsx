@@ -35,7 +35,6 @@ const selection_props = {
   spoilage: "Spoilage",
 };
 
-const grid_class = "grid-cols-[25px_1fr_60px_60px_80px_40px]";
 
 interface Editable {
   products?: ProductProp;
