@@ -263,3 +263,15 @@ export async function rebuildProductStock(
     });
   return projectStock(productId, validAdjustments, saleItems);
 }
+
+export async function listStockAdjustments(
+  db: InventoryDatabase,
+  productId?: UUID,
+): Promise<StockAdjustment[]> {
+  const rows = productId
+    ? await db.stockAdjustments.where("productId").equals(productId).toArray()
+    : await db.stockAdjustments.toArray();
+  return rows
+    .map(parseStockAdjustment)
+    .sort((left, right) => right.occurredAt.localeCompare(left.occurredAt));
+}
