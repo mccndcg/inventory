@@ -77,6 +77,7 @@ export function InventoryWorkspace({
 
   async function submitProduct(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setError("");
     setNotice("");
     const form = new FormData(event.currentTarget);
@@ -97,7 +98,7 @@ export function InventoryWorkspace({
         setNotice("Product created.");
       }
       setEditingProduct(undefined);
-      event.currentTarget.reset();
+      formElement.reset();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Product failed.");
     }
@@ -106,6 +107,7 @@ export function InventoryWorkspace({
   async function submitAdjustment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!adjustingProduct) return;
+    const formElement = event.currentTarget;
     setError("");
     setNotice("");
     const form = new FormData(event.currentTarget);
@@ -134,7 +136,7 @@ export function InventoryWorkspace({
         setNotice("Stock adjustment created.");
       }
       setEditingAdjustment(undefined);
-      event.currentTarget.reset();
+      formElement.reset();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Adjustment failed.");
     }

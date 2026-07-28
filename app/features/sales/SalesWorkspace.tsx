@@ -100,6 +100,7 @@ export function SalesWorkspace({
 
   async function submitSale(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setError("");
     setNotice("");
     const form = new FormData(event.currentTarget);
@@ -127,7 +128,7 @@ export function SalesWorkspace({
       }
       setLines([]);
       setEditingSale(undefined);
-      event.currentTarget.reset();
+      formElement.reset();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Sale failed.");
     }
