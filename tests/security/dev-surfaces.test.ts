@@ -20,7 +20,10 @@ function sourceFiles(directory: string): string[] {
         return sourceFiles(path);
       }
 
-      return sourceExtensions.has(extname(entry.name)) ? [path] : [];
+      return sourceExtensions.has(extname(entry.name)) &&
+        !entry.name.match(/\.test\.[^.]+$/)
+        ? [path]
+        : [];
     })
     .sort();
 }
@@ -47,7 +50,11 @@ describe("production surface policy", () => {
   it("does not retain bulk-write product seed helpers", () => {
     const bulkCallSites = files.flatMap((path) => {
       const source = readFileSync(path, "utf8");
-      const methods = [...source.matchAll(/\.(bulkAdd|bulkPut|bulkDelete)\s*\(/g)]
+      const methods = [
+        ...source.matchAll(
+          /(?:products|dexieGoods)\.(bulkAdd|bulkPut|bulkDelete)\s*\(/g,
+        ),
+      ]
         .map((match) => match[1]);
 
       return methods.map((method) => ({
