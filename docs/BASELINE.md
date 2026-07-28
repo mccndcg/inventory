@@ -39,6 +39,43 @@ These are historical counts, not a claim about the latest advisory database.
 Re-run `npm audit` and inspect direct dependency upgrade paths during the
 baseline phase. Do not mix broad dependency upgrades with domain behavior.
 
+### Phase 2.4 refresh
+
+On 2026-07-28, commit `b06323f` removed unused Firebase and Remix Serve
+dependencies, removed the unreferenced Firestore prototype, upgraded the
+Remix packages from 2.15.2 to 2.17.5, and refreshed compatible transitive
+packages. A clean `npm ci` installed 1,001 packages.
+
+The production-only audit changed from 30 findings (5 critical, 16 high,
+6 moderate, 3 low) to 6 findings (0 critical, 4 high, 2 moderate, 0 low).
+All six remaining findings belong to one framework chain:
+
+```text
+@remix-run/node or @remix-run/react
+  -> @remix-run/server-runtime / react-router-dom
+  -> react-router 6 / turbo-stream 2
+```
+
+This is an explicit temporary exception, not a clean audit:
+
+- **Owner:** repository maintainer implementing the framework replacement.
+- **Rationale:** Remix 2.17.5 is the final/current Remix 2 release in the
+  registry. npm proposes older Remix versions rather than a patched compatible
+  release. The affected React Router advisories require React Router 7.18 or
+  newer, and the turbo-stream advisory requires version 3 or newer.
+- **Compensating controls:** production remains a client-only maintenance
+  shell; all legacy business routes are excluded outside development; Remix
+  Serve is absent; no server actions, sessions, or legacy business UI are
+  exposed in production.
+- **Review trigger:** before enabling any business route in production, before
+  adding a network/server runtime, or by 2026-08-28, whichever comes first.
+- **Exit condition:** migrate the shell to a supported React Router 7.18+
+  framework line (or remove Remix/React Router), rerun the full clean-install
+  gates, and require `npm audit --omit=dev` to report zero findings.
+
+Do not run npm's proposed forced downgrade. Do not treat the production route
+quarantine as a permanent vulnerability waiver.
+
 The Vitest install added the compatible v3 runner while keeping Vite on
 `5.4.14`. Four existing transitive packages moved to newer compatible
 releases. Review package and lockfile diffs in every dependency slice.

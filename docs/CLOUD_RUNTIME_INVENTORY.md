@@ -27,9 +27,8 @@ are ready for the controlled switch.
 | Path | Remaining reason | Constraint |
 | --- | --- | --- |
 | `app/data/dexie.ts` | Defines the legacy `goods` database and configures the Dexie Cloud addon. | Quarantined source only; no production route may import or execute it. Do not point plain Dexie at this database name. |
-| `app/data/dummy.ts` | Unreachable Firebase/Firestore prototype helpers. | No callers are allowed. Remove with the later cloud/dependency cleanup. |
 
-Tests enforce this two-file application-source allowlist. Any new cloud import
+Tests enforce this single-file application-source allowlist. Any new cloud import
 must fail the security suite.
 
 ## Remaining repository references
@@ -37,13 +36,13 @@ must fail the security suite.
 | Path | Contents | Disposition |
 | --- | --- | --- |
 | `dexie-cloud.json` | Legacy CLI endpoint configuration. | Do not use it. Retain only until remote targets are archived and the runtime switch is accepted. |
-| `package.json` | `dexie-cloud-addon` and `firebase` dependencies. | Remove in a dedicated dependency/runtime cleanup after no executable imports remain. |
-| `package-lock.json` | Locked transitive trees for those packages. | Regenerate only with the corresponding dependency removal. |
+| `package.json` | Remaining `dexie-cloud-addon` dependency. | Remove with the quarantined legacy adapter after local replacement persistence is accepted. |
+| `package-lock.json` | Locked transitive tree for the remaining addon. | Regenerate with the corresponding dependency removal. |
 | Recovery documents | Historical evidence, removal procedure, and target contracts. | Preserve as documentation; these are not executable cloud dependencies. |
 
-The key file, embedded Firebase bootstrap, cloud login UI, `/dev` route,
-clear-then-import workflow, and public legacy product snapshot have already
-been removed from the current tree.
+The key file, embedded Firebase bootstrap, Firebase SDK and prototype helper,
+cloud login UI, `/dev` route, clear-then-import workflow, and public legacy
+product snapshot have already been removed from the current tree.
 
 ## External actions still pending
 
@@ -65,14 +64,12 @@ maintenance-only and the legacy cloud configuration must not be used.
 Recorded on 2026-07-28:
 
 - `npm run test` passed: 3 files and 11 tests;
-- focused ESLint for the guard, exporter, maintenance UI, root/config wiring,
-  and security test passed;
+- `npm run lint` passed with zero warnings;
 - `npm run build` passed with only root/maintenance assets and the inherited
-  stale Browserslist warning;
-- `npm run typecheck` still failed with 26 inherited errors, none in the
-  quarantine files;
-- global lint still failed with 146 errors and 14 warnings, none in the
-  quarantine files.
+  Vite CJS deprecation and stale Browserslist warnings;
+- `npm run typecheck` passed;
+- `npm audit --omit=dev` reported the six-item Remix/React Router exception
+  recorded in `BASELINE.md`, with no critical findings.
 
 This snapshot proves the quarantine surface, not general application
 correctness or production readiness.

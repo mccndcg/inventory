@@ -60,7 +60,7 @@ complete them.
 | --- | --- |
 | `app/components/goods/goods_out.tsx` | Replace with one cash-sale feature using application services. |
 | `app/components/goods/GoodsFlux/` | Remove the duplicate Goods Out experiment after the maintained sale flow passes. |
-| `app/components/inventory/table.tsx`, `table3.tsx`, `table4.tsx` | Keep one tested inventory list driven by product and stock projections; remove the rest. |
+| `app/components/inventory/table.tsx`, `table4.tsx` | Keep one tested inventory list driven by product and stock projections; remove the remaining duplicate. |
 | `app/routes/inventory._index123.tsx` and other stale alternates | Remove after route/reference search proves they are not the maintained path. |
 | `app/routes/sales/` current screens | Rebuild around active sale aggregates and drawer COH; remove direct daily-COH mutations. |
 | `app/routes/sales/components/EditCOHDialog.tsx` | Replace raw set/modifier behavior with signed cash-adjustment CRUD. |
