@@ -220,3 +220,32 @@ export interface SyncState {
   lastSyncAt?: IsoInstant;
   lastErrorCode?: string;
 }
+
+export interface DeviceCredential {
+  key: "device";
+  credential: string;
+  enrolledAt: IsoInstant;
+  serverUrl: string;
+}
+
+export interface DeviceDirectoryEntry {
+  deviceId: UUID;
+  deviceCode: string;
+  locationId: UUID;
+  drawerId: UUID;
+  drawerLabel: string;
+  status: "active" | "revoked" | "decommissioned";
+  provisionedAt: IsoInstant;
+  decommissionedAt?: IsoInstant;
+  serverVersion: string;
+}
+
+export interface RemoteShadow {
+  key: string;
+  aggregateType: AggregateType;
+  aggregateId: UUID;
+  serverVersion: string;
+  receivedCursor: string;
+  payload: unknown;
+  receivedAt: IsoInstant;
+}

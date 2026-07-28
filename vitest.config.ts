@@ -7,7 +7,11 @@ export default defineConfig({
     clearMocks: true,
     environment: "node",
     globals: false,
-    include: ["app/**/*.test.{ts,tsx}", "tests/**/*.test.{ts,tsx}"],
+    include: [
+      "app/**/*.test.{ts,tsx}",
+      "server/**/*.test.{ts,tsx}",
+      "tests/**/*.test.{ts,tsx}",
+    ],
     mockReset: true,
     passWithNoTests: false,
     restoreMocks: true,
