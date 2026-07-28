@@ -1,11 +1,14 @@
 import { Dexie, type Table } from "dexie";
 import type {
   CashAdjustment,
+  DeviceCredential,
+  DeviceDirectoryEntry,
   DeviceState,
   LocationSettings,
   OpeningBatch,
   OutboxOperation,
   Product,
+  RemoteShadow,
   Sale,
   SaleItem,
   StockAdjustment,
@@ -14,7 +17,7 @@ import type {
 
 export const INVENTORY_DATABASE_NAME = "inventory_local";
 export const LEGACY_DATABASE_NAME = "goods";
-export const DATABASE_VERSION = 1;
+export const DATABASE_VERSION = 2;
 
 export class InventoryDatabase extends Dexie {
   deviceState!: Table<DeviceState, "current">;
@@ -27,10 +30,13 @@ export class InventoryDatabase extends Dexie {
   cashAdjustments!: Table<CashAdjustment, string>;
   outbox!: Table<OutboxOperation, string>;
   syncState!: Table<SyncState, "server">;
+  deviceCredentials!: Table<DeviceCredential, "device">;
+  deviceDirectory!: Table<DeviceDirectoryEntry, string>;
+  remoteShadows!: Table<RemoteShadow, string>;
 
   constructor(name = INVENTORY_DATABASE_NAME) {
     super(name);
-    this.version(DATABASE_VERSION).stores({
+    this.version(1).stores({
       deviceState: "&key,&deviceId,&drawerId",
       locationSettings: "&key,&locationId",
       openingBatches:
@@ -48,6 +54,15 @@ export class InventoryDatabase extends Dexie {
       outbox:
         "&operationId,&[deviceId+deviceSequence],status,aggregateType,aggregateId,createdAt",
       syncState: "&key",
+    });
+    this.version(DATABASE_VERSION).stores({
+      deviceCredentials: "&key",
+      deviceDirectory: "&deviceId,&drawerId,locationId,status",
+      remoteShadows: "&key,aggregateType,aggregateId,receivedAt",
+    }).upgrade(async (transaction) => {
+      await transaction.table("deviceState").update("current", {
+        localSchemaVersion: DATABASE_VERSION,
+      });
     });
   }
 }

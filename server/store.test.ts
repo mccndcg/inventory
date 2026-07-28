@@ -151,6 +151,17 @@ describe("SQLite synchronization store", () => {
     expect(store.push(enrolled.credential, [operation()])).toEqual(accepted);
   });
 
+  it("rotates a credential for an exact active identity after local recovery", () => {
+    store = new SyncStore(":memory:", "correct horse battery staple");
+    const first = enrollFirst(store);
+    const recovered = enrollFirst(store);
+    expect(recovered.credential).not.toBe(first.credential);
+    expect(() => store?.pull(first.credential)).toThrowError(
+      expect.objectContaining({ code: "UNAUTHORIZED_DEVICE" }),
+    );
+    expect(store.pull(recovered.credential).devices).toHaveLength(1);
+  });
+
   it("accepts an offline oversale and exposes it once to every device", () => {
     store = new SyncStore(":memory:", "correct horse battery staple");
     const first = enrollFirst(store);

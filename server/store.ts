@@ -442,6 +442,36 @@ export class SyncStore {
     const provisionedAt = new Date().toISOString();
     const cursor = this.nextCursor();
     const serverVersion = `v${cursor}`;
+    const matchingRows = this.db.prepare(`
+      SELECT * FROM devices
+      WHERE device_id = ? OR device_code = ? OR drawer_id = ?
+    `).all(deviceId, deviceCode, drawerId) as DeviceRow[];
+    if (matchingRows.length) {
+      const exact = matchingRows.find(
+        (row) =>
+          row.device_id === deviceId &&
+          row.device_code === deviceCode &&
+          row.drawer_id === drawerId &&
+          row.location_id === locationId,
+      );
+      if (!exact || exact.status !== "active") {
+        throw new SyncProtocolError(
+          "DEVICE_ALREADY_EXISTS",
+          "Device code or identity is already assigned.",
+          409,
+        );
+      }
+      this.db.prepare(
+        "UPDATE devices SET token_hash = ? WHERE device_id = ?",
+      ).run(sha256(credential), deviceId);
+      this.audit("device_credential_rotated", deviceId);
+      return {
+        credential,
+        device: directoryEntry({ ...exact, token_hash: sha256(credential) }),
+        settings: this.settings(),
+        cursor: "0",
+      };
+    }
     try {
       this.db.prepare(`
         INSERT INTO devices (
@@ -471,7 +501,7 @@ export class SyncStore {
       credential,
       device: directoryEntry(device),
       settings: this.settings(),
-      cursor: String(this.latestCursor()),
+      cursor: "0",
     };
   }
 
@@ -524,6 +554,12 @@ export class SyncStore {
         try {
           result = this.acceptOperation(device, operation, requestHash);
         } catch (error) {
+          const permanent =
+            error instanceof SyncProtocolError ||
+            (error instanceof Error &&
+              (error.name === "RepositoryError" ||
+                error.name === "DomainError"));
+          if (!permanent) throw error;
           const code = error instanceof SyncProtocolError
             ? error.code
             : "INVALID_PAYLOAD";
@@ -740,13 +776,6 @@ export class SyncStore {
   private nextCursor(): number {
     const row = this.db.prepare(
       "SELECT COALESCE(MAX(cursor), 0) + 1 AS cursor FROM changes",
-    ).get() as { cursor: number };
-    return row.cursor;
-  }
-
-  private latestCursor(): number {
-    const row = this.db.prepare(
-      "SELECT COALESCE(MAX(cursor), 0) AS cursor FROM changes",
     ).get() as { cursor: number };
     return row.cursor;
   }

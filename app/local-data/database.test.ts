@@ -36,11 +36,14 @@ describe("inventory database schema", () => {
     expect(first.tables.map(({ name: tableName }) => tableName).sort()).toEqual(
       [
         "cashAdjustments",
+        "deviceCredentials",
+        "deviceDirectory",
         "deviceState",
         "locationSettings",
         "openingBatches",
         "outbox",
         "products",
+        "remoteShadows",
         "saleItems",
         "sales",
         "stockAdjustments",
@@ -70,6 +73,49 @@ describe("inventory database schema", () => {
       .toBe(true);
     expect(upgraded.tables.some(({ name: tableName }) => tableName === "placeholder"))
       .toBe(false);
+    upgraded.close();
+  });
+
+  it("upgrades v1 installation state and adds sync stores without data loss", async () => {
+    const name = testName("v1-sync-upgrade");
+    const previous = new Dexie(name);
+    previous.version(1).stores({
+      deviceState: "&key,&deviceId,&drawerId",
+      locationSettings: "&key,&locationId",
+      openingBatches: "&id",
+      products: "&id",
+      sales: "&id",
+      saleItems: "&id",
+      stockAdjustments: "&id",
+      cashAdjustments: "&id",
+      outbox: "&operationId",
+      syncState: "&key",
+    });
+    await previous.open();
+    await previous.table("deviceState").add({
+      key: "current",
+      deviceId: "10000000-0000-4000-8000-000000000001",
+      deviceCode: "POS-A",
+      locationId: "10000000-0000-4000-8000-000000000002",
+      drawerId: "10000000-0000-4000-8000-000000000003",
+      drawerLabel: "Front",
+      nextReceiptSequence: 4,
+      nextOperationSequence: 7,
+      installedAt: "2026-07-28T00:00:00.000Z",
+      localSchemaVersion: 1,
+    });
+    previous.close();
+
+    const upgraded = new InventoryDatabase(name);
+    await upgraded.open();
+    expect(await upgraded.deviceState.get("current")).toMatchObject({
+      nextReceiptSequence: 4,
+      nextOperationSequence: 7,
+      localSchemaVersion: DATABASE_VERSION,
+    });
+    expect(await upgraded.deviceCredentials.count()).toBe(0);
+    expect(await upgraded.deviceDirectory.count()).toBe(0);
+    expect(await upgraded.remoteShadows.count()).toBe(0);
     upgraded.close();
   });
 

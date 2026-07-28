@@ -7,12 +7,15 @@ import { validateStockAdjustment } from "../domain/stock";
 import { assertBusinessDate } from "../domain/time";
 import type {
   CashAdjustment,
+  DeviceCredential,
+  DeviceDirectoryEntry,
   DeviceState,
   LocationSettings,
   OpeningBatch,
   OpeningReportPayload,
   OutboxOperation,
   Product,
+  RemoteShadow,
   Sale,
   SaleItem,
   StockAdjustment,
@@ -327,6 +330,41 @@ const syncStateSchema = z.object({
   lastErrorCode: z.string().min(1).optional(),
 }).strict();
 
+const deviceCredentialSchema = z.object({
+  key: z.literal("device"),
+  credential: z.string().min(32),
+  enrolledAt: instant,
+  serverUrl: z.string().url(),
+}).strict();
+
+const deviceDirectoryEntrySchema = z.object({
+  deviceId: uuid,
+  deviceCode: z.string().min(2).max(16),
+  locationId: uuid,
+  drawerId: uuid,
+  drawerLabel: z.string().min(1),
+  status: z.enum(["active", "revoked", "decommissioned"]),
+  provisionedAt: instant,
+  decommissionedAt: instant.optional(),
+  serverVersion: z.string().min(1),
+}).strict();
+
+const remoteShadowSchema = z.object({
+  key: z.string().min(1),
+  aggregateType: z.enum([
+    "opening_batch",
+    "product",
+    "sale",
+    "stock_adjustment",
+    "cash_adjustment",
+  ]),
+  aggregateId: uuid,
+  serverVersion: z.string().min(1),
+  receivedCursor: z.string().min(1),
+  payload: z.unknown(),
+  receivedAt: instant,
+}).strict();
+
 function parseStored<T>(
   schema: z.ZodTypeAny,
   value: unknown,
@@ -384,3 +422,17 @@ export const parseOutboxOperation = (value: unknown) =>
   );
 export const parseSyncState = (value: unknown) =>
   parseStored<SyncState>(syncStateSchema, value, "sync state");
+export const parseDeviceCredential = (value: unknown) =>
+  parseStored<DeviceCredential>(
+    deviceCredentialSchema,
+    value,
+    "device credential",
+  );
+export const parseDeviceDirectoryEntry = (value: unknown) =>
+  parseStored<DeviceDirectoryEntry>(
+    deviceDirectoryEntrySchema,
+    value,
+    "device directory entry",
+  );
+export const parseRemoteShadow = (value: unknown) =>
+  parseStored<RemoteShadow>(remoteShadowSchema, value, "remote shadow");
