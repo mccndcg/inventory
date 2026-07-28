@@ -14,6 +14,7 @@ import type {
 export interface PersistenceDependencies {
   clock: Clock;
   ids: IdSource;
+  beforeOutbox?: () => void;
 }
 
 export interface PendingOperation {
@@ -110,6 +111,7 @@ export async function runAggregateMutation<T>(
       );
     }
 
+    dependencies.beforeOutbox?.();
     const operation: OutboxOperation = {
       operationId: dependencies.ids.randomUUID(),
       deviceId: device.deviceId,
