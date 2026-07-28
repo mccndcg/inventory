@@ -36,7 +36,7 @@ export interface AggregateTransactionContext {
 
 export interface AggregateMutationResult<T> {
   result: T;
-  operation: PendingOperation;
+  operation?: PendingOperation;
 }
 
 function nextSequence(current: number, label: string): number {
@@ -98,6 +98,10 @@ export async function runAggregateMutation<T>(
         return receipt;
       },
     });
+
+    if (!mutation.operation) {
+      return mutation.result;
+    }
 
     assertSafeInteger(
       mutation.operation.aggregateRevision,
