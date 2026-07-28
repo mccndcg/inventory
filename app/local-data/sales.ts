@@ -318,3 +318,21 @@ export async function voidSale(
     },
   );
 }
+
+export async function listSales(
+  db: InventoryDatabase,
+  options: { includeVoided?: boolean } = {},
+): Promise<SaleAggregate[]> {
+  const sales = (await db.sales.toArray())
+    .map(parseSale)
+    .filter((sale) => options.includeVoided || sale.tombstone === 0)
+    .sort((left, right) => right.occurredAt.localeCompare(left.occurredAt));
+  return Promise.all(
+    sales.map(async (sale) => {
+      const items = (
+        await db.saleItems.where("saleId").equals(sale.id).sortBy("position")
+      ).map(parseSaleItem);
+      return { sale, items, totalMinor: saleTotal(items) };
+    }),
+  );
+}

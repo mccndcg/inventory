@@ -1,13 +1,13 @@
-import { SalesHeader } from "./components/SalesHeader";
-import { SalesView } from "./components/SalesView";
+import { Link } from "@remix-run/react";
+import { SalesWorkspace } from "../../features/sales/SalesWorkspace";
 
-export default function Sales() {
+export default function SalesRoute() {
   return (
     <>
-      <SalesHeader />
-      <div className="grid place-items-center">
-        <SalesView></SalesView>
-      </div>
+      <nav className="p-4">
+        <Link className="underline" to="/">← Dashboard</Link>
+      </nav>
+      <SalesWorkspace />
     </>
   );
 }
