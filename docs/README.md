@@ -31,13 +31,15 @@ is safe, and the proof required at each stage.
     the remaining operator sign-off record and its checked external template.
 12. [Static offline deployment](OFFLINE_DEPLOYMENT.md) — hosting, install,
     update/rollback, browser support, persistence, and browser proof.
-13. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
-    later multi-device phase.
-14. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
+13. [Sync contract](SYNC_CONTRACT.md) — implemented protocol and remaining
+    production rollout gates.
+14. [Windows sync host](WINDOWS_SYNC_HOST.md) — Node/SQLite auto-start,
+    Cloudflare Tunnel, backup, restore, and commissioning operations.
+15. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
     mapped to removal or replacement.
-15. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
+16. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
     operation, and incidents.
-16. [Current baseline](BASELINE.md) — observed repository health and known
+17. [Current baseline](BASELINE.md) — observed repository health and known
     inherited failures.
 
 `FIRST_REVIEW.md` is user-owned historical audit material. It is useful

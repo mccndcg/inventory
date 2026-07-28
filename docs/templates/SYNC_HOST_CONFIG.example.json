@@ -1,0 +1,6 @@
+{
+  "databasePath": "C:\\ProgramData\\InventorySync\\inventory-sync.sqlite",
+  "passwordFile": "C:\\ProgramData\\InventorySync\\enrollment-password.txt",
+  "allowedOrigin": "https://inventory.example.com",
+  "port": 8787
+}

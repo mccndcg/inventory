@@ -1,8 +1,13 @@
 import { build } from "esbuild";
 
 await build({
-  entryPoints: ["server/start.ts"],
-  outfile: "build/sync-server.mjs",
+  entryPoints: {
+    "sync-server": "server/start.ts",
+    "sync-backup": "server/backup.ts",
+  },
+  outdir: "build",
+  entryNames: "[name]",
+  outExtension: { ".js": ".mjs" },
   bundle: true,
   format: "esm",
   platform: "node",

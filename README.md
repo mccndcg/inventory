@@ -6,9 +6,10 @@ offline deployment sectors are implemented; operator acceptance remains the
 production gate.
 
 The target is a local-first, cash-only CRUD application backed by plain
-Dexie/IndexedDB. Dexie Cloud will be removed. Custom multi-device
-synchronization is a later delivery phase, after the local application passes
-its acceptance gate.
+Dexie/IndexedDB. Dexie Cloud is absent from the runtime. The custom
+multi-device client and Node/SQLite server are implemented; operator staging,
+Windows/Cloudflare installation, restore proof, and pilot sign-off remain the
+production gates.
 
 Start with the [implementor documentation](docs/README.md). In particular:
 
@@ -27,8 +28,9 @@ Start with the [implementor documentation](docs/README.md). In particular:
   abandoned business routes and cloud runtime are removed.
 - Do not automatically clear, migrate, or delete the legacy `goods`
   IndexedDB database.
-- Until custom synchronization is complete and accepted, only one production
-  device may be authoritative. Other devices are test-only.
+- Until synchronization is installed and its operator acceptance record is
+  signed, only one production device may be authoritative. Other devices are
+  test-only.
 
 See [Dexie Cloud decommissioning](docs/DEXIE_CLOUD_DECOMMISSION.md) and the
 [fresh-balance cutover runbook](docs/CUTOVER.md) before touching production
@@ -88,6 +90,19 @@ navigation-fallback invariants. The external target publishes `build/client`
 to Cloudflare Pages-compatible HTTPS hosting. It must use the checked-in
 headers and explicit route rewrites and must return 404 for missing assets.
 See [static offline deployment](docs/OFFLINE_DEPLOYMENT.md).
+
+Build and run the shop-hosted synchronization server with:
+
+```sh
+npm run build:sync
+npm run start:sync -- --config /path/to/host-config.json
+npm run backup:sync -- --config /path/to/host-config.json --destination /off-computer/backups
+```
+
+Use the [Windows synchronization host runbook](docs/WINDOWS_SYNC_HOST.md) for
+Task Scheduler, Cloudflare Tunnel, secrets, backups, restore drills, and
+device commissioning. The server binds loopback only; HTTPS is supplied by
+the tunnel.
 
 For a deployed staging host and the operator-owned acceptance record:
 
