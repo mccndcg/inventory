@@ -28,7 +28,7 @@ is safe, and the proof required at each stage.
 10. [Fresh-balance cutover](CUTOVER.md) — archive, initialization, verification,
     and rollback.
 11. [Local release acceptance](LOCAL_ACCEPTANCE.md) — implemented evidence and
-    the remaining operator sign-off record.
+    the remaining operator sign-off record and its checked external template.
 12. [Static offline deployment](OFFLINE_DEPLOYMENT.md) — hosting, install,
     update/rollback, browser support, persistence, and browser proof.
 13. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the

@@ -1,0 +1,75 @@
+{
+  "recordFormatVersion": 1,
+  "application": {
+    "commit": "REPLACE_WITH_40_CHARACTER_LOWERCASE_GIT_SHA",
+    "localSchemaVersion": 1,
+    "databaseVersion": 1,
+    "hostUrl": "https://REPLACE_WITH_DEPLOYED_HOST"
+  },
+  "installation": {
+    "locationName": "REPLACE",
+    "locationCode": "REPLACE",
+    "deviceCode": "REPLACE",
+    "drawerLabel": "REPLACE",
+    "onlyAuthoritativePreSyncDevice": false
+  },
+  "catalog": {
+    "method": "manual"
+  },
+  "opening": {
+    "reportSha256": "REPLACE",
+    "physicalStockParity": false,
+    "physicalCashParity": false,
+    "reopenedProjectionParity": false,
+    "firstSaleAfterApproval": false
+  },
+  "backup": {
+    "manifestSha256": "REPLACE",
+    "encryptedDestinationLabel": "REPLACE_WITH_LABEL_NOT_SECRET_OR_PATH",
+    "custodian": "REPLACE",
+    "isolatedRestorePassed": false,
+    "restoredAt": "REPLACE_WITH_CANONICAL_UTC_INSTANT"
+  },
+  "offline": {
+    "chrome": {
+      "version": "REPLACE",
+      "warmOfflineStart": false,
+      "coldOfflineStart": false,
+      "routesPassed": []
+    },
+    "edge": {
+      "version": "REPLACE",
+      "warmOfflineStart": false,
+      "coldOfflineStart": false,
+      "routesPassed": []
+    }
+  },
+  "workflows": {
+    "sale": false,
+    "oversell": false,
+    "edit": false,
+    "void": false,
+    "stockAdjustment": false,
+    "cashAdjustment": false,
+    "drawerCoh": false,
+    "reload": false,
+    "failedUpdateRollback": false
+  },
+  "dexieCloudDecommission": {
+    "remoteArchivesVerified": false,
+    "localArchivesVerified": false,
+    "credentialsAndSessionsRevoked": false,
+    "observationCompleted": false,
+    "retentionDecision": "REPLACE",
+    "providerShutdownRecorded": false
+  },
+  "signoff": {
+    "recorder": "REPLACE",
+    "verifier": "REPLACE",
+    "approver": "REPLACE",
+    "tester": "REPLACE",
+    "decision": "no-go",
+    "signedAt": "REPLACE_WITH_CANONICAL_UTC_INSTANT",
+    "evidenceLocation": "REPLACE_WITH_EXTERNAL_CONTROLLED_LOCATION"
+  }
+}

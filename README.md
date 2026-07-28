@@ -89,6 +89,13 @@ to Cloudflare Pages-compatible HTTPS hosting. It must use the checked-in
 headers and explicit route rewrites and must return 404 for missing assets.
 See [static offline deployment](docs/OFFLINE_DEPLOYMENT.md).
 
+For a deployed staging host and the operator-owned acceptance record:
+
+```sh
+npm run verify:staging -- https://staging.example
+npm run verify:release -- /approved/evidence/local-acceptance.json
+```
+
 The artifact contains `/`, `/inventory`, `/sales`, `/cash`, `/opening`, and
 `/recovery`. Production deployment remains blocked until operator staging
 acceptance, cutover, and cloud decommissioning are complete.

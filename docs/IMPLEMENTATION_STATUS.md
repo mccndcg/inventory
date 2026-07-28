@@ -94,6 +94,18 @@ The next sector is operator staging acceptance and production cutover evidence.
 Custom multi-device synchronization remains Phase 7 and must not begin
 production rollout before the local acceptance record is signed.
 
+The repository now includes the non-fabricable acceptance boundary:
+
+- `npm run verify:staging -- <url>` checks all maintained routes, shell
+  revalidation, immutable hashed assets, service-worker scope, and missing
+  asset 404 behavior on the deployed host;
+- `docs/templates/LOCAL_ACCEPTANCE_RECORD.example.json` is copied to the
+  external evidence store and completed by the operator;
+- `npm run verify:release -- <record>` rejects incomplete physical,
+  backup/restore, browser, workflow, decommissioning, or sign-off evidence.
+
+These checks cannot complete the still-pending operator record themselves.
+
 Production cutover still requires the operator choices and signed staging
 acceptance in `CUTOVER.md` and `LOCAL_ACCEPTANCE.md`. Custom multi-device
 synchronization remains Phase 7 and must not begin production rollout before

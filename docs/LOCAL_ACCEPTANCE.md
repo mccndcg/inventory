@@ -33,6 +33,24 @@ npx playwright install chromium
 npm run test:offline
 ```
 
+Check the deployed HTTP contract with:
+
+```sh
+npm run verify:staging -- https://staging.example
+```
+
+Copy `docs/templates/LOCAL_ACCEPTANCE_RECORD.example.json` outside the
+repository, replace every placeholder with operator evidence, and validate it:
+
+```sh
+npm run verify:release -- /approved/evidence/local-acceptance.json
+```
+
+The validator proves completeness and internal formatting only. It does not
+perform physical counts, inspect the external archive, revoke credentials, or
+sign on an operator's behalf. Never commit the completed record because it may
+contain operational identity and evidence-location information.
+
 ## Operator acceptance still required
 
 An authorized operator must use sanitized staging data and record:

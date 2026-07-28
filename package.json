@@ -14,7 +14,9 @@
     "test": "vitest run",
     "test:offline": "playwright test",
     "test:watch": "vitest",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "verify:release": "node scripts/verify-release-record.mjs",
+    "verify:staging": "node scripts/verify-staging.mjs"
   },
   "resolutions": {
     "@radix-ui/react-focus-scope": "1.1.2"

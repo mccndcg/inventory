@@ -4,6 +4,7 @@ node_modules
 /build
 /playwright-report
 /test-results
+/release-evidence
 .env
 .env.*
 !.env.example
