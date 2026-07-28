@@ -21,8 +21,9 @@ The repository currently has:
 The smoke test proves only the harness. It does not prove inventory, cash,
 storage, UI, migration, synchronization, or production readiness.
 
-Run the repository on Node 24 LTS. Do not infer that every release admitted by
-the legacy `>=20` manifest range is supported.
+Run the repository on Node `24.15.0` with npm `11.12.1`. The manifest admits
+only the Node 24/npm 11 lines at or above those verified versions, while
+`.nvmrc` and `packageManager` pin the reproducible bootstrap.
 
 ## Test layers
 
