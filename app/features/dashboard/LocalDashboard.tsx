@@ -148,8 +148,8 @@ export function LocalDashboard({
         </a>
       </nav>
       <p className="rounded border p-4">
-        Synchronization is not enabled. This device continues to accept and
-        retain local transactions while offline.
+        This device keeps accepting and retaining transactions while offline.
+        Use the synchronization bar above for current delivery status.
       </p>
       <LocalSystemStatus db={db} />
       <p className="text-sm">

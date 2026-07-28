@@ -1,6 +1,6 @@
 import { LOCAL_SCHEMA_VERSION } from "../domain/constants";
 import { currentInstant } from "../domain/time";
-import type { Clock } from "../domain/types";
+import type { Clock, IdSource } from "../domain/types";
 import type { InventoryDatabase } from "../local-data/database";
 import { RepositoryError } from "../local-data/errors";
 import type {
@@ -36,6 +36,10 @@ export interface EnrollClientInput {
   password: string;
   deviceCode: string;
   drawerLabel: string;
+  firstLocation?: {
+    locationCode: string;
+    locationName: string;
+  };
 }
 
 export interface SyncResult {
@@ -96,6 +100,7 @@ export async function enrollClient(
   input: EnrollClientInput,
   fetcher: SyncFetch = fetch,
   clock: Clock = { now: () => new Date() },
+  ids: IdSource = { randomUUID: () => crypto.randomUUID() },
 ): Promise<EnrollmentResponse> {
   if (await db.deviceCredentials.get("device")) {
     throw new RepositoryError("ALREADY_EXISTS", "This installation is already enrolled.");
@@ -108,6 +113,14 @@ export async function enrollClient(
   if (Boolean(existingDevice) !== Boolean(existingSettings)) {
     throw new RepositoryError("INVALID_RECORD", "Local installation is incomplete.");
   }
+  const firstIdentity =
+    !existingDevice && input.firstLocation
+      ? {
+        deviceId: ids.randomUUID(),
+        drawerId: ids.randomUUID(),
+        locationId: ids.randomUUID(),
+      }
+      : undefined;
   const request: EnrollmentRequest = {
     password: input.password,
     deviceCode: input.deviceCode,
@@ -127,7 +140,18 @@ export async function enrollClient(
           businessTimezone: existingSettings.businessTimezone,
         },
       }
-      : {}),
+      : firstIdentity && input.firstLocation
+        ? {
+          existingIdentity: firstIdentity,
+          initialSettings: {
+            locationId: firstIdentity.locationId,
+            locationCode: input.firstLocation.locationCode,
+            locationName: input.firstLocation.locationName,
+            currencyCode: "PHP" as const,
+            businessTimezone: "Asia/Manila" as const,
+          },
+        }
+        : {}),
   };
   const response = await fetcher(`${endpoint}/sync/v1/enroll`, {
     method: "POST",

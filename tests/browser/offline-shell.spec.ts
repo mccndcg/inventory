@@ -1,4 +1,10 @@
-import { expect, test, chromium, type BrowserContext } from "@playwright/test";
+import {
+  expect,
+  test,
+  chromium,
+  type BrowserContext,
+  type Page,
+} from "@playwright/test";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -17,18 +23,99 @@ async function waitForControlledShell(context: BrowserContext) {
   return page;
 }
 
+async function enrollTestDevice(page: Page) {
+  let enrollment:
+    | {
+      existingIdentity: {
+        deviceId: string;
+        drawerId: string;
+        locationId: string;
+      };
+      initialSettings: {
+        locationId: string;
+        locationCode: string;
+        locationName: string;
+      };
+    }
+    | undefined;
+  await page.route("**/sync/v1/**", async (route) => {
+    const url = new URL(route.request().url());
+    if (url.pathname.endsWith("/enroll")) {
+      enrollment = route.request().postDataJSON() as typeof enrollment;
+      if (!enrollment) throw new Error("Missing enrollment request.");
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({
+          credential: "a".repeat(43),
+          cursor: "0",
+          device: {
+            ...enrollment.existingIdentity,
+            deviceCode: "POS-A",
+            drawerLabel: "Front",
+            status: "active",
+            provisionedAt: "2026-07-28T04:00:00.000Z",
+            serverVersion: "v1",
+          },
+          settings: {
+            key: "location",
+            ...enrollment.initialSettings,
+            currencyCode: "PHP",
+            businessTimezone: "Asia/Manila",
+            settingsVersion: 1,
+          },
+        }),
+      });
+      return;
+    }
+    if (!enrollment) throw new Error("Pull occurred before enrollment.");
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        changes: [],
+        cursor: "0",
+        hasMore: false,
+        settings: {
+          key: "location",
+          ...enrollment.initialSettings,
+          currencyCode: "PHP",
+          businessTimezone: "Asia/Manila",
+          settingsVersion: 1,
+        },
+        devices: [
+          {
+            ...enrollment.existingIdentity,
+            deviceCode: "POS-A",
+            drawerLabel: "Front",
+            status: "active",
+            provisionedAt: "2026-07-28T04:00:00.000Z",
+            serverVersion: "v1",
+          },
+        ],
+      }),
+    });
+  });
+  await page.getByLabel("Sync server address").fill(baseURL);
+  await page.getByLabel("Device code").fill("POS-A");
+  await page.getByLabel("Drawer label").fill("Front");
+  await page.getByLabel("Initialize a brand-new shop").check();
+  await page.getByLabel("Shop name").fill("Offline Test Shop");
+  await page.getByLabel("Shop code").fill("SHOP");
+  await page.getByLabel("Shop password").fill("shop-password");
+  await page.getByRole("button", { name: "Unlock this device" }).click();
+  await expect(page.getByText("Offline Test Shop", { exact: true })).toBeVisible();
+}
+
 test("installs online and supports warm and cold offline starts", async () => {
   const profile = await mkdtemp(join(tmpdir(), "inventory-offline-"));
   let activeContext: BrowserContext | undefined;
   try {
     activeContext = await chromium.launchPersistentContext(profile);
     const page = await waitForControlledShell(activeContext);
+    await enrollTestDevice(page);
 
     await activeContext.setOffline(true);
     await page.reload();
-    await expect(page.locator("body")).toContainText(
-      /Set up this installation|Corner Store/,
-    );
+    await expect(page.locator("body")).toContainText("Offline Test Shop");
     await activeContext.close();
     activeContext = undefined;
 
@@ -103,7 +190,7 @@ test("keeps the active shell when a replacement install is interrupted", async (
     });
     await context.setOffline(true);
     await page.reload();
-    await expect(page.locator("body")).toContainText("Set up this installation");
+    await expect(page.locator("body")).toContainText("Unlock Inventory and Cash");
     await context.close();
     context = undefined;
   } finally {

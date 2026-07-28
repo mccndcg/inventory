@@ -6,6 +6,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import { OfflineUpdateNotice } from "./offline/OfflineUpdateNotice";
+import { EnrollmentGate } from "./features/sync/EnrollmentGate";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,7 +29,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <EnrollmentGate>
+      <Outlet />
+    </EnrollmentGate>
+  );
 }
 
 

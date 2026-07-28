@@ -38,7 +38,8 @@ describe("replacement runtime isolation", () => {
       "utf8",
     );
 
-    expect(rootSource).toContain("return <Outlet />");
+    expect(rootSource).toContain("<EnrollmentGate>");
+    expect(rootSource).toContain("<Outlet />");
     expect(rootSource).not.toMatch(/LegacyMaintenance|legacyBusinessRoutes/);
     expect(viteSource).not.toMatch(/ignoredRouteFiles|legacy-runtime-policy/);
   });
