@@ -32,7 +32,7 @@ export function useSubmitGoodsOut(products?: ProductProp, date?: Date) {
   return { form, onSubmit, fields, append, remove, update };
 }
 
-export function submit_goods_in() {
+export function useSubmitGoodsIn() {
   const default_value = {
     product: "",
     quantity: 0,

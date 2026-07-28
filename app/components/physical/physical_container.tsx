@@ -1,5 +1,5 @@
 import {
-  form_physical,
+  usePhysicalForm,
   PhysicalProp,
   SinglePhysicalProp,
 } from "~/data/physical";
@@ -36,7 +36,7 @@ export function PhysicalForm({ dexie_good, onSubmitProp }: Props) {
   if (dexie_good.physical && dexie_good.physical.length > 0) {
     physical = dexie_good.physical;
   }
-  const { form, fields, update, append, remove } = form_physical(physical);
+  const { form, fields, update, append, remove } = usePhysicalForm(physical);
   const setOpenForm = useSetAtom(numberDialogAtom);
   const [initial, setInitial] = useState<undefined | SinglePhysicalProp>();
   const [selIndex, setSelIndex] = useState<undefined | number>();

@@ -38,7 +38,7 @@ export function QuickReport() {
       <div className="grow"></div>
       <div className="text-4xl space-x-2">
         <span>hi!</span>
-        <span className="italic font-thin">it's</span>
+        <span className="italic font-thin">it&apos;s</span>
       </div>
       <div>{time}</div>
       <div>{date}</div>

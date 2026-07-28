@@ -4,7 +4,6 @@ import { Label } from "./ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover-dialog";
 import { getDexieGoodsByPrefix } from "~/data/dexie";
 import { ProductMenu } from "./goods/product_menu";
-import { closePopover } from "~/lib/utils";
 
 interface Props {
   onSelectProd(input: DexieGood | null): void;

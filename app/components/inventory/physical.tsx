@@ -6,7 +6,7 @@ export function PhysicalInventory({ id }: { id?: string }) {
     useEffect(() => {
         console.log(id)
         id && getDexieGoodById(id).then(val => setDexieGood(val))
-    }, [])
+    }, [id])
     return (<div>
         {JSON.stringify(dexieGood)}
     </div>)

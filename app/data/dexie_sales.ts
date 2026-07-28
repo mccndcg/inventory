@@ -1,9 +1,8 @@
 import { db } from "./dexie";
 import { GoodOutProp } from "./schemas";
-import { formatDateToNumber, sales_type_to_is_good_in } from "~/lib/utils";
+import { formatDateToNumber } from "~/lib/utils";
 import { add_good_sales } from "./dexie_good_sales";
 import { recompute_coh_from_sales, txless_recompute_coh } from "./dexie_coh";
-import { addExpiration } from "./dexie_goods";
 import toast from "react-hot-toast";
 
 export async function getSalesById(id: string) {

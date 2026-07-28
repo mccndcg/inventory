@@ -21,7 +21,7 @@ export function EditCOHDialog() {
   );
   const [notes, setNotes] = useState(coh_container?.modifier?.notes || "");
 
-  const coh = useMemo(() => {
+  const coh = (() => {
     if (!coh_container?.modifier) {
       return coh_container.value;
     } else {
@@ -31,7 +31,7 @@ export function EditCOHDialog() {
           (coh_container.modifier.type == "minus" ? 1 : -1)
       );
     }
-  }, []);
+  })();
   const numericNewVal = newVal === "" ? 0 : newVal;
   const resultingVal = useMemo(() => {
     return tabVal == "set"

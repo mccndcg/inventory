@@ -1,17 +1,15 @@
-import { Link } from "@remix-run/react";
-import { ChevronLeft, Search, Trash } from "lucide-react";
+import { Link, useParams } from "@remix-run/react";
+import { ChevronLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import type { LinksFunction } from "@remix-run/node";
-import { useParams } from "@remix-run/react";
 import {
     Tabs,
-    TabsContent,
     TabsList,
     TabsTrigger,
 } from "~/components/ui/tabs"
 
 import styles from "~/loader.css?url";
-import { getDexieGoodById, getInventoryData } from "~/data/dexie";
+import { getDexieGoodById } from "~/data/dexie";
 import { useEffect, useState } from "react";
 import { PhysicalInventory } from "~/components/inventory/physical";
 

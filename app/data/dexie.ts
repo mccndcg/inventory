@@ -1,6 +1,6 @@
-import Dexie, { type EntityTable } from 'dexie';
+import { Dexie, type EntityTable } from 'dexie';
 import { formatDateToNumber, getChangedKeys, getNamePrefix, removeQuantities } from '~/lib/utils';
-import dexieCloud from "dexie-cloud-addon";
+import { dexieCloud } from "dexie-cloud-addon";
 import { recompute_coh_from_sales } from './dexie_coh';
 
 
@@ -137,7 +137,7 @@ interface editSales {
     date?: Date
 }
 
-export async function editSales({ id, item, date }: editSales, onFinish?: (val: boolean) => any) {
+export async function editSales({ id, item, date }: editSales, onFinish?: (val: boolean) => void) {
     try {
         await db.dexieSales.update(id, (sale) => {
             if (item) {

@@ -1,7 +1,6 @@
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,7 +37,7 @@ export function useRegisterGoodsForm(
 
 interface Props {
   def?: z.infer<typeof registerGoodsSchema>;
-  onSubmitProp?: (val: z.infer<typeof registerGoodsSchema>) => any;
+  onSubmitProp?: (val: z.infer<typeof registerGoodsSchema>) => unknown;
 }
 
 export default function RegisterGoods({ def, onSubmitProp }: Props) {

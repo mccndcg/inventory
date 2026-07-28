@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Minus } from "lucide-react"
-import { submit_goods_in } from "~/data/submit_goods_in"
+import { useSubmitGoodsIn } from "~/data/submit_goods_in"
 import { Button } from "../ui/button"
 
 export function ProductComp({ index }: { index: number }) {
-    const { form } = submit_goods_in()
+    const { form } = useSubmitGoodsIn()
     return (<div className="flex space-x-1.5 items-center">
         <div>{index}</div>
         <FormField

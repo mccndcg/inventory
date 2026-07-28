@@ -13,7 +13,7 @@ const physicalSchema = z.object({
 export type PhysicalProp = z.infer<typeof physicalSchema>
 export type SinglePhysicalProp = z.infer<typeof physical>
 
-export function form_physical(physical: SinglePhysicalProp[]) {
+export function usePhysicalForm(physical: SinglePhysicalProp[]) {
     const form = useForm<PhysicalProp>({
         resolver: zodResolver(physicalSchema),
         mode: "onChange",

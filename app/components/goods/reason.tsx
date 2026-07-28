@@ -1,12 +1,14 @@
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import type { UseFormReturn } from "react-hook-form";
+import type { GoodOutProp } from "~/data/schemas";
 
 type Selection = {
     [key in SalesType]?: string
 }
 
 interface Props {
-    form: any
+    form: UseFormReturn<GoodOutProp>
     selection: Selection
 }
 

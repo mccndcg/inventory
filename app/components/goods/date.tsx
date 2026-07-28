@@ -18,9 +18,10 @@ import { Button } from "../ui/button";
 import { cn } from "~/lib/utils";
 import { format } from "date-fns";
 import { useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
+import type { GoodOutProp } from "~/data/schemas";
 
-export function DateComp({ form }: { form: any }) {
-  // const { form } = submit_goods_in()
+export function DateComp({ form }: { form: UseFormReturn<GoodOutProp> }) {
   const [openCal, setOpenCal] = useState(false);
   return (
     <FormField

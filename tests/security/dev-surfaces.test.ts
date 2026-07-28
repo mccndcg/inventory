@@ -44,7 +44,7 @@ describe("production surface policy", () => {
     expect(clearCallSites).toEqual([]);
   });
 
-  it("keeps bulk writes limited to the unreachable additive product seed", () => {
+  it("does not retain bulk-write product seed helpers", () => {
     const bulkCallSites = files.flatMap((path) => {
       const source = readFileSync(path, "utf8");
       const methods = [...source.matchAll(/\.(bulkAdd|bulkPut|bulkDelete)\s*\(/g)]
@@ -56,15 +56,9 @@ describe("production surface policy", () => {
       }));
     });
 
-    expect(bulkCallSites).toEqual([
-      {
-        file: "app/components/register_goods/manual.ts",
-        method: "bulkAdd",
-      },
-    ]);
+    expect(bulkCallSites).toEqual([]);
 
     const seedImporters = files
-      .filter((path) => repositoryPath(path) !== "app/components/register_goods/manual.ts")
       .filter((path) => {
         const source = readFileSync(path, "utf8");
         return source.includes("addManual") ||

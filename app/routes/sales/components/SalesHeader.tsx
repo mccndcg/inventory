@@ -7,7 +7,6 @@ import {
   salesDateAtom,
 } from "../sales_atoms";
 import { DatePickerDemo } from "~/components/datepicker";
-import { recompute_coh_from_sales } from "~/data/dexie_coh";
 import { DateRange } from "react-day-picker";
 import { Link } from "@remix-run/react";
 

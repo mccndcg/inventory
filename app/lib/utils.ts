@@ -63,7 +63,7 @@ export function removeQuantities(
 }
 
 export function groupByDate(array: DexieSales[]) {
-  return array.reduce((acc: any, obj) => {
+  return array.reduce<SalesObject>((acc, obj) => {
     // Convert the date string to a Date object if it's a string
     const date = new Date(obj.tx_date);
 
@@ -136,17 +136,13 @@ export function getNamePrefix(name: string) {
   return name.slice(0, 6).toLowerCase();
 }
 
-interface GenericObject {
-  [key: string]: any;
-}
-
-export function getChangedKeys(oldObj: GenericObject, newObj: GenericObject) {
-  let result: GenericObject = {};
+export function getChangedKeys<T extends object>(oldObj: T, newObj: T) {
+  const result: Partial<T> = {};
 
   // Loop through the keys of the new object
-  for (let key in newObj) {
+  for (const key of Object.keys(newObj) as Array<keyof T>) {
     // Check if the key exists in the old object and the values are different
-    if (oldObj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(oldObj, key)) {
       if (key == "categories") {
         if (JSON.stringify(oldObj[key]) !== JSON.stringify(newObj[key])) {
           result[key] = newObj[key]; // Add the key and its new value to the result object
@@ -159,10 +155,13 @@ export function getChangedKeys(oldObj: GenericObject, newObj: GenericObject) {
   return result;
 }
 
-export function debounce(func: CallableFunction, delay: number) {
+export function debounce<TArgs extends unknown[]>(
+  func: (...args: TArgs) => void,
+  delay: number
+) {
   let timer: ReturnType<typeof setTimeout> | null = null;
 
-  return function (...args: any[]) {
+  return function (...args: TArgs) {
     // Clear the previous timer (if any) and set a new one
     if (timer) {
       clearTimeout(timer);
