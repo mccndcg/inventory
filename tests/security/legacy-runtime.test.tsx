@@ -102,4 +102,23 @@ describe("replacement runtime isolation", () => {
 
     expect(legacyDatabaseReferences).toEqual([]);
   });
+
+  it("keeps essential runtime code independent from network clients", () => {
+    const activeRuntimeFiles = sourceFiles(appRoot).filter((path) => {
+      const relativePath = repositoryPath(path);
+      return !relativePath.startsWith("app/legacy/") &&
+        !relativePath.match(/\.test\.[^.]+$/);
+    });
+    const networkReferences = activeRuntimeFiles
+      .filter((path) => {
+        const executableSource = readFileSync(path, "utf8")
+          .replace(/\/\*[\s\S]*?\*\//g, "")
+          .replace(/\/\/.*$/gm, "");
+        return /\b(?:fetch|WebSocket|XMLHttpRequest|EventSource)\s*\(|https?:\/\//
+          .test(executableSource);
+      })
+      .map(repositoryPath);
+
+    expect(networkReferences).toEqual([]);
+  });
 });
