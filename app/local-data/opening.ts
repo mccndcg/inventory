@@ -31,7 +31,8 @@ import {
   parseProduct,
 } from "./validation";
 
-export const APPLICATION_COMMIT = "phase-6-local";
+export const APPLICATION_COMMIT =
+  import.meta.env.VITE_APP_COMMIT || "development";
 
 export interface OpeningCountInput {
   productId: UUID;

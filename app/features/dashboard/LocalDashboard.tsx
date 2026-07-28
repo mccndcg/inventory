@@ -150,6 +150,9 @@ export function LocalDashboard({
         Synchronization is not enabled. This device continues to accept and
         retain local transactions while offline.
       </p>
+      <p className="text-sm">
+        <a className="underline" href="/recovery">Backup and recovery</a>
+      </p>
     </main>
   );
 }

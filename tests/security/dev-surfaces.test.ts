@@ -39,12 +39,20 @@ describe("production surface policy", () => {
     expect(existsSync(join(appRoot, "routes", "dev"))).toBe(false);
   });
 
-  it("does not expose whole-table clear operations", () => {
+  it("confines whole-table clearing to guarded recovery", () => {
     const clearCallSites = files
       .filter((path) => readFileSync(path, "utf8").match(/\.clear\s*\(/))
       .map(repositoryPath);
 
-    expect(clearCallSites).toEqual([]);
+    expect(clearCallSites).toEqual(["app/local-data/backup.ts"]);
+    const recoverySource = readFileSync(
+      join(appRoot, "local-data", "backup.ts"),
+      "utf8",
+    );
+    expect(recoverySource).toContain("backupManifestSha256");
+    expect(recoverySource).toContain("`RESET ${device.deviceCode}`");
+    expect(recoverySource).toContain("originalDeviceUnavailable");
+    expect(recoverySource).not.toContain("LEGACY_DATABASE_NAME");
   });
 
   it("does not retain bulk-write product seed helpers", () => {
