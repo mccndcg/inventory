@@ -265,3 +265,12 @@ export async function rebuildDrawerCash(
   );
   return projectDrawerCash(drawerId, validAdjustments, saleRows);
 }
+
+export async function listCashAdjustments(
+  db: InventoryDatabase,
+  drawerId: UUID,
+): Promise<CashAdjustment[]> {
+  return (await db.cashAdjustments.where("drawerId").equals(drawerId).toArray())
+    .map(parseCashAdjustment)
+    .sort((left, right) => right.occurredAt.localeCompare(left.occurredAt));
+}
