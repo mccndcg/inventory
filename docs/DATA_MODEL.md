@@ -12,7 +12,8 @@ UI, storage, and synchronization boundaries.
 type UUID = string;
 type IsoInstant = string;
 type BusinessDate = string; // validated YYYY-MM-DD
-type CurrencyCode = string; // configured ISO 4217 code
+type CurrencyCode = "PHP";
+type BusinessTimezone = "Asia/Manila";
 type Tombstone = 0 | 1;     // IndexedDB-indexable
 
 interface SyncableRecord {
@@ -53,7 +54,7 @@ interface LocationSettings {
   locationCode: string;
   locationName: string;
   currencyCode: CurrencyCode;
-  businessTimezone: string;
+  businessTimezone: BusinessTimezone;
   settingsVersion: number;
 }
 ```
@@ -62,8 +63,9 @@ interface LocationSettings {
 integers and advance transactionally. A cloned backup cannot be activated as
 a second device with the same identity. Currency and business timezone are
 immutable in v1 after opening finalization. Before sync, the authoritative
-device owns these settings; during sync bootstrap, the server adopts and then
-provisions the canonical read-only settings to every device.
+device owns the fixed `PHP` and `Asia/Manila` settings; during sync bootstrap,
+the server adopts and then provisions the canonical read-only settings to
+every device.
 
 ## Opening batch
 
@@ -96,7 +98,7 @@ interface OpeningReportPayload {
     name: string;
   };
   currencyCode: CurrencyCode;
-  businessTimezone: string;
+  businessTimezone: BusinessTimezone;
   countedAt: IsoInstant;
   businessDate: BusinessDate;
   authoritativeDevice: {
@@ -220,7 +222,7 @@ interface Sale extends SyncableRecord {
   receiptNumber: string;
   businessDate: BusinessDate;
   occurredAt: IsoInstant;
-  timezone: string;
+  timezone: BusinessTimezone;
   notes?: string;
 }
 
@@ -249,9 +251,8 @@ product selections before persistence, and the repository rejects a duplicate
 that reaches its compound index. The outbox sale payload contains the complete
 active or tombstoned aggregate snapshot.
 
-The current proposal uses positive integer quantities; resolve decision O-001
-before implementation. `unitPriceMinor` is a non-negative safe integer subject
-to O-004.
+Sale quantities are positive safe integers representing whole units.
+`unitPriceMinor` is a non-negative safe integer; zero-price items are valid.
 
 ## Stock adjustments
 
@@ -276,7 +277,7 @@ interface StockAdjustment extends SyncableRecord {
 }
 ```
 
-Under the v1 whole-unit proposal, `quantityDelta` is a signed safe integer.
+Under the v1 whole-unit rule, `quantityDelta` is a signed safe integer.
 An `opening_count` may be zero, must reference the finalized batch, and is
 immutable. Every other kind must be non-zero, must not carry an opening batch
 ID/key, and follows the exact sign matrix in `DOMAIN_RULES.md`. An opening row

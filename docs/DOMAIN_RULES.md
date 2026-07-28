@@ -24,7 +24,10 @@ authority records produces exactly the same result.
 
 - Persist integer minor units, never decimal JavaScript totals.
 - Every amount must be a finite safe integer.
-- The installation has one configured ISO currency code.
+- The installation currency is fixed to `PHP`; persisted minor units are
+  centavos.
+- Product and sale-item prices are non-negative safe integers. A zero-price
+  sale item is valid.
 - A sale item stores the price actually charged; later product price changes
   do not affect it.
 - A sale total is computed, never manually persisted as a competing truth:
@@ -50,6 +53,8 @@ stock(p) =
 
 Consequences:
 
+- Sale quantities are positive safe integers representing whole units.
+- Stock-adjustment deltas are signed safe integers representing whole units.
 - Negative stock is a valid value.
 - Never clamp a projection to zero.
 - Known stock is informational and never disables sale submission.
@@ -126,7 +131,8 @@ Create:
 - Allocate the receipt sequence and construct its display number inside the
   aggregate transaction so an abort does not consume or publish a receipt.
 - Require at least one item.
-- Require each quantity to satisfy the configured quantity policy.
+- Require each quantity to be a positive safe integer whole-unit count.
+- Require each item price to be a non-negative safe integer; zero is valid.
 - Combine duplicate product lines by product ID before persistence; reject a
   duplicate that reaches the repository.
 - Validate referenced products exist; archived products cannot be selected for
@@ -193,8 +199,9 @@ Delete:
   The UUID is the actual identity.
 - `occurredAt` and audit timestamps are ISO UTC instants.
 - `businessDate` is `YYYY-MM-DD` in the configured business timezone.
-- Currency and business timezone are fixed at opening in v1. Future devices
-  receive the location settings during server provisioning.
+- Currency is `PHP` and the business timezone is `Asia/Manila`; both are fixed
+  at opening in v1. Future devices receive those location settings during
+  server provisioning.
 - Client clocks do not establish cross-device ordering or conflict winners.
 - Restoring a backup must not leave two active installations with the same
   device identity.

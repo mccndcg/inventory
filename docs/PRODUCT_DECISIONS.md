@@ -21,6 +21,10 @@ replace a locked decision with behavior found in the legacy application.
 | P-009 | There are no product-specific offline restrictions, reservations, quotas, or approval overrides. | The same permissive sale rule applies to the full catalog. |
 | P-010 | A device may remain offline indefinitely. | There is no connectivity lease or forced reconnect interval. Operational documentation must state the unavoidable revocation, backup, and stale-software risks. |
 | P-011 | The user experience is simple CRUD. | Avoid event-sourcing terminology and elaborate workflow engines. Technical sync metadata must remain behind ordinary create, read, update, archive/void operations. |
+| P-012 | All v1 product and sale quantities are whole units. | Sale quantities are positive safe integers; stock adjustments are signed safe integers. Fractional or weighed goods require a future model decision and migration. |
+| P-013 | The installation currency is Philippine peso (`PHP`). | Persist integer centavos and expose no currency selector or conversion workflow in v1. |
+| P-014 | The business timezone is `Asia/Manila`. | Persist UTC instants and derive every `businessDate` in this fixed timezone, independent of device timezone. |
+| P-015 | A sale item may have a zero unit price. | Validate unit price as a non-negative safe integer; zero-price items remain ordinary cash-sale lines and are included in history and stock projection. |
 
 ## Architecture guardrails
 
@@ -72,10 +76,6 @@ work. Resolve each before the named gate.
 
 | ID | Needed by | Decision |
 | --- | --- | --- |
-| O-001 | Before Phase 3 | Confirm whether all quantities are whole units. The current v1 proposal is positive integer sale quantities and signed integer adjustments. If weighed or fractional goods are required, define a per-product base-unit scale before schema work. |
-| O-002 | Before Phase 3 | Choose the single operating currency. The model stores integer minor units and an ISO currency code; the initializer must not guess the code. |
-| O-003 | Before Phase 3 | Choose the business timezone used to derive `businessDate`. Store instants in UTC and never derive reports from a device's accidental timezone. |
-| O-004 | Before Phase 3 | Decide whether a sale-item price may be zero. The current proposal requires a positive safe integer; permit zero only by explicit decision. |
 | O-007 | Before cutover | Choose sanitized catalog import versus manual recreation, then confirm location name/code, production device code, drawer label, opening approver, archive retention period, and backup destination. |
 | O-008 | Future sync design | Select the server database/runtime, hosting, authentication, device provisioning/revocation, encryption, retention, and the operator-authorized drawer closure/transfer policy when an origin device is unavailable. |
 | O-009 | Future sync design | Define product-update conflict presentation and duplicate-product reconciliation. Products must never be merged solely by name. |
@@ -85,6 +85,12 @@ work. Resolve each before the named gate.
 
 The former sale-edit and adjustment-reason questions are resolved by A-014
 through A-016. Reopen them only through the change protocol below.
+
+## Decision history
+
+- 2026-07-28: O-001 through O-004 were resolved as P-012 through P-015:
+  whole-unit quantities, `PHP`, `Asia/Manila`, and zero-price sale items
+  allowed.
 
 ## Change protocol
 
