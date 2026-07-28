@@ -24,11 +24,13 @@ export function removeQuantities(
   inventory: PhysicalGood[],
   quantityToRemove: number
 ) {
-  // Sort the array by expirationDate, treating null as the latest date
+  // Sort by expiration date, treating an omitted date as the latest date.
   inventory.sort((a, b) => {
-    if (a.expiration_date === null) return 1;
-    if (b.expiration_date === null) return -1;
-    return new Date(a.expiration_date) - new Date(b.expiration_date);
+    const aTime =
+      a.expiration_date?.getTime() ?? Number.POSITIVE_INFINITY;
+    const bTime =
+      b.expiration_date?.getTime() ?? Number.POSITIVE_INFINITY;
+    return aTime - bTime;
   });
 
   // Iterate through the inventory and deduct quantities

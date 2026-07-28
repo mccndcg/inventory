@@ -16,8 +16,8 @@ export function EditCOHDialog() {
   const [tabVal, setTabVal] = useState<ModifierLit>(
     coh_container?.modifier?.type || "set"
   );
-  const [newVal, setNewVal] = useState<number>(
-    coh_container?.modifier?.amount || ""
+  const [newVal, setNewVal] = useState<number | "">(
+    coh_container?.modifier?.amount ?? ""
   );
   const [notes, setNotes] = useState(coh_container?.modifier?.notes || "");
 
@@ -32,14 +32,16 @@ export function EditCOHDialog() {
       );
     }
   }, []);
+  const numericNewVal = newVal === "" ? 0 : newVal;
   const resultingVal = useMemo(() => {
     return tabVal == "set"
-      ? newVal
+      ? numericNewVal
       : tabVal == "plus"
-      ? coh + newVal
-      : coh - newVal;
-  }, [tabVal, coh, newVal]);
+      ? coh + numericNewVal
+      : coh - numericNewVal;
+  }, [tabVal, coh, numericNewVal]);
   function updateCOHModifier() {
+    if (newVal === "" || !Number.isFinite(newVal)) return;
     add_modifier(coh_container.id, tabVal, newVal, notes);
     setOpen(false);
   }
@@ -62,9 +64,11 @@ export function EditCOHDialog() {
         placeholder="Set Change"
         type="number"
         value={newVal}
-        onChange={(e) => setNewVal(parseInt(e.target.value))}
+        onChange={(e) =>
+          setNewVal(e.target.value === "" ? "" : Number(e.target.value))
+        }
       />
-      {!isNaN(newVal) && newVal != "" && (
+      {newVal !== "" && Number.isFinite(newVal) && (
         <div className="flex flex-col items-center">
           <div>
             <span>Php {coh.toLocaleString("en-us")}</span>
@@ -78,7 +82,7 @@ export function EditCOHDialog() {
           <ArrowDown />
           <div>
             <span>
-              Php {isNaN(newVal) ? 0 : resultingVal.toLocaleString("en-us")}
+              Php {resultingVal.toLocaleString("en-us")}
             </span>
           </div>
         </div>
@@ -86,7 +90,7 @@ export function EditCOHDialog() {
       <Label>Notes</Label>
       <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
       <Button
-        disabled={isNaN(newVal) || newVal == ""}
+        disabled={newVal === "" || !Number.isFinite(newVal)}
         onClick={updateCOHModifier}
       >
         Save

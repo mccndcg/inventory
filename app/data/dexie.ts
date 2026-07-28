@@ -89,14 +89,15 @@ export async function updatePhysical(update: UpdateInput) {
     }
     else {
         // Add the new PhysicalGoods to the 'physical' array
-        dexieGood.physical.push(update.physical);
+        const physical = dexieGood.physical ?? [];
+        physical.push(update.physical);
         if (update.selling_price != dexieGood.selling_price) {
-            await db.dexieGoods.update(update.id, { physical: dexieGood.physical, selling_price: update.selling_price });
+            await db.dexieGoods.update(update.id, { physical, selling_price: update.selling_price });
 
         }
         else {
             // Update the DexieGood document with the new physical array
-            await db.dexieGoods.update(update.id, { physical: dexieGood.physical });
+            await db.dexieGoods.update(update.id, { physical });
         }
     }
 
@@ -107,7 +108,7 @@ export async function updatePhysicalRemove(id: string, quantity: number) {
     if (!dexieGood) {
         throw Error()
     }
-    const new_physical = removeQuantities(dexieGood.physical, quantity)
+    const new_physical = removeQuantities(dexieGood.physical ?? [], quantity)
     await db.dexieGoods.update(id, { physical: new_physical });
 }
 
@@ -136,21 +137,17 @@ interface editSales {
     date?: Date
 }
 
-interface UpdateObj {
-    items: ItemSale[]
-    tx_date?: Date
-    tx_date_idx?: number
-}
-
 export async function editSales({ id, item, date }: editSales, onFinish?: (val: boolean) => any) {
     try {
-        const updated_obj: UpdateObj = { items: [] }
-        item && (updated_obj.items = item)
-        if (date) {
-            updated_obj.tx_date = date
-            updated_obj.tx_date_idx = formatDateToNumber(date)
-        }
-        await db.dexieSales.update(id, updated_obj)
+        await db.dexieSales.update(id, (sale) => {
+            if (item) {
+                sale.items = item
+            }
+            if (date) {
+                sale.tx_date = date
+                sale.tx_date_idx = formatDateToNumber(date)
+            }
+        })
         await recompute_coh_from_sales()
         onFinish && onFinish(true)
     } catch (error) {

@@ -11,8 +11,6 @@ interface Props {
 export function useVirtualizedTable({ data }: Props) {
   const [visibleRows, setVisibleRows] = useState<DexieGood[]>([]);
   const [startIndex, setStartIndex] = useState(0);
-  const [endIndex, setEndIndex] = useState(0);
-  const lastScrollTop = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Calculate the total height of the table (useful for scrolling)
@@ -20,14 +18,12 @@ export function useVirtualizedTable({ data }: Props) {
 
   // Update visible rows when the component mounts or when the data changes
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
     // Handle the scroll event to calculate which rows should be visible
     const onScroll = () => {
-      const scrollTop = containerRef.current.scrollTop;
-
-      // Prevent unnecessary state updates if the scroll position hasn't changed much
-      if (Math.abs(scrollTop - lastScrollTop.current) < rowHeight) return;
-
-      lastScrollTop.current = scrollTop;
+      const scrollTop = container.scrollTop;
 
       const visibleCount = Math.ceil(containerHeight / rowHeight); // Rows that fit in the container
 
@@ -41,14 +37,10 @@ export function useVirtualizedTable({ data }: Props) {
         newStartIndex + visibleCount + buffer * 2
       ); // Ensure we don't go beyond the end of the data
 
-      if (newStartIndex !== startIndex) {
-        setStartIndex(newStartIndex);
-        setVisibleRows(data.slice(newStartIndex, newEndIndex + 1)); // Slice the visible rows
-      }
+      setStartIndex(newStartIndex);
+      setVisibleRows(data.slice(newStartIndex, newEndIndex + 1));
     };
     onScroll();
-    const container = containerRef.current;
-    if (!container) throw Error;
 
     // Attach the scroll event listener
     container.addEventListener("scroll", onScroll);
@@ -57,7 +49,7 @@ export function useVirtualizedTable({ data }: Props) {
     return () => {
       container.removeEventListener("scroll", onScroll);
     };
-  }, [data,]);
+  }, [data]);
   return {
     totalHeight,
     visibleRows,
@@ -65,6 +57,5 @@ export function useVirtualizedTable({ data }: Props) {
     rowHeight,
     containerHeight,
     containerRef,
-    endIndex,
   };
 }

@@ -26,8 +26,9 @@ export default function InventoryWithId() {
 
     const [dexieGood, setDexieGood] = useState<DexieGood | null>()
     useEffect(() => {
+        if (!params.id) return
         getDexieGoodById(params.id).then((val) => setDexieGood(val))
-    }, [])
+    }, [params.id])
     return (
         <>
             <div className="sticky top-0 z-10 p-2 bg-background flex flex-col space-y-4 shadow-md">
@@ -54,7 +55,9 @@ export default function InventoryWithId() {
             </div>
             <div className="p-4">
                 {
-                    tab == "physical" ? <PhysicalInventory id={params.id} /> : "wenk"
+                    tab == "physical" && params.id
+                      ? <PhysicalInventory id={params.id} />
+                      : "wenk"
                 }
             </div>
 

@@ -10,7 +10,7 @@ import {
 import { Input } from "../ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { addDexieGood } from "~/data/dexie";
@@ -19,7 +19,9 @@ import { categories, registerGoodsSchema } from "./schema";
 import { useSetAtom } from "jotai";
 import { dialogAtom } from "../modal_card";
 
-export function register_goods(def?: z.infer<typeof registerGoodsSchema>) {
+export function useRegisterGoodsForm(
+  def?: z.infer<typeof registerGoodsSchema>
+) {
   const form = useForm<z.infer<typeof registerGoodsSchema>>({
     resolver: zodResolver(registerGoodsSchema),
     mode: "onChange",
@@ -31,11 +33,7 @@ export function register_goods(def?: z.infer<typeof registerGoodsSchema>) {
       categories: [],
     },
   });
-  const { fields, append, remove, update } = useFieldArray({
-    control: form.control,
-    name: "categories",
-  });
-  return { form, append, remove };
+  return form;
 }
 
 interface Props {
@@ -44,7 +42,7 @@ interface Props {
 }
 
 export default function RegisterGoods({ def, onSubmitProp }: Props) {
-  const { form, append, remove } = register_goods(def);
+  const form = useRegisterGoodsForm(def);
   const categories_arr = form.watch("categories");
   const setOpen = useSetAtom(dialogAtom);
 
@@ -61,8 +59,13 @@ export default function RegisterGoods({ def, onSubmitProp }: Props) {
       .finally(() => setOpen(false));
   }
   function modify_array(ele: string) {
-    const index = categories_arr.findIndex((val) => val == ele);
-    index === -1 ? append(ele) : remove(index);
+    const nextCategories = categories_arr.includes(ele)
+      ? categories_arr.filter((category) => category !== ele)
+      : [...categories_arr, ele];
+    form.setValue("categories", nextCategories, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   }
   return (
     <Form {...form}>

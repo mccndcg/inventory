@@ -80,7 +80,11 @@ function InventoryTable({
 
   return (
     <>
-      <ResponsiveDialog title="Modify Good" hide_trigger={true}>
+      <ResponsiveDialog
+        title="Modify Good"
+        hide_trigger={true}
+        id="modify_good"
+      >
         {editMode == "good"
           ? selGood !== undefined && (
               <RegisterGoods def={selGood} onSubmitProp={editGoodFunc} />

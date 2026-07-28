@@ -38,7 +38,6 @@ export function TableDemo({
     containerHeight,
     totalHeight,
     visibleRows,
-    endIndex
   } = useVirtualizedTable({ data: transformed_data });
   const context = useContext(MenuContext);
   if (!context) throw Error;
