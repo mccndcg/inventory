@@ -96,9 +96,6 @@ describe("legacy runtime quarantine", () => {
       })
       .map(repositoryPath);
 
-    expect(cloudReferenceFiles).toEqual([
-      "app/data/dexie.ts",
-      "app/data/dummy.ts",
-    ]);
+    expect(cloudReferenceFiles).toEqual(["app/data/dexie.ts"]);
   });
 });
