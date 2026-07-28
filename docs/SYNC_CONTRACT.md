@@ -1,11 +1,11 @@
 # Future custom synchronization contract
 
-Status: normative constraints for a later phase; not authorized for local
-implementation yet
+Status: normative Phase 7 implementation contract; production rollout gated
 
-Custom synchronization starts only after the local application and fresh
-initialization pass acceptance. Infrastructure choices remain open, but any
-implementation must satisfy this contract.
+Custom synchronization engineering was authorized on 2026-07-28. Production
+provisioning and rollout still start only after the local application and
+fresh initialization pass the external acceptance record. A-022 through A-026
+freeze the initial infrastructure and operating choices.
 
 ## Goals
 
@@ -94,6 +94,14 @@ A transport timeout after commit is resolved by re-uploading the same
 operation ID. It must not create a second record, second cash contribution, or
 second stock effect.
 
+Sync v1 processes one contiguous batch in one database transaction. Each
+structurally permanent rejection receives and stores a stable rejection
+receipt and consumes its device sequence, allowing later independent
+operations in the same batch to be evaluated. A transient database/server
+failure rolls back the whole request. A sequence gap rejects the request
+without consuming the missing sequence. Reusing a sequence with a different
+operation ID or payload is a permanent identity/integrity error.
+
 An `opening_batch` payload contains the finalized immutable batch, canonical
 line manifest, and every opening stock/cash adjustment. The server validates
 their IDs/hash and applies all normalized rows plus the operation receipt in
@@ -161,8 +169,10 @@ manufacture opening stock, or copy another device's identity.
 ### Products
 
 - Product UUID, not normalized name, is identity.
-- Ordinary updates use server-accepted last-write-wins order or an explicit
-  conflict response selected in O-009; never use wall-clock time.
+- Ordinary updates require the current `baseServerVersion`. A stale update is
+  rejected with `STALE_AGGREGATE`, the canonical server snapshot is returned,
+  and the local attempt remains durable for explicit keep-server/retry-local
+  choice. Never use wall-clock time.
 - A tombstone wins over a stale offline update.
 - Restoration is an explicit operation based on the tombstone's current server
   version.
@@ -243,7 +253,7 @@ device. Product and operations messaging must state this plainly.
 
 ## Security requirements
 
-Resolve the backend/auth decisions before implementation. At minimum:
+The A-022/A-023 backend and authentication decisions require:
 
 - encrypted transport;
 - per-device credentials stored outside source control;
@@ -299,17 +309,15 @@ Multi-device production remains blocked until automated tests prove:
 
 ## Decisions to freeze before coding
 
-Record outcomes for PRODUCT_DECISIONS O-008 through O-010, plus:
+Resolved by A-022 through A-026:
 
-- push/pull transport and endpoint versioning;
-- transactional server database and backup/restore objectives;
-- sequence-gap and batch-partial-failure behavior;
-- device provisioning, replacement, and cloned-backup recovery;
-- unavailable-origin drawer closure/transfer authority and audit model;
-- client/server schema support window;
-- payload/batch limits and large-bootstrap strategy;
-- conflict/reconciliation UI;
-- retention of operations, tombstones, logs, and decommissioned devices;
-- monitoring, alerting, support owner, and pilot duration.
+- HTTPS JSON endpoints under `/sync/v1`;
+- PostgreSQL 17 and the backup objectives in A-025;
+- stable accepted/rejected receipts in one transactional batch;
+- one-time provisioning and hashed device credentials;
+- immutable admin-authenticated unavailable-drawer recovery;
+- current/previous schema window and A-025 limits;
+- explicit product conflicts and duplicate-name flags;
+- A-025 retention and A-026 monitoring/pilot gates.
 
 Do not choose infrastructure merely because the prototype used it.

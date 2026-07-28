@@ -739,12 +739,15 @@ test-only until Phase 7 is complete.
 
 ## Phase 7 — Implement custom synchronization
 
-This phase cannot start until the Phase 6 local acceptance report is signed
-off. Read `SYNC_CONTRACT.md` before selecting infrastructure.
+Phase 7 engineering was explicitly authorized on 2026-07-28 in the same goal
+as cutover readiness. Production provisioning and rollout cannot start until
+the Phase 6 local acceptance report is signed. Read `SYNC_CONTRACT.md` before
+changing the frozen A-022 through A-026 choices.
 
 ### Slice 7.1: freeze protocol and security decisions
 
-Resolve O-008 through O-010. Version operation envelopes and server responses.
+Implemented decision freeze on 2026-07-28 as A-022 through A-026. Version
+operation envelopes and server responses.
 Specify device provisioning, authorization, idempotency, revisions, cursors,
 retention, schema compatibility, monitoring, and recovery.
 

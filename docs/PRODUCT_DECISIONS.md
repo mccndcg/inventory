@@ -54,6 +54,11 @@ correct and synchronizable.
 | A-019 | Publish `build/client` to Cloudflare Pages-compatible static HTTPS hosting. Serve the shell, manifest, and service worker with revalidation; serve content-hashed assets immutably; use only explicit application-route rewrites; and return 404 for a missing asset so an incomplete release cannot install HTML in place of code. |
 | A-020 | The supported v1 browser target is the current and immediately previous stable desktop releases of Chrome and Edge on managed Windows devices. Precache the complete release, keep a new worker waiting, and require an operator to apply it. A failed install leaves the active worker in control. Never automatically reload an open form, and never roll an application back across an irreversible local-schema change. |
 | A-021 | Request persistent browser storage only from the visible operator action. Show best-effort/unsupported/error status and a warning at 80% quota use. Persistence reduces eviction risk but never replaces verified encrypted backups. |
+| A-022 | Custom sync uses one Node 24 TypeScript HTTP service and PostgreSQL 17, packaged as a container and initially hosted with managed PostgreSQL in Render's Singapore region. The static client remains on Cloudflare Pages-compatible hosting. TLS is mandatory; the server allowlists the production origin and never logs credentials or business payloads. |
+| A-023 | Device provisioning uses a 15-minute, single-use, 256-bit token created under an operator admin credential. Exchange returns a location-scoped, rotatable 256-bit device bearer credential; only its SHA-256 hash is stored server-side, and the browser stores it in a dedicated local table excluded from backup/export. Revoked devices are rejected when they reconnect. An unavailable drawer is closed only by an immutable, audited server recovery record under the admin credential; it never spoofs the lost device's origin. |
+| A-024 | Product updates use explicit optimistic conflicts: a stale `baseServerVersion` is rejected and both the canonical server value and durable local attempt remain available for operator choice. Same-name products are only flagged, never automatically merged. Push transactions store stable accepted/rejected receipts and consume every contiguous device sequence; permanent rejection does not block a later independent operation. |
+| A-025 | Sync v1 accepts the current and immediately previous client operation/local-schema versions. Push is limited to 100 operations or 1 MiB; pull is limited to 500 changes or 2 MiB. Operation receipts, tombstones, recovery records, and decommissioned directory entries are retained for 10 years; security/access logs for 180 days; server backups for 35 daily and 12 month-end copies, with one-hour RPO and four-hour RTO targets. |
+| A-026 | Alert when a device has pending work older than 24 hours, permanent failures, a 15-minute server error rate above 1%, sequence abuse, or a failed backup. Deployment names an operations recovery owner. Production pilot lasts at least 14 consecutive operating days, includes at least 100 reconciled sale operations across two devices, and requires daily aggregate/projection parity with no unexplained duplicate or loss. |
 
 ## Explicit non-goals
 
@@ -81,9 +86,6 @@ work. Resolve each before the named gate.
 | ID | Needed by | Decision |
 | --- | --- | --- |
 | O-007 | Before cutover | Choose sanitized catalog import versus manual recreation, then confirm location name/code, production device code, drawer label, opening approver, archive retention period, and backup destination. |
-| O-008 | Future sync design | Select the server database/runtime, hosting, authentication, device provisioning/revocation, encryption, retention, and the operator-authorized drawer closure/transfer policy when an origin device is unavailable. |
-| O-009 | Future sync design | Define product-update conflict presentation and duplicate-product reconciliation. Products must never be merged solely by name. |
-| O-010 | Future sync rollout | Define supported client schema window, maximum batch sizes, monitoring, recovery ownership, and pilot success period. |
 
 The former sale-edit and adjustment-reason questions are resolved by A-014
 through A-016. Reopen them only through the change protocol below.
@@ -99,6 +101,13 @@ through A-016. Reopen them only through the change protocol below.
 - 2026-07-28: O-012 was resolved as A-019 through A-021: static HTTPS hosting,
   complete Workbox precaching, prompted atomic updates, managed desktop
   Chrome/Edge support, and explicit persistence/quota warnings.
+- 2026-07-28: O-008 through O-010 were resolved as A-022 through A-026:
+  PostgreSQL/Node hosting, hashed per-device credentials, audited unavailable
+  drawer recovery, explicit product conflicts, protocol limits/retention,
+  monitoring, recovery ownership, and a measured two-device pilot.
+- 2026-07-28: the owner authorized Phase 7 engineering in the same goal as
+  cutover readiness. This does not waive the signed local acceptance record or
+  authorize multiple production devices before the Phase 7 pilot gate passes.
 
 ## Change protocol
 
