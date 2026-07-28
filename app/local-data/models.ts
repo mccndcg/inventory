@@ -1,0 +1,159 @@
+import type {
+  BusinessTimezone,
+  CurrencyCode,
+} from "../domain/constants";
+import type {
+  BusinessDate,
+  CashAdjustmentKind,
+  IsoInstant,
+  StockAdjustmentKind,
+  Tombstone,
+  UUID,
+} from "../domain/types";
+
+export interface SyncableRecord {
+  id: UUID;
+  originDeviceId: UUID;
+  revision: number;
+  recordSchemaVersion: number;
+  tombstone: Tombstone;
+  createdAt: IsoInstant;
+  updatedAt: IsoInstant;
+  deletedAt?: IsoInstant;
+  lastServerVersion?: string;
+}
+
+export interface DeviceState {
+  key: "current";
+  deviceId: UUID;
+  deviceCode: string;
+  locationId: UUID;
+  drawerId: UUID;
+  drawerLabel: string;
+  nextReceiptSequence: number;
+  nextOperationSequence: number;
+  installedAt: IsoInstant;
+  localSchemaVersion: number;
+}
+
+export interface LocationSettings {
+  key: "location";
+  locationId: UUID;
+  locationCode: string;
+  locationName: string;
+  currencyCode: CurrencyCode;
+  businessTimezone: BusinessTimezone;
+  settingsVersion: number;
+}
+
+export interface OpeningBatch {
+  id: UUID;
+  locationId: UUID;
+  locationOpeningKey: string;
+  originDeviceId: UUID;
+  revision: number;
+  recordSchemaVersion: number;
+  draftVersion: number;
+  status: "draft" | "review_ready" | "finalized";
+  reportPayload: unknown;
+  createdAt: IsoInstant;
+  updatedAt: IsoInstant;
+  finalizedAt?: IsoInstant;
+  reportSha256?: string;
+  lastServerVersion?: string;
+}
+
+export interface Product extends SyncableRecord {
+  locationId: UUID;
+  name: string;
+  normalizedName: string;
+  currentPriceMinor: number;
+  currencyCode: CurrencyCode;
+  categories: string[];
+  sku?: string;
+  sizeLabel?: string;
+}
+
+export interface Sale extends SyncableRecord {
+  locationId: UUID;
+  deviceId: UUID;
+  drawerId: UUID;
+  receiptSequence: number;
+  receiptNumber: string;
+  businessDate: BusinessDate;
+  occurredAt: IsoInstant;
+  timezone: BusinessTimezone;
+  notes?: string;
+}
+
+export interface SaleItem {
+  id: UUID;
+  saleId: UUID;
+  productId: UUID;
+  productNameSnapshot: string;
+  quantity: number;
+  unitPriceMinor: number;
+  currencyCode: CurrencyCode;
+  position: number;
+}
+
+export interface StockAdjustment extends SyncableRecord {
+  locationId: UUID;
+  productId: UUID;
+  openingBatchId?: UUID;
+  openingKey?: string;
+  kind: StockAdjustmentKind;
+  quantityDelta: number;
+  businessDate: BusinessDate;
+  occurredAt: IsoInstant;
+  notes?: string;
+}
+
+export interface CashAdjustment extends SyncableRecord {
+  locationId: UUID;
+  deviceId: UUID;
+  drawerId: UUID;
+  openingBatchId?: UUID;
+  openingKey?: string;
+  commissioningReportPayload?: unknown;
+  commissioningReportSha256?: string;
+  commissioningApprovedBy?: string;
+  commissioningApprovedAt?: IsoInstant;
+  kind: CashAdjustmentKind;
+  amountMinor: number;
+  currencyCode: CurrencyCode;
+  businessDate: BusinessDate;
+  occurredAt: IsoInstant;
+  notes?: string;
+}
+
+export type AggregateType =
+  | "opening_batch"
+  | "product"
+  | "sale"
+  | "stock_adjustment"
+  | "cash_adjustment";
+
+export interface OutboxOperation {
+  operationId: UUID;
+  deviceId: UUID;
+  deviceSequence: number;
+  aggregateType: AggregateType;
+  aggregateId: UUID;
+  action: "upsert" | "delete";
+  aggregateRevision: number;
+  operationSchemaVersion: number;
+  baseServerVersion?: string;
+  payload: unknown;
+  createdAt: IsoInstant;
+  status: "pending" | "acknowledged" | "failed";
+  attemptCount: number;
+  lastErrorCode?: string;
+}
+
+export interface SyncState {
+  key: "server";
+  cursor?: string;
+  lastSyncAt?: IsoInstant;
+  lastErrorCode?: string;
+}
