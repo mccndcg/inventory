@@ -122,7 +122,7 @@ describe("cash adjustment repository", () => {
     });
     await expect(
       voidCashAdjustment(db, local.id, { clock, ids }),
-    ).rejects.toThrow(/currency/);
+    ).rejects.toThrow(/invalid/);
   });
 
   it("rolls back cash, outbox, and sequence on failure", async () => {

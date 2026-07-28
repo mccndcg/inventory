@@ -5,6 +5,7 @@ import type { Clock, IdSource, UUID } from "../domain/types";
 import type { InventoryDatabase } from "./database";
 import { RepositoryError } from "./errors";
 import type { DeviceState, LocationSettings } from "./models";
+import { parseDeviceState, parseLocationSettings } from "./validation";
 
 export interface InstallationDependencies {
   clock: Clock;
@@ -47,7 +48,10 @@ export async function initializeInstallation(
             "Installation settings are incomplete.",
           );
         }
-        return { device: existingDevice, settings: existingSettings };
+        return {
+          device: parseDeviceState(existingDevice),
+          settings: parseLocationSettings(existingSettings),
+        };
       }
 
       const identity = createDeviceIdentity(input, dependencies.ids);
@@ -89,5 +93,8 @@ export async function readInstallation(
   if (!device || !settings) {
     throw new RepositoryError("NOT_FOUND", "Installation is not initialized.");
   }
-  return { device, settings };
+  return {
+    device: parseDeviceState(device),
+    settings: parseLocationSettings(settings),
+  };
 }

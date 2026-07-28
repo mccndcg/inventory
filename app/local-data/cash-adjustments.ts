@@ -13,6 +13,11 @@ import {
   runAggregateMutation,
   type PersistenceDependencies,
 } from "./transactions";
+import {
+  parseCashAdjustment,
+  parseSale,
+  parseSaleItem,
+} from "./validation";
 
 export interface CashAdjustmentFields {
   kind: Exclude<
@@ -52,7 +57,7 @@ async function requiredAdjustment(
   if (!adjustment) {
     throw new RepositoryError("NOT_FOUND", "Cash adjustment was not found.");
   }
-  return adjustment;
+  return parseCashAdjustment(adjustment);
 }
 
 function assertMutable(
@@ -247,12 +252,16 @@ export async function rebuildDrawerCash(
     db.cashAdjustments.where("drawerId").equals(drawerId).toArray(),
     db.sales.where("drawerId").equals(drawerId).toArray(),
   ]);
+  const validAdjustments = adjustments.map(parseCashAdjustment);
+  const validSales = sales.map(parseSale);
   const saleRows = await Promise.all(
-    sales.map(async (sale) => ({
+    validSales.map(async (sale) => ({
       drawerId: sale.drawerId,
       tombstone: sale.tombstone,
-      items: await db.saleItems.where("saleId").equals(sale.id).toArray(),
+      items: (
+        await db.saleItems.where("saleId").equals(sale.id).toArray()
+      ).map(parseSaleItem),
     })),
   );
-  return projectDrawerCash(drawerId, adjustments, saleRows);
+  return projectDrawerCash(drawerId, validAdjustments, saleRows);
 }

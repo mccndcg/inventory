@@ -10,6 +10,7 @@ import type {
   DeviceState,
   OutboxOperation,
 } from "./models";
+import { parseDeviceState, parseOutboxOperation } from "./validation";
 
 export interface PersistenceDependencies {
   clock: Clock;
@@ -75,7 +76,7 @@ export async function runAggregateMutation<T>(
         "Installation is not initialized.",
       );
     }
-    const device = { ...storedDevice };
+    const device = { ...parseDeviceState(storedDevice) };
     let receiptAllocated = false;
     const mutation = await work({
       device,
@@ -116,7 +117,7 @@ export async function runAggregateMutation<T>(
     }
 
     dependencies.beforeOutbox?.();
-    const operation: OutboxOperation = {
+    const operation: OutboxOperation = parseOutboxOperation({
       operationId: dependencies.ids.randomUUID(),
       deviceId: device.deviceId,
       deviceSequence: device.nextOperationSequence,
@@ -132,7 +133,7 @@ export async function runAggregateMutation<T>(
       ...(mutation.operation.baseServerVersion
         ? { baseServerVersion: mutation.operation.baseServerVersion }
         : {}),
-    };
+    });
     device.nextOperationSequence = nextSequence(
       device.nextOperationSequence,
       "Operation sequence",

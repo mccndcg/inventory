@@ -13,6 +13,12 @@ import {
   runAggregateMutation,
   type PersistenceDependencies,
 } from "./transactions";
+import {
+  parseProduct,
+  parseSale,
+  parseSaleItem,
+  parseStockAdjustment,
+} from "./validation";
 
 export interface StockAdjustmentFields {
   productId: UUID;
@@ -47,7 +53,7 @@ async function requiredAdjustment(
   if (!adjustment) {
     throw new RepositoryError("NOT_FOUND", "Stock adjustment was not found.");
   }
-  return adjustment;
+  return parseStockAdjustment(adjustment);
 }
 
 function assertMutable(
@@ -86,7 +92,8 @@ export async function createStockAdjustment(
     [db.products, db.stockAdjustments],
     dependencies,
     async ({ device }) => {
-      const product = await db.products.get(validated.productId);
+      const storedProduct = await db.products.get(validated.productId);
+      const product = storedProduct ? parseProduct(storedProduct) : undefined;
       if (
         !product ||
         product.locationId !== device.locationId ||
@@ -152,7 +159,8 @@ export async function updateStockAdjustment(
           "Voided adjustment cannot be edited.",
         );
       }
-      const product = await db.products.get(validated.productId);
+      const storedProduct = await db.products.get(validated.productId);
+      const product = storedProduct ? parseProduct(storedProduct) : undefined;
       if (!product || product.locationId !== device.locationId) {
         throw new RepositoryError("NOT_FOUND", "Local product was not found.");
       }
@@ -240,15 +248,18 @@ export async function rebuildProductStock(
     db.stockAdjustments.where("productId").equals(productId).toArray(),
     db.sales.toArray(),
   ]);
+  const validAdjustments = adjustments.map(parseStockAdjustment);
+  const validSales = sales.map(parseSale);
   const saleTombstones = new Map(
-    sales.map((sale) => [sale.id, sale.tombstone] as const),
+    validSales.map((sale) => [sale.id, sale.tombstone] as const),
   );
   const saleItems = (await db.saleItems.where("productId").equals(productId).toArray())
+    .map(parseSaleItem)
     .flatMap((item) => {
       const saleTombstone = saleTombstones.get(item.saleId);
       return saleTombstone === undefined
         ? []
         : [{ productId: item.productId, quantity: item.quantity, saleTombstone }];
     });
-  return projectStock(productId, adjustments, saleItems);
+  return projectStock(productId, validAdjustments, saleItems);
 }

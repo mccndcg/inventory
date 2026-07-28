@@ -9,6 +9,7 @@ import {
   runAggregateMutation,
   type PersistenceDependencies,
 } from "./transactions";
+import { parseProduct } from "./validation";
 
 export interface ProductFields {
   name: string;
@@ -63,7 +64,7 @@ async function requiredProduct(
   if (!product) {
     throw new RepositoryError("NOT_FOUND", "Product was not found.");
   }
-  return product;
+  return parseProduct(product);
 }
 
 export async function createProduct(
@@ -210,7 +211,9 @@ export function getProduct(
   db: InventoryDatabase,
   id: UUID,
 ): Promise<Product | undefined> {
-  return db.products.get(id);
+  return db.products.get(id).then((product) =>
+    product ? parseProduct(product) : undefined,
+  );
 }
 
 export async function searchProducts(
@@ -219,7 +222,7 @@ export async function searchProducts(
   options: { includeArchived?: boolean } = {},
 ): Promise<Product[]> {
   const normalizedQuery = normalizeProductName(query);
-  const products = await db.products.toArray();
+  const products = (await db.products.toArray()).map(parseProduct);
   return products
     .filter(
       (product) =>

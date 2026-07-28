@@ -14,6 +14,7 @@ import {
   runAggregateMutation,
   type PersistenceDependencies,
 } from "./transactions";
+import { parseProduct, parseSale, parseSaleItem } from "./validation";
 
 export interface SaleItemInput {
   productId: UUID;
@@ -88,7 +89,7 @@ async function loadProducts(
         "Every sale item requires an active local product.",
       );
     }
-    result.set(productIds[index], product);
+    result.set(productIds[index], parseProduct(product));
   });
   return result;
 }
@@ -176,7 +177,7 @@ async function requiredSale(db: InventoryDatabase, id: UUID): Promise<Sale> {
   if (!sale) {
     throw new RepositoryError("NOT_FOUND", "Sale was not found.");
   }
-  return sale;
+  return parseSale(sale);
 }
 
 function assertSaleOwnership(
@@ -202,9 +203,12 @@ export async function readSale(
   db: InventoryDatabase,
   id: UUID,
 ): Promise<SaleAggregate | undefined> {
-  const sale = await db.sales.get(id);
-  if (!sale) return undefined;
-  const items = await db.saleItems.where("saleId").equals(id).sortBy("position");
+  const storedSale = await db.sales.get(id);
+  if (!storedSale) return undefined;
+  const sale = parseSale(storedSale);
+  const items = (
+    await db.saleItems.where("saleId").equals(id).sortBy("position")
+  ).map(parseSaleItem);
   return { sale, items, totalMinor: saleTotal(items) };
 }
 
@@ -282,10 +286,10 @@ export async function voidSale(
         device.drawerId,
         device.locationId,
       );
-      const items = await db.saleItems
+      const items = (await db.saleItems
         .where("saleId")
         .equals(existing.id)
-        .sortBy("position");
+        .sortBy("position")).map(parseSaleItem);
       if (existing.tombstone === 1) {
         return {
           result: { sale: existing, items, totalMinor: saleTotal(items) },
