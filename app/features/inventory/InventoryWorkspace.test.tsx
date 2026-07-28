@@ -8,6 +8,7 @@ import { Dexie } from "dexie";
 import type { IdSource } from "../../domain/types";
 import { InventoryDatabase } from "../../local-data/database";
 import { initializeInstallation } from "../../local-data/installation";
+import { finalizeZeroOpeningForTest } from "../../local-data/test-opening";
 import { InventoryWorkspace } from "./InventoryWorkspace";
 
 let db: InventoryDatabase;
@@ -34,6 +35,7 @@ beforeEach(async () => {
     },
     { clock, ids },
   );
+  await finalizeZeroOpeningForTest(db, { clock, ids });
 });
 
 afterEach(async () => {

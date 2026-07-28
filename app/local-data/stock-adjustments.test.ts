@@ -11,6 +11,7 @@ import {
   updateStockAdjustment,
   voidStockAdjustment,
 } from "./stock-adjustments";
+import { finalizeZeroOpeningForTest } from "./test-opening";
 
 let db: InventoryDatabase;
 let sequence: number;
@@ -51,6 +52,7 @@ describe("stock adjustment repository", () => {
       { name: "Rice", currentPriceMinor: 100 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     const adjustment = await createStockAdjustment(
       db,
       {
@@ -86,6 +88,7 @@ describe("stock adjustment repository", () => {
       { name: "Rice", currentPriceMinor: 100 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     await expect(
       createStockAdjustment(
         db,
@@ -99,25 +102,11 @@ describe("stock adjustment repository", () => {
       ),
     ).rejects.toThrow(/wrong sign/);
 
-    const { device } = await readInstallation(db);
-    const openingId = ids.randomUUID();
-    await db.stockAdjustments.add({
-      id: openingId,
-      locationId: device.locationId,
-      productId: product.id,
-      openingBatchId: ids.randomUUID(),
-      openingKey: `opening:${ids.randomUUID()}:product:${product.id}`,
-      kind: "opening_count",
-      quantityDelta: 1,
-      businessDate: "2026-07-28",
-      occurredAt: clock.now().toISOString(),
-      originDeviceId: device.deviceId,
-      revision: 1,
-      recordSchemaVersion: 1,
-      tombstone: 0,
-      createdAt: clock.now().toISOString(),
-      updatedAt: clock.now().toISOString(),
-    });
+    const openingId = (await db.stockAdjustments
+      .where("productId")
+      .equals(product.id)
+      .first())?.id;
+    if (!openingId) throw new Error("missing test opening stock");
     await expect(
       voidStockAdjustment(db, openingId, { clock, ids }),
     ).rejects.toThrow(/immutable/);
@@ -146,6 +135,7 @@ describe("stock adjustment repository", () => {
       { name: "Rice", currentPriceMinor: 100 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     const operationCount = await db.outbox.count();
     const sequenceBefore = (await readInstallation(db)).device
       .nextOperationSequence;
@@ -167,7 +157,7 @@ describe("stock adjustment repository", () => {
         },
       ),
     ).rejects.toThrow("injected failure");
-    expect(await db.stockAdjustments.count()).toBe(0);
+    expect(await db.stockAdjustments.count()).toBe(1);
     expect(await db.outbox.count()).toBe(operationCount);
     expect((await readInstallation(db)).device.nextOperationSequence).toBe(
       sequenceBefore,

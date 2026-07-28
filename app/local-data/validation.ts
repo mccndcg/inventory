@@ -9,11 +9,14 @@ import type {
   CashAdjustment,
   DeviceState,
   LocationSettings,
+  OpeningBatch,
+  OpeningReportPayload,
   OutboxOperation,
   Product,
   Sale,
   SaleItem,
   StockAdjustment,
+  SyncState,
 } from "./models";
 import { RepositoryError } from "./errors";
 
@@ -32,6 +35,7 @@ const businessDate = z.string().refine((value) => {
 const safeInteger = z.number().int().safe();
 const positiveInteger = safeInteger.positive();
 const tombstone = z.union([z.literal(0), z.literal(1)]);
+const sha256 = z.string().regex(/^[0-9a-f]{64}$/);
 
 const syncableShape = {
   id: uuid,
@@ -67,6 +71,109 @@ const locationSettingsSchema = z.object({
   businessTimezone: z.literal(BUSINESS_TIMEZONE),
   settingsVersion: positiveInteger,
 }).strict();
+
+const openingStockLineSchema = z.object({
+  adjustmentId: uuid,
+  productId: uuid,
+  productNameSnapshot: z.string().min(1),
+  skuSnapshot: z.string().min(1).optional(),
+  countedQuantity: safeInteger.nonnegative(),
+}).strict();
+
+const openingCashLineSchema = z.object({
+  adjustmentId: uuid,
+  deviceId: uuid,
+  drawerId: uuid,
+  drawerLabelSnapshot: z.string().min(1),
+  countedAmountMinor: safeInteger.nonnegative(),
+  currencyCode: z.literal(CURRENCY_CODE),
+}).strict();
+
+const openingReportPayloadSchema = z.object({
+  reportFormatVersion: z.literal(1),
+  openingBatchId: uuid,
+  applicationCommit: z.string().min(1),
+  localSchemaVersion: positiveInteger,
+  location: z.object({
+    id: uuid,
+    code: z.string().min(1),
+    name: z.string().min(1),
+  }).strict(),
+  currencyCode: z.literal(CURRENCY_CODE),
+  businessTimezone: z.literal(BUSINESS_TIMEZONE),
+  countedAt: instant,
+  businessDate,
+  authoritativeDevice: z.object({
+    deviceId: uuid,
+    deviceCode: z.string().min(2).max(16),
+    drawerId: uuid,
+    drawerLabel: z.string().min(1),
+  }).strict(),
+  stockLines: z.array(openingStockLineSchema),
+  cashLines: z.array(openingCashLineSchema).length(1),
+  catalogImportSha256: sha256.optional(),
+  legacyArchiveReferences: z.array(z.object({
+    label: z.string().min(1),
+    sha256,
+  }).strict()),
+  recorder: z.object({
+    displayName: z.string().min(1),
+    recordedAt: instant,
+  }).strict(),
+  verifier: z.object({
+    displayName: z.string().min(1),
+    verifiedAt: instant,
+  }).strict(),
+  exceptionNotes: z.array(z.string().min(1)),
+}).strict();
+
+const openingBatchSchema = z.object({
+  id: uuid,
+  locationId: uuid,
+  locationOpeningKey: z.string().min(1),
+  originDeviceId: uuid,
+  revision: positiveInteger,
+  recordSchemaVersion: z.literal(1),
+  draftVersion: positiveInteger,
+  status: z.enum(["draft", "review_ready", "finalized"]),
+  reportPayload: openingReportPayloadSchema,
+  createdAt: instant,
+  updatedAt: instant,
+  reviewPreparedAt: instant.optional(),
+  approvedBy: z.string().min(1).optional(),
+  approvedAt: instant.optional(),
+  approvalStatement: z.string().min(1).optional(),
+  finalizedAt: instant.optional(),
+  finalizedBy: z.string().min(1).optional(),
+  reportSha256: sha256.optional(),
+  notes: z.string().min(1).optional(),
+  lastServerVersion: z.string().min(1).optional(),
+}).strict().superRefine((batch, context) => {
+  if (batch.id !== batch.reportPayload.openingBatchId) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Opening batch and report IDs must match.",
+    });
+  }
+  if (batch.locationId !== batch.reportPayload.location.id) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Opening batch and report locations must match.",
+    });
+  }
+  if (batch.status === "draft" && batch.reportSha256) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Draft opening batch cannot have a report hash.",
+    });
+  }
+  if (batch.status !== "draft" && !batch.reportSha256) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Frozen opening batch requires a report hash.",
+    });
+  }
+});
 
 const productSchema = z.object({
   ...syncableShape,
@@ -211,6 +318,13 @@ const outboxOperationSchema = z.object({
   lastErrorCode: z.string().min(1).optional(),
 }).strict();
 
+const syncStateSchema = z.object({
+  key: z.literal("server"),
+  cursor: z.string().min(1).optional(),
+  lastSyncAt: instant.optional(),
+  lastErrorCode: z.string().min(1).optional(),
+}).strict();
+
 function parseStored<T>(
   schema: z.ZodTypeAny,
   value: unknown,
@@ -234,6 +348,14 @@ export const parseLocationSettings = (value: unknown) =>
     value,
     "location settings",
   );
+export const parseOpeningReportPayload = (value: unknown) =>
+  parseStored<OpeningReportPayload>(
+    openingReportPayloadSchema,
+    value,
+    "opening report",
+  );
+export const parseOpeningBatch = (value: unknown) =>
+  parseStored<OpeningBatch>(openingBatchSchema, value, "opening batch");
 export const parseProduct = (value: unknown) =>
   parseStored<Product>(productSchema, value, "product");
 export const parseSale = (value: unknown) =>
@@ -258,3 +380,5 @@ export const parseOutboxOperation = (value: unknown) =>
     value,
     "outbox operation",
   );
+export const parseSyncState = (value: unknown) =>
+  parseStored<SyncState>(syncStateSchema, value, "sync state");

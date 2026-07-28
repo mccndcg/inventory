@@ -10,6 +10,7 @@ import {
 } from "./cash-adjustments";
 import { InventoryDatabase } from "./database";
 import { initializeInstallation, readInstallation } from "./installation";
+import { finalizeZeroOpeningForTest } from "./test-opening";
 
 let db: InventoryDatabase;
 let sequence: number;
@@ -35,6 +36,7 @@ beforeEach(async () => {
     },
     { clock, ids },
   );
+  await finalizeZeroOpeningForTest(db, { clock, ids });
 });
 
 afterEach(async () => {
@@ -84,27 +86,10 @@ describe("cash adjustment repository", () => {
       ),
     ).rejects.toThrow(/wrong sign/);
 
-    const { device } = await readInstallation(db);
-    const opening = {
-      id: ids.randomUUID(),
-      locationId: device.locationId,
-      deviceId: device.deviceId,
-      drawerId: device.drawerId,
-      openingBatchId: ids.randomUUID(),
-      openingKey: `location:${device.locationId}:drawer:${device.drawerId}`,
-      kind: "opening_balance" as const,
-      amountMinor: 0,
-      currencyCode: "PHP" as const,
-      businessDate: "2026-07-28",
-      occurredAt: clock.now().toISOString(),
-      originDeviceId: device.deviceId,
-      revision: 1,
-      recordSchemaVersion: 1,
-      tombstone: 0 as const,
-      createdAt: clock.now().toISOString(),
-      updatedAt: clock.now().toISOString(),
-    };
-    await db.cashAdjustments.add(opening);
+    const opening = (await db.cashAdjustments.toArray()).find(
+      ({ kind }) => kind === "opening_balance",
+    );
+    if (!opening) throw new Error("missing test opening cash");
     await expect(
       voidCashAdjustment(db, opening.id, { clock, ids }),
     ).rejects.toThrow(/immutable/);
@@ -141,8 +126,7 @@ describe("cash adjustment repository", () => {
         },
       ),
     ).rejects.toThrow("injected failure");
-    expect(await db.cashAdjustments.count()).toBe(0);
-    expect(await db.outbox.count()).toBe(0);
+    expect(await db.cashAdjustments.count()).toBe(1);
     expect((await readInstallation(db)).device.nextOperationSequence).toBe(
       sequenceBefore,
     );

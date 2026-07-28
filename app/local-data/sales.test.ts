@@ -11,6 +11,7 @@ import {
   createStockAdjustment,
   rebuildProductStock,
 } from "./stock-adjustments";
+import { finalizeZeroOpeningForTest } from "./test-opening";
 
 let db: InventoryDatabase;
 let sequence: number;
@@ -56,6 +57,7 @@ describe("atomic sale repository", () => {
       { name: "Freebie", currentPriceMinor: 50 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     const aggregate = await createSale(
       db,
       {
@@ -92,6 +94,7 @@ describe("atomic sale repository", () => {
       { name: "Rice", currentPriceMinor: 100 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     await createStockAdjustment(
       db,
       {
@@ -144,6 +147,7 @@ describe("atomic sale repository", () => {
       { name: "Rice", currentPriceMinor: 100 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     await expect(
       createSale(
         db,
@@ -176,6 +180,7 @@ describe("atomic sale repository", () => {
       { name: "Rice", currentPriceMinor: 100 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     const before = await readInstallation(db);
     const outboxBefore = await db.outbox.count();
     await expect(

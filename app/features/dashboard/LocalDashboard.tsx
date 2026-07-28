@@ -8,6 +8,7 @@ import {
   initializeInstallation,
   readInstallation,
 } from "../../local-data/installation";
+import { readOpeningBatch } from "../../local-data/opening";
 import { browserPersistenceDependencies } from "../../local-data/runtime";
 import type { PersistenceDependencies } from "../../local-data/transactions";
 
@@ -23,7 +24,11 @@ export function LocalDashboard({
   const [error, setError] = useState("");
   const installation = useLiveQuery(async () => {
     try {
-      return await readInstallation(db);
+      const current = await readInstallation(db);
+      return {
+        ...current,
+        opening: await readOpeningBatch(db),
+      };
     } catch {
       return null;
     }
@@ -115,6 +120,18 @@ export function LocalDashboard({
           {installation.device.drawerLabel}
         </p>
       </header>
+      {installation.opening?.status !== "finalized" && (
+        <section className="rounded border border-amber-500 bg-amber-50 p-4">
+          <h2 className="text-xl font-semibold">Opening balances required</h2>
+          <p>
+            Create the catalog, count physical stock and drawer cash, then
+            approve the exact opening report before transactions begin.
+          </p>
+          <a className="mt-2 inline-block underline" href="/opening">
+            Continue opening workflow
+          </a>
+        </section>
+      )}
       <nav className="grid gap-4 md:grid-cols-3">
         <a className="rounded border p-5 shadow-sm" href="/inventory">
           <strong className="text-xl">Inventory</strong>

@@ -10,6 +10,7 @@ import { InventoryDatabase } from "../../local-data/database";
 import { initializeInstallation, readInstallation } from "../../local-data/installation";
 import { createProduct } from "../../local-data/products";
 import { rebuildProductStock } from "../../local-data/stock-adjustments";
+import { finalizeZeroOpeningForTest } from "../../local-data/test-opening";
 import { SalesWorkspace } from "./SalesWorkspace";
 
 let db: InventoryDatabase;
@@ -73,6 +74,7 @@ describe("sales workspace", () => {
       { name: "Freebie", currentPriceMinor: 0 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     const user = userEvent.setup();
     const view = render(<SalesWorkspace db={db} dependencies={{ clock, ids }} />);
     await screen.findByRole("option", { name: "Rice" });
@@ -115,6 +117,7 @@ describe("sales workspace", () => {
       { name: "Rice", currentPriceMinor: 100 },
       { clock, ids },
     );
+    await finalizeZeroOpeningForTest(db, { clock, ids });
     const before = await readInstallation(db);
     const user = userEvent.setup();
     render(

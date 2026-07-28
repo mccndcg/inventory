@@ -8,6 +8,7 @@ import { Dexie } from "dexie";
 import type { IdSource } from "../../domain/types";
 import { InventoryDatabase } from "../../local-data/database";
 import { initializeInstallation } from "../../local-data/installation";
+import { finalizeZeroOpeningForTest } from "../../local-data/test-opening";
 import { CashWorkspace } from "./CashWorkspace";
 
 let db: InventoryDatabase;
@@ -34,6 +35,7 @@ beforeEach(async () => {
     },
     { clock, ids },
   );
+  await finalizeZeroOpeningForTest(db, { clock, ids });
 });
 
 afterEach(async () => {
@@ -65,7 +67,7 @@ describe("cash workspace", () => {
   it("derives COH across movement, count, edit, void, and reload workflows", async () => {
     const user = userEvent.setup();
     const view = render(<CashWorkspace db={db} dependencies={{ clock, ids }} />);
-    expect(await screen.findByText("PHP 0.00")).toBeTruthy();
+    expect((await screen.findAllByText("PHP 0.00")).length).toBeGreaterThan(0);
 
     await record(user, "deposit", "10");
     expect((await screen.findAllByText("PHP 10.00")).length).toBeGreaterThan(0);
@@ -112,12 +114,12 @@ describe("cash workspace", () => {
   it("reports invalid cash mutations without changing COH", async () => {
     const user = userEvent.setup();
     render(<CashWorkspace db={db} dependencies={{ clock, ids }} />);
-    await screen.findByText("PHP 0.00");
+    await screen.findAllByText("PHP 0.00");
     await record(user, "deposit", "0");
     expect((await screen.findByRole("alert")).textContent).toContain(
       "wrong sign",
     );
-    expect(await db.cashAdjustments.count()).toBe(0);
-    expect(screen.getByText("PHP 0.00")).toBeTruthy();
+    expect(await db.cashAdjustments.count()).toBe(1);
+    expect(screen.getAllByText("PHP 0.00").length).toBeGreaterThan(0);
   });
 });

@@ -9,6 +9,7 @@ import type {
 import type { InventoryDatabase } from "./database";
 import { RepositoryError } from "./errors";
 import type { StockAdjustment } from "./models";
+import { requireFinalizedOpening } from "./opening";
 import {
   runAggregateMutation,
   type PersistenceDependencies,
@@ -89,9 +90,10 @@ export async function createStockAdjustment(
   });
   return runAggregateMutation(
     db,
-    [db.products, db.stockAdjustments],
+    [db.openingBatches, db.products, db.stockAdjustments],
     dependencies,
     async ({ device }) => {
+      await requireFinalizedOpening(db);
       const storedProduct = await db.products.get(validated.productId);
       const product = storedProduct ? parseProduct(storedProduct) : undefined;
       if (
@@ -148,9 +150,10 @@ export async function updateStockAdjustment(
   });
   return runAggregateMutation(
     db,
-    [db.products, db.stockAdjustments],
+    [db.openingBatches, db.products, db.stockAdjustments],
     dependencies,
     async ({ device }) => {
+      await requireFinalizedOpening(db);
       const existing = await requiredAdjustment(db, id);
       assertMutable(existing, device.deviceId, device.locationId);
       if (existing.tombstone === 1) {
@@ -199,9 +202,10 @@ export async function voidStockAdjustment(
 ): Promise<StockAdjustment> {
   return runAggregateMutation(
     db,
-    [db.stockAdjustments],
+    [db.openingBatches, db.stockAdjustments],
     dependencies,
     async ({ device }) => {
+      await requireFinalizedOpening(db);
       const existing = await requiredAdjustment(db, id);
       assertMutable(existing, device.deviceId, device.locationId);
       if (existing.tombstone === 1) {

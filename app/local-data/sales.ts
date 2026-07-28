@@ -10,6 +10,7 @@ import type { BusinessDate, UUID } from "../domain/types";
 import type { InventoryDatabase } from "./database";
 import { RepositoryError } from "./errors";
 import type { Product, Sale, SaleItem } from "./models";
+import { requireFinalizedOpening } from "./opening";
 import {
   runAggregateMutation,
   type PersistenceDependencies,
@@ -124,9 +125,10 @@ export async function createSale(
   const validated = validateFields(fields, dependencies.clock.now());
   return runAggregateMutation(
     db,
-    [db.products, db.sales, db.saleItems],
+    [db.openingBatches, db.products, db.sales, db.saleItems],
     dependencies,
     async ({ device, allocateReceipt }) => {
+      await requireFinalizedOpening(db);
       const products = await loadProducts(
         db,
         validated.items.map(({ productId }) => productId),
@@ -221,9 +223,10 @@ export async function updateSale(
   const validated = validateFields(fields, dependencies.clock.now());
   return runAggregateMutation(
     db,
-    [db.products, db.sales, db.saleItems],
+    [db.openingBatches, db.products, db.sales, db.saleItems],
     dependencies,
     async ({ device }) => {
+      await requireFinalizedOpening(db);
       const existing = await requiredSale(db, id);
       assertSaleOwnership(
         existing,
@@ -276,9 +279,10 @@ export async function voidSale(
 ): Promise<SaleAggregate> {
   return runAggregateMutation(
     db,
-    [db.sales, db.saleItems],
+    [db.openingBatches, db.sales, db.saleItems],
     dependencies,
     async ({ device }) => {
+      await requireFinalizedOpening(db);
       const existing = await requiredSale(db, id);
       assertSaleOwnership(
         existing,

@@ -46,6 +46,61 @@ export interface LocationSettings {
   settingsVersion: number;
 }
 
+export interface OpeningStockLine {
+  adjustmentId: UUID;
+  productId: UUID;
+  productNameSnapshot: string;
+  skuSnapshot?: string;
+  countedQuantity: number;
+}
+
+export interface OpeningCashLine {
+  adjustmentId: UUID;
+  deviceId: UUID;
+  drawerId: UUID;
+  drawerLabelSnapshot: string;
+  countedAmountMinor: number;
+  currencyCode: CurrencyCode;
+}
+
+export interface OpeningReportPayload {
+  reportFormatVersion: 1;
+  openingBatchId: UUID;
+  applicationCommit: string;
+  localSchemaVersion: number;
+  location: {
+    id: UUID;
+    code: string;
+    name: string;
+  };
+  currencyCode: CurrencyCode;
+  businessTimezone: BusinessTimezone;
+  countedAt: IsoInstant;
+  businessDate: BusinessDate;
+  authoritativeDevice: {
+    deviceId: UUID;
+    deviceCode: string;
+    drawerId: UUID;
+    drawerLabel: string;
+  };
+  stockLines: OpeningStockLine[];
+  cashLines: OpeningCashLine[];
+  catalogImportSha256?: string;
+  legacyArchiveReferences: Array<{
+    label: string;
+    sha256: string;
+  }>;
+  recorder: {
+    displayName: string;
+    recordedAt: IsoInstant;
+  };
+  verifier: {
+    displayName: string;
+    verifiedAt: IsoInstant;
+  };
+  exceptionNotes: string[];
+}
+
 export interface OpeningBatch {
   id: UUID;
   locationId: UUID;
@@ -55,11 +110,17 @@ export interface OpeningBatch {
   recordSchemaVersion: number;
   draftVersion: number;
   status: "draft" | "review_ready" | "finalized";
-  reportPayload: unknown;
+  reportPayload: OpeningReportPayload;
   createdAt: IsoInstant;
   updatedAt: IsoInstant;
+  reviewPreparedAt?: IsoInstant;
+  approvedBy?: string;
+  approvedAt?: IsoInstant;
+  approvalStatement?: string;
   finalizedAt?: IsoInstant;
+  finalizedBy?: string;
   reportSha256?: string;
+  notes?: string;
   lastServerVersion?: string;
 }
 

@@ -9,6 +9,7 @@ import type {
 import type { InventoryDatabase } from "./database";
 import { RepositoryError } from "./errors";
 import type { CashAdjustment } from "./models";
+import { requireFinalizedOpening } from "./opening";
 import {
   runAggregateMutation,
   type PersistenceDependencies,
@@ -102,9 +103,10 @@ export async function createCashAdjustment(
   const validated = validateFields(fields, dependencies.clock.now());
   return runAggregateMutation(
     db,
-    [db.cashAdjustments],
+    [db.openingBatches, db.cashAdjustments],
     dependencies,
     async ({ device }) => {
+      await requireFinalizedOpening(db);
       const instant = currentInstant(dependencies.clock);
       const adjustment: CashAdjustment = {
         id: dependencies.ids.randomUUID(),
@@ -148,9 +150,10 @@ export async function updateCashAdjustment(
   const validated = validateFields(fields, dependencies.clock.now());
   return runAggregateMutation(
     db,
-    [db.cashAdjustments],
+    [db.openingBatches, db.cashAdjustments],
     dependencies,
     async ({ device }) => {
+      await requireFinalizedOpening(db);
       const existing = await requiredAdjustment(db, id);
       assertMutable(
         existing,
@@ -198,9 +201,10 @@ export async function voidCashAdjustment(
 ): Promise<CashAdjustment> {
   return runAggregateMutation(
     db,
-    [db.cashAdjustments],
+    [db.openingBatches, db.cashAdjustments],
     dependencies,
     async ({ device }) => {
+      await requireFinalizedOpening(db);
       const existing = await requiredAdjustment(db, id);
       assertMutable(
         existing,
