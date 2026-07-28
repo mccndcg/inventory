@@ -7,6 +7,8 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import { Toaster } from "react-hot-toast"
+import { LegacyMaintenance } from "./components/legacy-maintenance";
+import { legacyBusinessRoutesEnabled } from "./security/legacy-runtime-policy";
 import "./tailwind.css";
 
 
@@ -43,7 +45,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return legacyBusinessRoutesEnabled(import.meta.env.MODE)
+    ? <Outlet />
+    : <LegacyMaintenance />;
 }
 
 

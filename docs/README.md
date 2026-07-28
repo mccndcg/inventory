@@ -21,15 +21,17 @@ is safe, and the proof required at each stage.
 6. [Testing](TESTING.md) — Vitest usage and required test matrix.
 7. [Dexie Cloud decommissioning](DEXIE_CLOUD_DECOMMISSION.md) — safe
    repository cleanup and operator-only external actions.
-8. [Fresh-balance cutover](CUTOVER.md) — archive, initialization, verification,
+8. [Legacy cloud runtime inventory](CLOUD_RUNTIME_INVENTORY.md) — executable
+   cloud references, the production quarantine, and pending external work.
+9. [Fresh-balance cutover](CUTOVER.md) — archive, initialization, verification,
    and rollback.
-9. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
+10. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
    later multi-device phase.
-10. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
+11. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
     mapped to removal or replacement.
-11. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
+12. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
     operation, and incidents.
-12. [Current baseline](BASELINE.md) — observed repository health and known
+13. [Current baseline](BASELINE.md) — observed repository health and known
     inherited failures.
 
 `FIRST_REVIEW.md` is user-owned historical audit material. It is useful

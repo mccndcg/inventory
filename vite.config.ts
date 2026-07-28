@@ -1,6 +1,7 @@
 import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { ignoredLegacyRouteFiles } from "./app/security/legacy-runtime-policy";
 
 declare module "@remix-run/node" {
   interface Future {
@@ -8,10 +9,11 @@ declare module "@remix-run/node" {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     remix({
       ssr: false,
+      ignoredRouteFiles: ignoredLegacyRouteFiles(mode),
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
@@ -22,4 +24,4 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-});
+}));
