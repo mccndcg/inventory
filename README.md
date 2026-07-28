@@ -1,7 +1,9 @@
 # Inventory recovery
 
-This repository is an abandoned inventory and cash application undergoing a
-controlled recovery. It is not production-ready.
+This repository contains the local replacement for an abandoned inventory and
+cash application. The local CRUD, fresh opening, and backup/recovery sectors
+are implemented; operator acceptance and resilient offline deployment remain
+production gates.
 
 The target is a local-first, cash-only CRUD application backed by plain
 Dexie/IndexedDB. Dexie Cloud will be removed. Custom multi-device
@@ -21,8 +23,8 @@ Start with the [implementor documentation](docs/README.md). In particular:
   as compromised. They are gone from the current tree, but operator revocation
   and any approved history cleanup remain pending.
 - The legacy `/dev` clear/import controls are removed.
-- Non-development builds exclude every abandoned business route and expose
-  only the maintenance/read-only export surface.
+- Maintained routes use only the replacement `inventory_local` repositories;
+  abandoned business routes and cloud runtime are removed.
 - Do not automatically clear, migrate, or delete the legacy `goods`
   IndexedDB database.
 - Until custom synchronization is complete and accepted, only one production
@@ -46,9 +48,8 @@ npm ci
 npm run dev
 ```
 
-Development mode includes quarantined legacy routes for recovery work. Never
-run it against production browser data or with working legacy cloud
-credentials.
+Development mode uses the same maintained local routes as the production
+build. Never point development tooling at a production browser profile.
 
 Run the installed Vitest harness with:
 
@@ -66,9 +67,10 @@ npm run lint
 npm run build
 ```
 
-At the documented baseline, Vitest and the production build pass, while
-typecheck and lint have inherited failures. Do not interpret a targeted test
-pass as repository-wide readiness; see [BASELINE.md](docs/BASELINE.md).
+The current clean gate includes the secret scan, Vitest, strict typecheck,
+zero-warning lint, and production build. See
+[implementation status](docs/IMPLEMENTATION_STATUS.md) for the latest proof
+and external blockers.
 
 ## Deployment
 
@@ -85,6 +87,7 @@ production server. A production host must publish `build/client`, serve
 `index.html` for non-asset navigation requests, use HTTPS, and avoid caching
 `index.html` more aggressively than its hashed assets.
 
-The current production artifact is intentionally maintenance-only.
-Production deployment remains blocked until the security, local acceptance,
-cutover, backup, and offline-shell gates in the playbook are complete.
+The artifact contains `/`, `/inventory`, `/sales`, `/cash`, `/opening`, and
+`/recovery`. Production deployment remains blocked until operator staging
+acceptance, cutover, cloud decommissioning, and the static offline-shell gate
+in the playbook are complete.

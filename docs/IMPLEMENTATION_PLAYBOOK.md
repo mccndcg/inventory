@@ -644,6 +644,8 @@ refactor(storage): remove dexie cloud runtime
 
 ### Slice 5.10: implement validated backup and restore
 
+Implemented on 2026-07-28 in `29b7713`.
+
 Resolve O-011 first. Deliver a user-visible versioned export, deterministic
 manifest/hashes, validation, isolated restore, projection rebuild, and explicit
 same-device/replacement/read-only identity handling from `OPERATIONS.md`.
@@ -691,6 +693,8 @@ device.
 
 ### Slice 6.1: add initialization workflow and report
 
+Implemented on 2026-07-28 in `5c3bd04`.
+
 Deliver:
 
 - explicit uninitialized state;
@@ -721,6 +725,10 @@ feat(cutover): add verified opening balances
 ```
 
 ### Slice 6.2: local release acceptance
+
+The automated local portion is recorded in `LOCAL_ACCEPTANCE.md`. Operator
+staging execution/sign-off and the real-browser offline-shell checks remain
+release gates; documentation does not substitute for those external actions.
 
 Use sanitized staging data. Execute `TESTING.md`, `CUTOVER.md`, and
 `OPERATIONS.md` checks, including offline cold/warm start, backup/restore,

@@ -50,6 +50,7 @@ correct and synchronizable.
 | A-015 | A finalized opening batch and its opening stock/cash adjustments are immutable and cannot be edited, voided, tombstoned, restored, or deleted. Later differences use new corrections. |
 | A-016 | Adjustment kinds and signs are fixed by `DOMAIN_RULES.md`; correction notes are required. A later drawer uses one immutable `drawer_opening`, not an amendment to the store opening batch. |
 | A-017 | Location currency and business timezone are fixed during initialization. Future devices receive server-provisioned location settings rather than choosing their own. |
+| A-018 | Backup format v1 is application-owned, versioned JSON with per-payload and manifest SHA-256 integrity. The file is not application-encrypted: operators place it on an approved encrypted volume, keep two copies with one off-device, export after each operating day and before upgrades/reset, retain 30 daily and 12 month-end copies, and target a one-business-day recovery point and four-hour recovery time. Store ownership controls destination access and encryption-key custody. |
 
 ## Explicit non-goals
 
@@ -80,7 +81,6 @@ work. Resolve each before the named gate.
 | O-008 | Future sync design | Select the server database/runtime, hosting, authentication, device provisioning/revocation, encryption, retention, and the operator-authorized drawer closure/transfer policy when an origin device is unavailable. |
 | O-009 | Future sync design | Define product-update conflict presentation and duplicate-product reconciliation. Products must never be merged solely by name. |
 | O-010 | Future sync rollout | Define supported client schema window, maximum batch sizes, monitoring, recovery ownership, and pilot success period. |
-| O-011 | Before backup implementation | Choose backup format/version ownership, encryption method, key custody, destination, frequency, retention, and recovery objectives. |
 | O-012 | Before offline-shell implementation | Choose static hosting, application-shell/service-worker strategy, update/rollback behavior, supported browsers, and storage-persistence/eviction policy. |
 
 The former sale-edit and adjustment-reason questions are resolved by A-014
@@ -91,6 +91,9 @@ through A-016. Reopen them only through the change protocol below.
 - 2026-07-28: O-001 through O-004 were resolved as P-012 through P-015:
   whole-unit quantities, `PHP`, `Asia/Manila`, and zero-price sale items
   allowed.
+- 2026-07-28: O-011 was resolved as A-018 for local backup v1. O-007 still
+  requires the operator to name the actual approved destination and custodian
+  before production cutover.
 
 ## Change protocol
 

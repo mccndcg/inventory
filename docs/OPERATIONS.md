@@ -1,10 +1,10 @@
 # Operations guide
 
-Status: target operating contract
+Status: implemented local operating contract; future-sync sections remain target
 
-This guide covers local operation first and the additional controls required
-before multi-device rollout. It does not claim that these controls are already
-implemented.
+This guide covers implemented local backup/recovery and the additional controls
+required before multi-device rollout. Static offline-shell and synchronization
+requirements remain future gates where stated.
 
 ## Operating modes
 
@@ -48,7 +48,8 @@ implemented.
 
 ## Backup contract
 
-Implement an explicit, user-visible export. A valid backup contains:
+The `/recovery` screen provides an explicit, user-visible export. A valid
+backup contains:
 
 - format and local schema versions;
 - export ID and UTC creation instant;
@@ -61,10 +62,17 @@ Implement an explicit, user-visible export. A valid backup contains:
 - SHA-256 for each payload and the manifest;
 - no credential secret.
 
-Use an atomic snapshot/read transaction where supported. Encrypt backups at
-rest, restrict access, and keep at least one copy outside the device. Decide
-frequency, retention, destination, recovery owner, and recovery objectives
-during O-011. Cutover O-007 then records the chosen destination.
+The application reads all stores in one atomic snapshot, validates authority
+and projections, and generates per-payload and manifest SHA-256 values. Hashes
+prove integrity, not secrecy. Backup v1 JSON is not encrypted by the
+application. Save it only to an operator-approved encrypted volume whose
+access and encryption key are controlled by the store owner/custodian.
+
+Export after each operating day and before every application upgrade, restore,
+or reset. Keep at least two copies, including one outside the device; retain
+30 rolling daily copies and 12 month-end copies. The local objectives are a
+maximum one-business-day data loss and restoration within four hours. O-007
+still records the actual destination and custodian before cutover.
 
 Never commit real backups, customer data, device credentials, or opening
 reports to this repository.
@@ -85,6 +93,12 @@ At the chosen operating frequency:
 8. Record tester, date, result, application version, and evidence location.
 
 A downloaded file without a successful restore drill is not a proven backup.
+
+The application validates format/schema support, every stored record,
+relationships, counts, hashes, identity, sequences, opening-report parity,
+stock, and drawer COH before any restore. “Restore isolated investigation
+copy” writes a new `inventory_restore_*` database and never activates it as
+the production database.
 
 ## Restore and device identity
 
@@ -117,6 +131,20 @@ Restore steps:
 10. Record the action and retain pre-restore evidence.
 
 Do not clear a partially damaged database before capturing it.
+
+## Emergency local reset
+
+Reset is intentionally separated under `/recovery`. It clears only the
+replacement `inventory_local` stores and never opens, upgrades, or deletes
+legacy `goods`. The user-visible action is disabled until a backup has been
+exported in the current session and requires the exact phrase
+`RESET <deviceCode>`.
+
+Same-device replacement requires a validated backup, an explicit statement
+that the original device is destroyed or permanently unable to write, and
+`RESTORE <deviceCode>`. A backup from a different device cannot replace an
+already initialized local device. These are destructive-action confirmations,
+not roles, passwords, or online approvals.
 
 ## Planned device replacement after sync
 

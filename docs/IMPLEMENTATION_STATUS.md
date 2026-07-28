@@ -23,16 +23,18 @@ Status: current handoff
 - The legacy `goods` database is never opened during normal startup, migrated,
   upgraded, cleared, or dual-written.
 
-## Completed Phase 5 application
+## Completed local application and recovery
 
 The maintained routes are:
 
 | Route | Maintained behavior |
 | --- | --- |
-| `/` | First-device/store identity setup and local dashboard. It creates no opening balances. |
+| `/` | First-device/store identity setup, explicit uninitialized state, and local dashboard. |
 | `/inventory` | Product create/edit/archive/restore/search, signed stock-adjustment CRUD, and derived negative stock. |
 | `/sales` | Offline cash-sale create/edit/void, multi-item and zero-price support, receipt and item snapshots, and overselling. |
 | `/cash` | Drawer COH plus deposit, withdrawal, expense, and counted-minus-projected cash corrections with edit/void history. |
+| `/opening` | Fresh physical stock/cash draft, exact SHA-256 review, approval, and one atomic immutable finalization. |
+| `/recovery` | Versioned hashed backup, validation, isolated/same-device restore, and guarded emergency reset. |
 
 All maintained UI writes go through replacement repositories. The old
 inventory, Goods Out, duplicate sale history, mutable daily COH, prototype
@@ -48,12 +50,17 @@ operator archival evidence and is not imported by normal startup.
 Vitest covers:
 
 - dashboard identity setup without opening balances;
+- opening draft/review/finalization, exact preallocated IDs/hash, tamper
+  rejection, idempotency, rollback, projection parity, and immutability;
 - inventory empty/error/reload, product CRUD, signed adjustments, and negative
   stock;
 - sales multi-item/duplicate combination, zero prices, receipts, reload,
   edit, void, oversell, and injected transaction failure;
 - cash movements, physical count difference, edit, void, reload, invalid
   mutation, and drawer projection;
+- representative backup export with tombstones, exact counts/hashes,
+  unsupported/tampered rejection, isolated restore parity, guarded same-device
+  replacement, and reset isolation from legacy `goods`;
 - database isolation, transactions, runtime validation, secret scanning, and
   absence of active legacy/cloud/network paths.
 
@@ -70,14 +77,14 @@ npm run build
 
 ## Next implementation sector
 
-Phase 6 is next: the reviewable fresh-balance initialization and local release.
-It must create the one finalized opening batch and immutable opening stock/cash
-adjustments. Do not add opening-balance controls to the ordinary inventory or
-cash screens.
+Slice 5.11 is next: resilient static offline delivery and visible storage/build
+status. O-012 must select hosting, supported browsers, service-worker/update
+policy, rollback, and persistence/eviction behavior first.
 
-Backup/restore, resilient static offline delivery, production cutover, and
-custom multi-device synchronization remain later sectors and retain their
-documented decision/operator prerequisites.
+Production cutover still requires the operator choices and signed staging
+acceptance in `CUTOVER.md` and `LOCAL_ACCEPTANCE.md`. Custom multi-device
+synchronization remains Phase 7 and must not begin production rollout before
+those local gates pass.
 
 ## External operator work still open
 

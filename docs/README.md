@@ -26,14 +26,16 @@ is safe, and the proof required at each stage.
 9. [Legacy cloud runtime inventory](CLOUD_RUNTIME_INVENTORY.md) — executable
    cloud references, the production quarantine, and pending external work.
 10. [Fresh-balance cutover](CUTOVER.md) — archive, initialization, verification,
-   and rollback.
-11. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
-   later multi-device phase.
-12. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
+    and rollback.
+11. [Local release acceptance](LOCAL_ACCEPTANCE.md) — implemented evidence and
+    the remaining operator sign-off record.
+12. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
+    later multi-device phase.
+13. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
     mapped to removal or replacement.
-13. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
+14. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
     operation, and incidents.
-14. [Current baseline](BASELINE.md) — observed repository health and known
+15. [Current baseline](BASELINE.md) — observed repository health and known
     inherited failures.
 
 `FIRST_REVIEW.md` is user-owned historical audit material. It is useful
