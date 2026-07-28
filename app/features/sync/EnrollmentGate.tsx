@@ -19,6 +19,11 @@ import {
   type SyncResult,
 } from "../../sync/client";
 import { SYNC_INTERVAL_MS } from "../../sync/protocol";
+import {
+  acceptServerProduct,
+  keepLocalProduct,
+  listProductConflicts,
+} from "../../sync/conflicts";
 
 type SyncAction = (db: InventoryDatabase) => Promise<SyncResult>;
 
@@ -37,13 +42,14 @@ function SyncPanel({
   syncAction: SyncAction;
 }) {
   const status = useLiveQuery(async () => {
-    const [state, pending, failed, shadows] = await Promise.all([
+    const [state, pending, failed, shadows, conflicts] = await Promise.all([
       db.syncState.get("server"),
       db.outbox.where("status").equals("pending").count(),
       db.outbox.where("status").equals("failed").count(),
       db.remoteShadows.count(),
+      listProductConflicts(db),
     ]);
-    return { state, pending, failed, shadows };
+    return { state, pending, failed, shadows, conflicts };
   }, [db]);
   const [syncing, setSyncing] = useState(false);
   const [message, setMessage] = useState("");
@@ -64,6 +70,27 @@ function SyncPanel({
       );
     } finally {
       setSyncing(false);
+    }
+  }
+
+  async function resolve(
+    key: string,
+    choice: "local" | "server",
+  ): Promise<void> {
+    setMessage("");
+    try {
+      if (choice === "server") {
+        await acceptServerProduct(db, key);
+        setMessage("Server product accepted.");
+      } else {
+        await keepLocalProduct(db, key, browserPersistenceDependencies);
+        setMessage("Local product queued with the latest server version.");
+        await run();
+      }
+    } catch (error) {
+      setMessage(
+        error instanceof Error ? error.message : "Conflict resolution failed.",
+      );
     }
   }
 
@@ -101,6 +128,33 @@ function SyncPanel({
         </button>
         {message && <span role="status">{message}</span>}
       </div>
+      {status?.conflicts.map((conflict) => (
+        <div
+          className="mx-auto mt-2 max-w-6xl rounded border border-amber-500 bg-amber-50 p-3"
+          key={conflict.shadow.key}
+        >
+          <strong>Product edit needs a choice</strong>
+          <p>
+            This device: {conflict.local.name} · Server: {conflict.server.name}
+          </p>
+          <div className="mt-2 flex gap-2">
+            <button
+              className="rounded border bg-white px-3 py-1"
+              onClick={() => void resolve(conflict.shadow.key, "local")}
+              type="button"
+            >
+              Keep this device&apos;s edit
+            </button>
+            <button
+              className="rounded border bg-white px-3 py-1"
+              onClick={() => void resolve(conflict.shadow.key, "server")}
+              type="button"
+            >
+              Use server version
+            </button>
+          </div>
+        </div>
+      ))}
     </aside>
   );
 }

@@ -20,6 +20,7 @@ import type { PersistenceDependencies } from "../local-data/transactions";
 import { createSyncHttpServer } from "../../server/http";
 import { SyncStore } from "../../server/store";
 import { enrollClient, syncNow } from "./client";
+import { keepLocalProduct } from "./conflicts";
 
 const locationId = "30000000-0000-4000-8000-000000000001";
 const deviceId = "30000000-0000-4000-8000-000000000002";
@@ -221,5 +222,19 @@ describe("offline client synchronization", () => {
     expect(
       await second.outbox.where("status").equals("failed").count(),
     ).toBe(1);
+
+    await keepLocalProduct(
+      second,
+      `product:${product.id}`,
+      dependencies,
+    );
+    expect(await second.remoteShadows.count()).toBe(0);
+    expect(
+      await second.outbox.where("status").equals("discarded").count(),
+    ).toBe(1);
+    await syncNow(second);
+    await syncNow(first);
+    expect((await getProduct(first, product.id))?.name).toBe("Rice B");
+    expect((await getProduct(second, product.id))?.name).toBe("Rice B");
   });
 });

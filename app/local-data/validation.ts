@@ -318,7 +318,7 @@ const outboxOperationSchema = z.object({
   baseServerVersion: z.string().min(1).optional(),
   payload: z.unknown(),
   createdAt: instant,
-  status: z.enum(["pending", "acknowledged", "failed"]),
+  status: z.enum(["pending", "acknowledged", "failed", "discarded"]),
   attemptCount: safeInteger.nonnegative(),
   lastErrorCode: z.string().min(1).optional(),
 }).strict();

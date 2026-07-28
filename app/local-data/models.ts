@@ -209,7 +209,7 @@ export interface OutboxOperation {
   baseServerVersion?: string;
   payload: unknown;
   createdAt: IsoInstant;
-  status: "pending" | "acknowledged" | "failed";
+  status: "pending" | "acknowledged" | "failed" | "discarded";
   attemptCount: number;
   lastErrorCode?: string;
 }
