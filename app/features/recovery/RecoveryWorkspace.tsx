@@ -3,6 +3,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import {
   backupFileName,
   createBackup,
+  recordSuccessfulBackup,
   resetLocalDatabase,
   restoreBackupToIsolatedDatabase,
   restoreSameDeviceBackup,
@@ -72,6 +73,7 @@ export function RecoveryWorkspace({
     await run(async () => {
       const backup = await createBackup(db, dependencies);
       download(backup);
+      await recordSuccessfulBackup(db, backup);
       setLastExportHash(backup.manifestSha256);
     }, "Backup exported and hashed. Move it to the approved encrypted destination.");
   }

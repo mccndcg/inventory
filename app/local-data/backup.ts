@@ -507,6 +507,30 @@ export async function createBackup(
   };
 }
 
+export async function recordSuccessfulBackup(
+  db: InventoryDatabase,
+  backup: BackupDocument,
+): Promise<void> {
+  const current = await db.deviceState.get("current");
+  if (!current) {
+    throw new RepositoryError("NOT_FOUND", "Installation is not initialized.");
+  }
+  if (
+    current.deviceId !== backup.manifest.source.deviceId ||
+    current.locationId !== backup.manifest.source.locationId
+  ) {
+    throw new RepositoryError(
+      "OWNERSHIP_MISMATCH",
+      "Backup status does not match this installation.",
+    );
+  }
+  requiredSha256(backup.manifestSha256, "Backup manifest hash");
+  await db.deviceState.update("current", {
+    lastBackupAt: backup.manifest.createdAt,
+    lastBackupManifestSha256: backup.manifestSha256,
+  });
+}
+
 function parsePayloads(value: unknown): BackupPayloads {
   const record = asRecord(value, "Backup payloads");
   assertExactKeys(record, payloadNames, "Backup payloads");

@@ -1,9 +1,9 @@
 # Inventory recovery
 
 This repository contains the local replacement for an abandoned inventory and
-cash application. The local CRUD, fresh opening, and backup/recovery sectors
-are implemented; operator acceptance and resilient offline deployment remain
-production gates.
+cash application. The local CRUD, fresh opening, backup/recovery, and resilient
+offline deployment sectors are implemented; operator acceptance remains the
+production gate.
 
 The target is a local-first, cash-only CRUD application backed by plain
 Dexie/IndexedDB. Dexie Cloud will be removed. Custom multi-device
@@ -65,6 +65,7 @@ npm run test
 npm run typecheck
 npm run lint
 npm run build
+npm run test:offline
 ```
 
 The current clean gate includes the secret scan, Vitest, strict typecheck,
@@ -82,12 +83,12 @@ npm run build
 npm start
 ```
 
-`npm start` runs Vite's local preview server. It is a smoke-test tool, not a
-production server. A production host must publish `build/client`, serve
-`index.html` for non-asset navigation requests, use HTTPS, and avoid caching
-`index.html` more aggressively than its hashed assets.
+`npm start` serves the exact static artifact locally with production cache and
+navigation-fallback invariants. The external target publishes `build/client`
+to Cloudflare Pages-compatible HTTPS hosting. It must use the checked-in
+headers and explicit route rewrites and must return 404 for missing assets.
+See [static offline deployment](docs/OFFLINE_DEPLOYMENT.md).
 
 The artifact contains `/`, `/inventory`, `/sales`, `/cash`, `/opening`, and
 `/recovery`. Production deployment remains blocked until operator staging
-acceptance, cutover, cloud decommissioning, and the static offline-shell gate
-in the playbook are complete.
+acceptance, cutover, and cloud decommissioning are complete.

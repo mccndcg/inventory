@@ -40,3 +40,9 @@ jobs:
 
       - name: Build production SPA
         run: npm run build
+
+      - name: Install Chromium for offline acceptance
+        run: npx playwright install --with-deps chromium
+
+      - name: Run offline application-shell acceptance
+        run: npm run test:offline

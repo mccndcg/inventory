@@ -15,7 +15,10 @@ The automated suite covers initialization/reload, product CRUD, zero opening
 counts, opening stock/cash projections, ordinary adjustments, overselling,
 multi-item and zero-price sales, edit/void, COH, tombstones, injected rollback,
 backup tampering, schema rejection, restore parity, identity safeguards, and
-legacy database isolation.
+legacy database isolation. Slice 5.11 adds storage denial/pressure tests and
+real Chromium proof for online installation, warm offline reload, full browser
+restart across all maintained routes, and an interrupted update that retains
+the active shell.
 
 The authoritative repository gate is:
 
@@ -26,6 +29,8 @@ npm test -- --run
 npm run typecheck -- --pretty false
 npm run lint
 npm run build
+npx playwright install chromium
+npm run test:offline
 ```
 
 ## Operator acceptance still required
@@ -39,9 +44,9 @@ An authorized operator must use sanitized staging data and record:
 - physical opening stock and cash parity after close/reopen;
 - representative sale, oversell, edit, void, adjustment, COH, and rollback
   results;
-- supported-browser warm/cold offline results after Slice 5.11;
+- staging Chrome and Edge warm/cold offline results on the actual host/device;
 - go/no-go decision, tester, date, application commit, and evidence location.
 
-Until this report is signed and the offline-shell gate passes, the code is not
-a production-release approval. Exactly one device remains authoritative before
-custom sync acceptance.
+The automated offline-shell gate passes, but until this report is signed the
+code is not a production-release approval. Exactly one device remains
+authoritative before custom sync acceptance.

@@ -61,6 +61,11 @@ Vitest covers:
 - representative backup export with tombstones, exact counts/hashes,
   unsupported/tampered rejection, isolated restore parity, guarded same-device
   replacement, and reset isolation from legacy `goods`;
+- persistent-storage denial/grant and 80% quota-pressure warnings, visible
+  application/schema/offline-shell/backup status, and recorded backup metadata;
+- real Chromium online install, warm offline reload, full-profile cold restart
+  across every maintained route, and failed-update retention of the active
+  shell;
 - database isolation, transactions, runtime validation, secret scanning, and
   absence of active legacy/cloud/network paths.
 
@@ -73,13 +78,21 @@ npm test -- --run
 npm run typecheck -- --pretty false
 npm run lint
 npm run build
+npx playwright install chromium
+npm run test:offline
 ```
 
 ## Next implementation sector
 
-Slice 5.11 is next: resilient static offline delivery and visible storage/build
-status. O-012 must select hosting, supported browsers, service-worker/update
-policy, rollback, and persistence/eviction behavior first.
+Slice 5.11 is implemented. O-012 is resolved by A-019 through A-021 and
+`OFFLINE_DEPLOYMENT.md`: the static artifact contains a complete prompted
+offline shell, safe caching headers/fallbacks, persistent-storage and quota
+health, app/schema/backup evidence, and automated browser restart/failed-update
+proof.
+
+The next sector is operator staging acceptance and production cutover evidence.
+Custom multi-device synchronization remains Phase 7 and must not begin
+production rollout before the local acceptance record is signed.
 
 Production cutover still requires the operator choices and signed staging
 acceptance in `CUTOVER.md` and `LOCAL_ACCEPTANCE.md`. Custom multi-device

@@ -29,13 +29,15 @@ is safe, and the proof required at each stage.
     and rollback.
 11. [Local release acceptance](LOCAL_ACCEPTANCE.md) — implemented evidence and
     the remaining operator sign-off record.
-12. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
+12. [Static offline deployment](OFFLINE_DEPLOYMENT.md) — hosting, install,
+    update/rollback, browser support, persistence, and browser proof.
+13. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
     later multi-device phase.
-13. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
+14. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
     mapped to removal or replacement.
-14. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
+15. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
     operation, and incidents.
-15. [Current baseline](BASELINE.md) — observed repository health and known
+16. [Current baseline](BASELINE.md) — observed repository health and known
     inherited failures.
 
 `FIRST_REVIEW.md` is user-owned historical audit material. It is useful

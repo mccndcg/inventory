@@ -34,6 +34,8 @@ export interface DeviceState {
   nextOperationSequence: number;
   installedAt: IsoInstant;
   localSchemaVersion: number;
+  lastBackupAt?: IsoInstant;
+  lastBackupManifestSha256?: string;
 }
 
 export interface LocationSettings {

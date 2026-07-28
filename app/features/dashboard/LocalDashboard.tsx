@@ -11,6 +11,7 @@ import {
 import { readOpeningBatch } from "../../local-data/opening";
 import { browserPersistenceDependencies } from "../../local-data/runtime";
 import type { PersistenceDependencies } from "../../local-data/transactions";
+import { LocalSystemStatus } from "../status/LocalSystemStatus";
 
 interface LocalDashboardProps {
   db?: InventoryDatabase;
@@ -150,6 +151,7 @@ export function LocalDashboard({
         Synchronization is not enabled. This device continues to accept and
         retain local transactions while offline.
       </p>
+      <LocalSystemStatus db={db} />
       <p className="text-sm">
         <a className="underline" href="/recovery">Backup and recovery</a>
       </p>

@@ -51,6 +51,9 @@ correct and synchronizable.
 | A-016 | Adjustment kinds and signs are fixed by `DOMAIN_RULES.md`; correction notes are required. A later drawer uses one immutable `drawer_opening`, not an amendment to the store opening batch. |
 | A-017 | Location currency and business timezone are fixed during initialization. Future devices receive server-provisioned location settings rather than choosing their own. |
 | A-018 | Backup format v1 is application-owned, versioned JSON with per-payload and manifest SHA-256 integrity. The file is not application-encrypted: operators place it on an approved encrypted volume, keep two copies with one off-device, export after each operating day and before upgrades/reset, retain 30 daily and 12 month-end copies, and target a one-business-day recovery point and four-hour recovery time. Store ownership controls destination access and encryption-key custody. |
+| A-019 | Publish `build/client` to Cloudflare Pages-compatible static HTTPS hosting. Serve the shell, manifest, and service worker with revalidation; serve content-hashed assets immutably; use only explicit application-route rewrites; and return 404 for a missing asset so an incomplete release cannot install HTML in place of code. |
+| A-020 | The supported v1 browser target is the current and immediately previous stable desktop releases of Chrome and Edge on managed Windows devices. Precache the complete release, keep a new worker waiting, and require an operator to apply it. A failed install leaves the active worker in control. Never automatically reload an open form, and never roll an application back across an irreversible local-schema change. |
+| A-021 | Request persistent browser storage only from the visible operator action. Show best-effort/unsupported/error status and a warning at 80% quota use. Persistence reduces eviction risk but never replaces verified encrypted backups. |
 
 ## Explicit non-goals
 
@@ -81,7 +84,6 @@ work. Resolve each before the named gate.
 | O-008 | Future sync design | Select the server database/runtime, hosting, authentication, device provisioning/revocation, encryption, retention, and the operator-authorized drawer closure/transfer policy when an origin device is unavailable. |
 | O-009 | Future sync design | Define product-update conflict presentation and duplicate-product reconciliation. Products must never be merged solely by name. |
 | O-010 | Future sync rollout | Define supported client schema window, maximum batch sizes, monitoring, recovery ownership, and pilot success period. |
-| O-012 | Before offline-shell implementation | Choose static hosting, application-shell/service-worker strategy, update/rollback behavior, supported browsers, and storage-persistence/eviction policy. |
 
 The former sale-edit and adjustment-reason questions are resolved by A-014
 through A-016. Reopen them only through the change protocol below.
@@ -94,6 +96,9 @@ through A-016. Reopen them only through the change protocol below.
 - 2026-07-28: O-011 was resolved as A-018 for local backup v1. O-007 still
   requires the operator to name the actual approved destination and custodian
   before production cutover.
+- 2026-07-28: O-012 was resolved as A-019 through A-021: static HTTPS hosting,
+  complete Workbox precaching, prompted atomic updates, managed desktop
+  Chrome/Edge support, and explicit persistence/quota warnings.
 
 ## Change protocol
 

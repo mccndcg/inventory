@@ -60,6 +60,8 @@ const deviceStateSchema = z.object({
   nextOperationSequence: positiveInteger,
   installedAt: instant,
   localSchemaVersion: positiveInteger,
+  lastBackupAt: instant.optional(),
+  lastBackupManifestSha256: sha256.optional(),
 }).strict();
 
 const locationSettingsSchema = z.object({

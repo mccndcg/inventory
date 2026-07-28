@@ -70,6 +70,10 @@ describe("recovery workspace", () => {
     expect(await screen.findByText(/Backup exported and hashed/)).toBeTruthy();
     expect(backups).toHaveLength(1);
     expect(reset.disabled).toBe(false);
+    expect(await db.deviceState.get("current")).toMatchObject({
+      lastBackupAt: backups[0]!.manifest.createdAt,
+      lastBackupManifestSha256: backups[0]!.manifestSha256,
+    });
 
     await user.type(screen.getByLabelText("Type RESET POS-A"), "RESET POS-A");
     await user.click(reset);

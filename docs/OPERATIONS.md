@@ -1,10 +1,10 @@
 # Operations guide
 
-Status: implemented local operating contract; future-sync sections remain target
+Status: implemented local/offline operating contract; future-sync sections remain target
 
 This guide covers implemented local backup/recovery and the additional controls
-required before multi-device rollout. Static offline-shell and synchronization
-requirements remain future gates where stated.
+required before multi-device rollout. Synchronization requirements remain
+future gates where stated.
 
 ## Operating modes
 
@@ -30,18 +30,19 @@ requirements remain future gates where stated.
 
 ## Browser and device requirements
 
-- Use managed, supported devices and browser versions.
+- Use managed Windows devices with the current or immediately previous stable
+  desktop Chrome or Edge release.
 - Do not use private/incognito browsing.
 - Do not clear site data, reset the browser profile, run storage cleaners, or
   uninstall the application before a verified export/sync.
-- Request persistent browser storage where supported, but do not treat the
-  request as a backup.
+- Use **Request persistent browser storage** and record the result, but do not
+  treat a grant as a backup.
 - Keep adequate disk space and monitor storage-pressure/eviction warnings.
 - Protect device login and physical access.
 - Use automatic clock synchronization; incorrect client time affects audit
   display even though it cannot order sync.
-- Install/cache a versioned offline application shell before relying on an
-  offline cold start.
+- Confirm `Offline shell ready`, reload once, and pass the warm/full-restart
+  offline checks before relying on an offline cold start.
 - Record device ID/code, drawer ID/label, application version, local schema,
   browser, OS, provision date, and custodian without storing credentials in
   source control.
@@ -185,6 +186,11 @@ server recovery/transfer operation.
   finalized opening batch or its opening adjustments.
 
 ## Release and schema upgrades
+
+Publish `build/client` according to `OFFLINE_DEPLOYMENT.md`. Missing hashed
+assets must return 404; never use a blanket SPA fallback for assets. The
+service worker keeps updates waiting until the operator applies them and keeps
+the active release when candidate installation fails.
 
 Before deployment:
 
