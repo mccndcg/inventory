@@ -5,14 +5,8 @@ import {
   type Dirent,
 } from "node:fs";
 import { extname, join, relative, sep } from "node:path";
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import { LegacyMaintenance } from "../../app/components/legacy-maintenance";
 import { exportLegacyDatabase } from "../../app/legacy/read-only-export";
-import {
-  ignoredLegacyRouteFiles,
-  legacyBusinessRoutesEnabled,
-} from "../../app/security/legacy-runtime-policy";
 
 const repositoryRoot = process.cwd();
 const appRoot = join(repositoryRoot, "app");
@@ -36,20 +30,17 @@ function repositoryPath(path: string): string {
   return relative(repositoryRoot, path).split(sep).join("/");
 }
 
-describe("legacy runtime quarantine", () => {
-  it("fails closed outside development builds", () => {
-    expect(legacyBusinessRoutesEnabled("development")).toBe(true);
-    expect(legacyBusinessRoutesEnabled("production")).toBe(false);
-    expect(legacyBusinessRoutesEnabled("staging")).toBe(false);
-    expect(ignoredLegacyRouteFiles("production")).toEqual(["routes/**"]);
-  });
+describe("replacement runtime isolation", () => {
+  it("renders replacement routes without a legacy-mode switch", () => {
+    const rootSource = readFileSync(join(appRoot, "root.tsx"), "utf8");
+    const viteSource = readFileSync(
+      join(repositoryRoot, "vite.config.ts"),
+      "utf8",
+    );
 
-  it("renders the maintenance-only production surface", () => {
-    const markup = renderToStaticMarkup(<LegacyMaintenance />);
-
-    expect(markup).toContain("Maintenance mode");
-    expect(markup).toContain("Export legacy local data");
-    expect(markup).not.toContain("<form");
+    expect(rootSource).toContain("return <Outlet />");
+    expect(rootSource).not.toMatch(/LegacyMaintenance|legacyBusinessRoutes/);
+    expect(viteSource).not.toMatch(/ignoredRouteFiles|legacy-runtime-policy/);
   });
 
   it("does not publish the legacy product snapshot", () => {
@@ -88,7 +79,7 @@ describe("legacy runtime quarantine", () => {
     expect(open).not.toHaveBeenCalled();
   });
 
-  it("allows legacy cloud imports only in quarantined modules", () => {
+  it("has no cloud runtime import or configuration", () => {
     const cloudReferenceFiles = sourceFiles(appRoot)
       .filter((path) => {
         const source = readFileSync(path, "utf8");
@@ -96,6 +87,19 @@ describe("legacy runtime quarantine", () => {
       })
       .map(repositoryPath);
 
-    expect(cloudReferenceFiles).toEqual(["app/data/dexie.ts"]);
+    expect(cloudReferenceFiles).toEqual([]);
+  });
+
+  it("keeps normal startup isolated from the legacy goods database", () => {
+    const startupFiles = sourceFiles(appRoot).filter(
+      (path) => !repositoryPath(path).startsWith("app/legacy/"),
+    );
+    const legacyDatabaseReferences = startupFiles
+      .filter((path) =>
+        readFileSync(path, "utf8").includes('legacyDatabaseName = "goods"'),
+      )
+      .map(repositoryPath);
+
+    expect(legacyDatabaseReferences).toEqual([]);
   });
 });
