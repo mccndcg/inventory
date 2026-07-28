@@ -1,0 +1,42 @@
+name: Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Scan tracked files for secrets
+        run: npm run scan:secrets
+
+      - name: Run tests
+        run: npm test
+
+      - name: Check types
+        run: npm run typecheck
+
+      - name: Lint without warnings
+        run: npm run lint
+
+      - name: Build production SPA
+        run: npm run build

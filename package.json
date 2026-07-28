@@ -9,6 +9,7 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --no-cache --max-warnings 0 .",
     "preview": "vite preview",
+    "scan:secrets": "node scripts/secret-scan.mjs",
     "start": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
