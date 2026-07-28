@@ -121,6 +121,27 @@ export function createSyncHttpServer(
     }
   });
 
+  server.post(
+    "/sync/v1/admin/devices/:deviceId/decommission",
+    async (request, reply) => {
+      try {
+        const password = request.headers["x-shop-password"];
+        if (typeof password !== "string") {
+          throw new SyncProtocolError(
+            "INVALID_PASSWORD",
+            "Shop password is required.",
+            401,
+          );
+        }
+        const params = request.params as { deviceId: string };
+        store.decommission(password, params.deviceId);
+        return { status: "decommissioned" };
+      } catch (error) {
+        errorReply(error, reply);
+      }
+    },
+  );
+
   server.setErrorHandler((error, _request, reply) => {
     errorReply(error, reply);
   });

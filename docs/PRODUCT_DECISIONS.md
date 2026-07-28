@@ -66,6 +66,7 @@ correct and synchronizable.
 | A-028 | The server stores only a salted memory-hard hash of the shop enrollment password. A successful first enrollment creates a server-provisioned device/drawer identity and returns a rotatable 256-bit device bearer credential; only its SHA-256 hash is stored server-side. The browser keeps the credential in a dedicated local table excluded from application backup/export. Enrollment state gates every maintained route, survives offline restarts, and is removed only by explicit local reset or server revocation observed on reconnect. |
 | A-029 | The client attempts one push-then-pull cycle immediately after an enrolled application opens and every 15 minutes while it remains open. A visible `Sync now` action runs the same single-flight cycle. Failed transport attempts retain durable work and use the next scheduled or manual opportunity; the design does not depend on browser execution while closed. |
 | A-030 | The SQLite database and server configuration live under an operator-selected protected Windows data directory, never the repository. A consistent daily backup is copied off the shop computer, retaining at least 30 daily and 12 month-end copies. Service installation, backup destination, Tunnel hostname, secret setup, and restore drill remain explicit operator evidence. |
+| A-031 | A later synchronized device is atomically assigned one unique drawer and one immutable, hashed `drawer_opening` at PHP 0.00 during shop-password enrollment. Physical cash is subsequently added through ordinary deposit CRUD. Planned decommissioning is accepted only after the old device synchronizes a zero drawer COH. Immediate credential revocation remains available for a lost device, but an unavailable nonzero drawer is never silently transferred or spoofed; same-device recovery or explicit incident reconciliation is required before replacement. |
 
 ## Explicit non-goals
 
@@ -115,6 +116,9 @@ through A-016. Reopen them only through the change protocol below.
   the owner selected a Windows shop-hosted Node/SQLite hub through Cloudflare
   Tunnel, one-time whole-app password enrollment, a persistent per-device
   credential, 15-minute foreground sync, and a manual sync action.
+- 2026-07-28: A-031 resolved ordinary later-drawer commissioning and planned
+  replacement with the simplest fresh-balance policy: automatic zero opening,
+  normal cash deposits, and zero-before-decommission.
 - 2026-07-28: the owner authorized Phase 7 engineering in the same goal as
   cutover readiness. This does not waive the signed local acceptance record or
   authorize multiple production devices before the Phase 7 pilot gate passes.

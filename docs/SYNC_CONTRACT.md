@@ -203,13 +203,14 @@ manufacture opening stock, or copy another device's identity.
   tables.
 - New devices pull that same batch.
 - Adding a drawer persists the exact canonical commissioning payload/hash and
-  creates one immutable `drawer_opening` cash adjustment. It does not mutate
-  the store opening batch.
+  creates one immutable PHP 0.00 `drawer_opening` cash adjustment in the same
+  server transaction as enrollment. It does not mutate the store opening
+  batch. Physical cash added later uses ordinary deposit CRUD.
 - A planned replacement closes the old drawer COH to zero with origin-device
   count/withdrawal adjustments before the new drawer opens.
-- If the origin device is unavailable, provisioning stops until the O-008
-  operator-authorized server recovery/transfer policy closes the old drawer
-  without spoofing its origin.
+- If the origin device is unavailable with nonzero drawer COH, the server
+  never spoofs or transfers its records. The operator uses same-device
+  recovery or stops replacement for explicit incident reconciliation.
 - No device creates another location opening stock set.
 
 ### Location settings and device directory
@@ -323,8 +324,8 @@ Multi-device production remains blocked until automated tests prove:
 13. canonical location settings and device/drawer labels converge;
 14. commissioning report/hash is idempotent, duplicate drawer openings fail,
     and old-to-new drawer transfer preserves location COH;
-15. unavailable-origin recovery closes old drawer COH under the accepted policy
-    before a replacement opens;
+15. unavailable-origin recovery cannot silently move or spoof old drawer COH;
+    planned decommissioning rejects a nonzero drawer;
 16. pilot reconciliation shows equal aggregate IDs/revisions and projections
     on all devices.
 

@@ -116,9 +116,15 @@ describe("offline client synchronization", () => {
       drawerLabel: "Back",
     });
     const bootstrap = await syncNow(second);
-    expect(bootstrap.pulled).toBe(2);
+    expect(bootstrap.pulled).toBe(3);
     const secondIdentity = await second.deviceState.get("current");
     expect(secondIdentity?.deviceId).not.toBe(deviceId);
+    expect(
+      await second.cashAdjustments
+        .where("drawerId")
+        .equals(secondIdentity?.drawerId ?? "")
+        .first(),
+    ).toMatchObject({ kind: "drawer_opening", amountMinor: 0 });
     expect(await rebuildProductStock(second, rice.id)).toBe(1);
 
     await Promise.all([
@@ -153,6 +159,41 @@ describe("offline client synchronization", () => {
     ).toBe(100);
     expect(await first.remoteShadows.count()).toBe(0);
     expect(await second.remoteShadows.count()).toBe(0);
+
+    const credential =
+      (await first.deviceCredentials.get("device"))?.credential ?? "";
+    const openingChange = store
+      .pull(credential)
+      .changes.find((change) => change.aggregateType === "opening_batch");
+    const nextSequence = (await first.deviceState.get("current"))
+      ?.nextOperationSequence;
+    const openingPayload = openingChange?.payload as {
+      batch?: Record<string, unknown>;
+    };
+    const immutableAttempt = store.push(credential, [
+      {
+        operationId: crypto.randomUUID(),
+        deviceId,
+        deviceSequence: nextSequence ?? 0,
+        aggregateType: "opening_batch",
+        aggregateId: openingChange?.aggregateId ?? "",
+        action: "upsert",
+        aggregateRevision: 2,
+        operationSchemaVersion: 1,
+        baseServerVersion: openingChange?.serverVersion,
+        payload: {
+          ...openingPayload,
+          batch: { ...openingPayload.batch, revision: 2 },
+        },
+        createdAt: clock.now().toISOString(),
+        status: "pending",
+        attemptCount: 0,
+      },
+    ]);
+    expect(immutableAttempt.receipts[0]).toMatchObject({
+      status: "rejected",
+      errorCode: "IMMUTABLE_OPENING",
+    });
   });
 
   it("retains pending work and the prior cursor when transport fails", async () => {

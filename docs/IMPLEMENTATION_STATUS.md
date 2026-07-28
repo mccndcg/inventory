@@ -45,6 +45,32 @@ legacy fallback are removed. Plain `dexie` and `dexie-react-hooks` remain.
 The read-only `app/legacy/read-only-export.ts` module remains isolated for
 operator archival evidence and is not imported by normal startup.
 
+## Completed custom synchronization
+
+- The whole application is locked until one successful shop-password
+  enrollment. The password is not stored in the browser; a unique persistent
+  device credential permits later offline startup without another prompt.
+- The client uses the Dexie v2 outbox, cursor, credential, device-directory,
+  and remote-shadow stores. It pushes before pull, does not echo remote
+  changes, retains permanent failures, and exposes explicit product-conflict
+  choices.
+- One single-flight cycle runs on enrolled startup, every 15 minutes while the
+  app is open, and from the visible **Sync now** action. Local sale entry never
+  waits for the network.
+- The Node 24/Fastify server binds loopback and persists configuration,
+  memory-hard password hash, hashed per-device credentials, directory,
+  aggregates, cursors, idempotency receipts, and audit events in built-in
+  SQLite.
+- Later-device enrollment atomically creates one unique drawer and one hashed,
+  immutable PHP 0.00 `drawer_opening`. Planned decommissioning requires server
+  drawer COH of zero; immediate credential revocation remains separate.
+- The packaged backup command creates a live consistent SQLite snapshot,
+  verifies integrity, and emits a SHA-256 sidecar. File-based host
+  configuration keeps the password outside the source tree.
+- `WINDOWS_SYNC_HOST.md` covers Task Scheduler auto-start, Cloudflare Tunnel,
+  exact-origin CORS, no inbound router exposure, off-computer backup, restore
+  drill, device commissioning, revocation, and outage behavior.
+
 ## Proof surface
 
 Vitest covers:
@@ -68,6 +94,14 @@ Vitest covers:
   shell;
 - database isolation, transactions, runtime validation, secret scanning, and
   absence of active legacy/cloud/network paths.
+- server password/enrollment rate limits, credential rotation/revocation,
+  durable restart, idempotent receipts/cursors, sequence and optimistic product
+  conflicts, immutable drawer opening, and zero-only decommissioning;
+- two simultaneously offline devices selling the last unit and converging to
+  stock `-1` with independent drawer COH;
+- enrolled real-browser offline restart, periodic/manual delivery, rejected
+  conflict recovery, host configuration, and a live-store SQLite backup that
+  can be reopened with preserved identity.
 
 Run the authoritative clean gate:
 
@@ -82,19 +116,15 @@ npx playwright install chromium
 npm run test:offline
 ```
 
-## Next implementation sector
+## Implementation boundary
 
-Slice 5.11 is implemented. O-012 is resolved by A-019 through A-021 and
-`OFFLINE_DEPLOYMENT.md`: the static artifact contains a complete prompted
-offline shell, safe caching headers/fallbacks, persistent-storage and quota
-health, app/schema/backup evidence, and automated browser restart/failed-update
-proof.
+The application, offline shell, custom synchronization client/server,
+conflict UI, device commissioning safeguards, and Windows host/backup package
+are implemented. There is no remaining planned repository feature sector for
+the agreed cash-only CRUD v1.
 
-The next sector is operator staging acceptance and production cutover evidence.
-Custom multi-device synchronization remains Phase 7 and must not begin
-production rollout before the local acceptance record is signed.
-
-The repository now includes the non-fabricable acceptance boundary:
+Production is not yet complete because these non-fabricable operator gates
+remain:
 
 - `npm run verify:staging -- <url>` checks all maintained routes, shell
   revalidation, immutable hashed assets, service-worker scope, and missing
@@ -103,13 +133,20 @@ The repository now includes the non-fabricable acceptance boundary:
   external evidence store and completed by the operator;
 - `npm run verify:release -- <record>` rejects incomplete physical,
   backup/restore, browser, workflow, decommissioning, or sign-off evidence.
+- install the Node/SQLite service and Cloudflare Tunnel on the named managed
+  Windows shop computer and prove restart;
+- select the real origins, hostname, password custody, backup destination, and
+  operations owner;
+- complete a real off-computer backup and isolated restore drill;
+- complete the fresh-balance cutover and signed local/staging acceptance;
+- finish external Dexie Cloud archive, credential/session revocation, audit,
+  retention/deletion approval, and provider shutdown;
+- run the 14-day/two-device/100-sale pilot with daily aggregate and projection
+  parity.
 
-These checks cannot complete the still-pending operator record themselves.
-
-Production cutover still requires the operator choices and signed staging
-acceptance in `CUTOVER.md` and `LOCAL_ACCEPTANCE.md`. Custom multi-device
-synchronization remains Phase 7 and must not begin production rollout before
-those local gates pass.
+Until those records are signed, only one production device is authoritative.
+An unavailable device with nonzero drawer COH also remains an explicit
+incident stop: the server will not silently spoof or transfer its cash.
 
 ## External operator work still open
 

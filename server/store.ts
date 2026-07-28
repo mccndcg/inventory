@@ -7,9 +7,12 @@ import {
 } from "node:crypto";
 import { DatabaseSync } from "node:sqlite";
 import { normalizeDeviceCode } from "../app/domain/identity";
+import { projectDrawerCash } from "../app/domain/cash";
+import { businessDateFor } from "../app/domain/time";
 import { canonicalJson } from "../app/local-data/canonical";
 import type {
   AggregateType,
+  CashAdjustment,
   DeviceDirectoryEntry,
   LocationSettings,
   OutboxOperation,
@@ -207,6 +210,48 @@ function operationPayload(operation: OutboxOperation): {
         cashAdjustments.some((row) => row.openingBatchId !== batch.id)
       ) {
         throw new SyncProtocolError("INVALID_OPENING", "Opening batch is incomplete.");
+      }
+      const report = batch.reportPayload;
+      const stockById = new Map(
+        stockAdjustments.map((row) => [row.id, row]),
+      );
+      const cashById = new Map(cashAdjustments.map((row) => [row.id, row]));
+      const stockMatches =
+        stockAdjustments.length === report.stockLines.length &&
+        report.stockLines.every((line) => {
+          const row = stockById.get(line.adjustmentId);
+          return (
+            row?.productId === line.productId &&
+            row.quantityDelta === line.countedQuantity &&
+            row.kind === "opening_count" &&
+            row.openingKey ===
+              `opening:${batch.id}:product:${line.productId}`
+          );
+        });
+      const cashMatches =
+        cashAdjustments.length === report.cashLines.length &&
+        report.cashLines.every((line) => {
+          const row = cashById.get(line.adjustmentId);
+          return (
+            row?.deviceId === line.deviceId &&
+            row.drawerId === line.drawerId &&
+            row.amountMinor === line.countedAmountMinor &&
+            row.kind === "opening_balance" &&
+            row.openingKey ===
+              `location:${batch.locationId}:drawer:${line.drawerId}`
+          );
+        });
+      if (
+        batch.locationOpeningKey !== `location:${batch.locationId}` ||
+        batch.reportSha256 !== sha256(canonicalJson(report)) ||
+        report.authoritativeDevice.deviceId !== batch.originDeviceId ||
+        !stockMatches ||
+        !cashMatches
+      ) {
+        throw new SyncProtocolError(
+          "INVALID_OPENING",
+          "Opening report hash or normalized records do not match.",
+        );
       }
       return {
         originDeviceId: batch.originDeviceId,
@@ -407,7 +452,12 @@ export class SyncStore {
       this.audit("enrollment_rejected", undefined, "INVALID_PASSWORD");
       throw new SyncProtocolError("INVALID_PASSWORD", "The shop password is incorrect.", 401);
     }
+    return this.transaction(() => this.enrollVerified(input));
+  }
+
+  private enrollVerified(input: EnrollmentRequest): EnrollmentResponse {
     const config = this.config();
+    const locationWasInitialized = Boolean(config.location_id);
     let locationId = config.location_id;
     if (!locationId) {
       if (!input.existingIdentity || !input.initialSettings) {
@@ -495,6 +545,16 @@ export class SyncStore {
         409,
       );
     }
+    if (locationWasInitialized) {
+      this.commissionZeroDrawer({
+        deviceId,
+        deviceCode,
+        drawerId,
+        drawerLabel,
+        locationId,
+        occurredAt: provisionedAt,
+      });
+    }
     this.audit("device_enrolled", deviceId);
     const device = this.deviceById(deviceId);
     return {
@@ -503,6 +563,87 @@ export class SyncStore {
       settings: this.settings(),
       cursor: "0",
     };
+  }
+
+  private commissionZeroDrawer(input: {
+    deviceId: string;
+    deviceCode: string;
+    drawerId: string;
+    drawerLabel: string;
+    locationId: string;
+    occurredAt: string;
+  }): void {
+    const adjustmentId = randomUUID();
+    const reportPayload = {
+      reportFormatVersion: 1,
+      cashAdjustmentId: adjustmentId,
+      applicationCommit: "server-generated",
+      localSchemaVersion: 2,
+      locationId: input.locationId,
+      deviceId: input.deviceId,
+      deviceCode: input.deviceCode,
+      drawerId: input.drawerId,
+      drawerLabel: input.drawerLabel,
+      currencyCode: "PHP",
+      countedAt: input.occurredAt,
+      businessDate: businessDateFor(new Date(input.occurredAt)),
+      countedAmountMinor: 0,
+      oldDrawerClosureAdjustmentIds: [],
+      recorder: {
+        displayName: "Shop-password enrollment",
+        recordedAt: input.occurredAt,
+      },
+      verifier: {
+        displayName: "Shop-password enrollment",
+        verifiedAt: input.occurredAt,
+      },
+      notes: ["New synchronized drawer commissioned at zero cash."],
+    };
+    const cursor = this.nextCursor();
+    const serverVersion = `v${cursor}`;
+    const adjustment: CashAdjustment = parseCashAdjustment({
+      id: adjustmentId,
+      locationId: input.locationId,
+      deviceId: input.deviceId,
+      drawerId: input.drawerId,
+      openingKey: `location:${input.locationId}:drawer:${input.drawerId}`,
+      commissioningReportPayload: reportPayload,
+      commissioningReportSha256: sha256(canonicalJson(reportPayload)),
+      commissioningApprovedBy: "Shop-password enrollment",
+      commissioningApprovedAt: input.occurredAt,
+      kind: "drawer_opening",
+      amountMinor: 0,
+      currencyCode: "PHP",
+      businessDate: reportPayload.businessDate,
+      occurredAt: input.occurredAt,
+      notes: "Automatically commissioned at zero cash.",
+      originDeviceId: input.deviceId,
+      revision: 1,
+      recordSchemaVersion: 1,
+      tombstone: 0,
+      createdAt: input.occurredAt,
+      updatedAt: input.occurredAt,
+      lastServerVersion: serverVersion,
+    });
+    const payloadJson = canonicalJson(adjustment);
+    this.db.prepare(`
+      INSERT INTO aggregates (
+        aggregate_type, aggregate_id, location_id, origin_device_id,
+        revision, server_version, tombstone, payload_json
+      ) VALUES ('cash_adjustment', ?, ?, ?, 1, ?, 0, ?)
+    `).run(
+      adjustment.id,
+      input.locationId,
+      input.deviceId,
+      serverVersion,
+      payloadJson,
+    );
+    this.db.prepare(`
+      INSERT INTO changes (
+        cursor, aggregate_type, aggregate_id, server_version, payload_json
+      ) VALUES (?, 'cash_adjustment', ?, ?, ?)
+    `).run(cursor, adjustment.id, serverVersion, payloadJson);
+    this.audit("drawer_commissioned_zero", input.deviceId);
   }
 
   authenticate(credential: string): DeviceRow {
@@ -621,6 +762,42 @@ export class SyncStore {
     const existing = this.db.prepare(`
       SELECT * FROM aggregates WHERE aggregate_type = ? AND aggregate_id = ?
     `).get(operation.aggregateType, operation.aggregateId) as AggregateRow | undefined;
+    if (existing && operation.aggregateType === "opening_batch") {
+      throw new SyncProtocolError(
+        "IMMUTABLE_OPENING",
+        "The finalized location opening is immutable.",
+        409,
+      );
+    }
+    if (
+      existing?.tombstone === 1 &&
+      parsed.tombstone === 0 &&
+      operation.aggregateType !== "product"
+    ) {
+      throw new SyncProtocolError(
+        "INVALID_RESTORE",
+        "Voided sales and adjustments cannot be restored.",
+        409,
+      );
+    }
+    if (operation.aggregateType === "cash_adjustment") {
+      const incoming = parsed.payload as CashAdjustment;
+      const prior = existing
+        ? parseCashAdjustment(parseJson(existing.payload_json))
+        : undefined;
+      if (
+        incoming.kind === "opening_balance" ||
+        incoming.kind === "drawer_opening" ||
+        prior?.kind === "opening_balance" ||
+        prior?.kind === "drawer_opening"
+      ) {
+        throw new SyncProtocolError(
+          "IMMUTABLE_OPENING",
+          "Opening cash records are server-managed and immutable.",
+          409,
+        );
+      }
+    }
     if (existing) {
       if (
         operation.aggregateType !== "product" &&
@@ -754,6 +931,71 @@ export class SyncStore {
       throw new SyncProtocolError("DEVICE_NOT_FOUND", "Active device was not found.", 404);
     }
     this.audit("device_revoked", deviceId);
+  }
+
+  decommission(password: string, deviceId: string): void {
+    if (!this.verifyPassword(password)) {
+      throw new SyncProtocolError(
+        "INVALID_PASSWORD",
+        "The shop password is incorrect.",
+        401,
+      );
+    }
+    this.transaction(() => {
+      const device = this.deviceById(deviceId);
+      if (device.status !== "active") {
+        throw new SyncProtocolError(
+          "DEVICE_NOT_FOUND",
+          "Active device was not found.",
+          404,
+        );
+      }
+      if (this.drawerCash(device.drawer_id) !== 0) {
+        throw new SyncProtocolError(
+          "DRAWER_NOT_ZERO",
+          "The drawer must synchronize a zero cash balance before planned decommissioning.",
+          409,
+        );
+      }
+      this.db.prepare(`
+        UPDATE devices
+        SET status = 'decommissioned', decommissioned_at = ?
+        WHERE device_id = ?
+      `).run(new Date().toISOString(), deviceId);
+      this.audit("device_decommissioned", deviceId);
+    });
+  }
+
+  private drawerCash(drawerId: string): number {
+    const rows = this.db.prepare(`
+      SELECT aggregate_type, payload_json
+      FROM aggregates
+      WHERE aggregate_type IN ('cash_adjustment', 'sale') AND tombstone = 0
+    `).all() as Array<{
+      aggregate_type: "cash_adjustment" | "sale";
+      payload_json: string;
+    }>;
+    const adjustments = rows
+      .filter((row) => row.aggregate_type === "cash_adjustment")
+      .map((row) => parseCashAdjustment(parseJson(row.payload_json)));
+    const sales = rows
+      .filter((row) => row.aggregate_type === "sale")
+      .map((row) => {
+        const payload = parseJson(row.payload_json) as {
+          sale?: unknown;
+          items?: unknown;
+        };
+        const sale = parseSale(payload.sale);
+        const items = Array.isArray(payload.items)
+          ? payload.items.map(parseSaleItem)
+          : [];
+        return {
+          drawerId: sale.drawerId,
+          tombstone: sale.tombstone,
+          items,
+        };
+      });
+    return projectDrawerCash(drawerId, adjustments, sales);
   }
 
   listDevices(locationId?: string): DeviceDirectoryEntry[] {

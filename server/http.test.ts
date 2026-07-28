@@ -87,5 +87,16 @@ describe("sync HTTP boundary", () => {
       cursor: "0",
       settings: { currencyCode: "PHP", businessTimezone: "Asia/Manila" },
     });
+
+    const decommissioned = await server.inject({
+      method: "POST",
+      url: "/sync/v1/admin/devices/20000000-0000-4000-8000-000000000001/decommission",
+      headers: {
+        origin: "https://inventory.example.com",
+        "x-shop-password": "shop-password",
+      },
+    });
+    expect(decommissioned.statusCode).toBe(200);
+    expect(decommissioned.json()).toEqual({ status: "decommissioned" });
   });
 });

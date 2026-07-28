@@ -144,6 +144,13 @@ Every physical device gets one unique device code, one drawer, one browser
 profile, and one credential. Never clone an enrolled browser profile. A local
 backup intentionally excludes the synchronization credential.
 
+Joining enrollment atomically creates a hashed, immutable PHP 0.00 drawer
+opening. Put physical cash into that drawer only through a normal deposit in
+the app. For planned replacement, synchronize withdrawals until the old
+drawer shows PHP 0.00, then call the password-protected `decommission`
+endpoint. The server rejects planned decommissioning while its projected
+drawer COH is nonzero.
+
 To revoke a lost device, an authorized operator calls the password-protected
 revocation endpoint while the server is reachable. Revocation takes effect
 when that device reconnects; it cannot disable a device that remains offline.

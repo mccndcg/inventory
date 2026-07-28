@@ -1,8 +1,10 @@
+import { createHash } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import type { OutboxOperation, Product, Sale, SaleItem } from "../app/local-data/models";
+import { canonicalJson } from "../app/local-data/canonical";
 import { SyncProtocolError } from "../app/sync/protocol";
 import { SyncStore } from "./store";
 
@@ -172,8 +174,11 @@ describe("SQLite synchronization store", () => {
       existingIdentity: { deviceId: deviceB, drawerId: drawerB, locationId },
     });
     store.push(first.credential, [operation()]);
-    const productVersion = store.pull(second.credential).changes[0]?.serverVersion;
-    expect(productVersion).toBe("v1");
+    const productVersion = store
+      .pull(second.credential)
+      .changes.find((change) => change.aggregateType === "product")
+      ?.serverVersion;
+    expect(productVersion).toBe("v2");
 
     const sale: Sale = {
       id: saleId,
@@ -214,9 +219,114 @@ describe("SQLite synchronization store", () => {
       }),
     ]);
     expect(pushed.receipts[0]?.status).toBe("accepted");
-    expect(store.pull(first.credential, "1").changes).toEqual([
+    expect(store.pull(first.credential, "2").changes).toEqual([
       expect.objectContaining({ aggregateType: "sale", aggregateId: saleId }),
     ]);
+    expect(() =>
+      store?.decommission("correct horse battery staple", deviceB),
+    ).toThrowError(expect.objectContaining({ code: "DRAWER_NOT_ZERO" }));
+    const voided = store.push(second.credential, [
+      operation({
+        operationId: conflictOperation,
+        deviceId: deviceB,
+        deviceSequence: 2,
+        aggregateType: "sale",
+        aggregateId: saleId,
+        aggregateRevision: 2,
+        payload: {
+          sale: { ...sale, revision: 2, tombstone: 1, deletedAt: now },
+          items: [item],
+        },
+      }),
+    ]);
+    expect(voided.receipts[0]?.status).toBe("accepted");
+    const restore = store.push(second.credential, [
+      operation({
+        operationId: crypto.randomUUID(),
+        deviceId: deviceB,
+        deviceSequence: 3,
+        aggregateType: "sale",
+        aggregateId: saleId,
+        aggregateRevision: 3,
+        payload: {
+          sale: { ...sale, revision: 3, tombstone: 0 },
+          items: [item],
+        },
+      }),
+    ]);
+    expect(restore.receipts[0]).toMatchObject({
+      status: "rejected",
+      errorCode: "INVALID_RESTORE",
+    });
+  });
+
+  it("commissions later drawers at zero and only decommissions a zero drawer", () => {
+    store = new SyncStore(":memory:", "correct horse battery staple");
+    enrollFirst(store);
+    const second = store.enroll({
+      password: "correct horse battery staple",
+      deviceCode: "POS-B",
+      drawerLabel: "Back",
+      existingIdentity: { deviceId: deviceB, drawerId: drawerB, locationId },
+    });
+    const opening = store.pull(second.credential).changes.find(
+      (change) => change.aggregateType === "cash_adjustment",
+    );
+    expect(opening?.payload).toMatchObject({
+      deviceId: deviceB,
+      drawerId: drawerB,
+      kind: "drawer_opening",
+      amountMinor: 0,
+      openingKey: `location:${locationId}:drawer:${drawerB}`,
+      commissioningReportPayload: {
+        countedAmountMinor: 0,
+        deviceId: deviceB,
+        drawerId: drawerB,
+      },
+    });
+    const hashedOpening = opening?.payload as {
+      commissioningReportPayload?: unknown;
+      commissioningReportSha256?: string;
+    };
+    expect(hashedOpening.commissioningReportSha256).toBe(
+      createHash("sha256")
+        .update(canonicalJson(hashedOpening.commissioningReportPayload))
+        .digest("hex"),
+    );
+    const openingPayload = opening?.payload as Record<string, unknown>;
+    const attemptedMutation = store.push(second.credential, [
+      operation({
+        operationId: conflictOperation,
+        deviceId: deviceB,
+        deviceSequence: 1,
+        aggregateType: "cash_adjustment",
+        aggregateId: String(openingPayload.id),
+        aggregateRevision: 2,
+        baseServerVersion: opening?.serverVersion,
+        payload: {
+          ...openingPayload,
+          revision: 2,
+          updatedAt: now,
+        },
+      }),
+    ]);
+    expect(attemptedMutation.receipts[0]).toMatchObject({
+      status: "rejected",
+      errorCode: "IMMUTABLE_OPENING",
+    });
+
+    store.decommission("correct horse battery staple", deviceB);
+    expect(store.listDevices()).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          deviceId: deviceB,
+          status: "decommissioned",
+        }),
+      ]),
+    );
+    expect(() => store?.pull(second.credential)).toThrowError(
+      expect.objectContaining({ code: "UNAUTHORIZED_DEVICE" }),
+    );
   });
 
   it("returns a stable explicit conflict for simultaneous product edits", () => {

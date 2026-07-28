@@ -159,15 +159,17 @@ A new device identity always receives a new logical drawer. Before opening it:
 4. Synchronize and verify those records.
 5. Decommission the old device/drawer in the server directory.
 6. Provision the new device/drawer.
-7. Create the new immutable `drawer_opening` from the separately approved
-   commissioning report for the cash physically placed in it.
-8. Verify old drawer COH is zero and total location COH changed only by any
-   independently explained count difference.
+7. Enrollment atomically creates the new immutable, hashed PHP 0.00
+   `drawer_opening`.
+8. Record physical cash placed in the new drawer through ordinary deposit CRUD
+   and synchronize it.
+9. Verify old drawer COH is zero and total location COH changed only by the
+   explicit new deposit and any independently explained count difference.
 
 For an unplanned loss where the origin device cannot close its drawer, do not
 provision a new production identity and duplicate the cash. Use same-device
-recovery, or stop until O-008 defines and Phase 7 proves an operator-authorized
-server recovery/transfer operation.
+recovery, or stop replacement for explicit incident reconciliation. The
+server must not spoof the unavailable device or silently transfer its COH.
 
 ## Routine cash and stock operation
 

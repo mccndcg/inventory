@@ -753,6 +753,8 @@ retention, schema compatibility, monitoring, and recovery.
 
 ### Slice 7.2: implement server persistence
 
+Implemented.
+
 Use a transactional shared database. Deduplicate `operationId`, enforce device
 sequence/revision and device/drawer/location rules, provision canonical
 location settings/directory, atomically apply the complete opening aggregate,
@@ -760,6 +762,8 @@ assign server versions/cursor order, preserve tombstones, and accept
 structurally valid overselling sales.
 
 ### Slice 7.3: implement client push/pull and recovery
+
+Implemented.
 
 First add the tested client schema upgrade for server-provisioned
 device/drawer directory and remote shadows. Then push ordered pending
@@ -769,6 +773,8 @@ pending work, and preserve pending operations across failure or upgrade.
 
 ### Slice 7.4: prove two-device convergence
 
+Implemented for the automated v1 acceptance surface.
+
 Run the exact concurrent-offline-sale scenario in `DOMAIN_RULES.md`, followed
 by duplicate upload, retry, edit, void, stale product update, tombstone, clock
 skew, pending-edit/pull overlay, atomic opening bootstrap, and long-offline
@@ -776,23 +782,26 @@ schema tests.
 
 ### Slice 7.5: commission and replace device drawers
 
-Deliver the provisioning service/UI and server validation for one
-device-to-drawer binding, canonical commissioning report/hash, immutable
-`drawer_opening`, and unique opening key. Planned replacement must close the
-old drawer to zero before the new opening. O-008 must define an
-operator-authorized server recovery/transfer operation for an unavailable
-origin device before that recovery path is enabled.
+Implemented under A-031. Shop-password enrollment atomically creates one
+device-to-drawer binding and one hashed, immutable PHP 0.00 `drawer_opening`
+with a unique opening key. Physical cash then uses ordinary deposit CRUD.
+Planned decommissioning is rejected until the server projection of the old
+drawer is zero. Immediate revocation remains available for lost credentials;
+an unavailable nonzero drawer is not silently transferred or spoofed.
 
 Gate:
 
 - report canonicalization, tamper rejection, and idempotent retry;
 - duplicate drawer/opening rejection;
-- planned old-drawer withdrawal plus new opening preserves location COH;
+- planned old-drawer withdrawal plus new zero opening preserves location COH;
 - same-device recovery cannot create a second active identity;
-- unavailable-origin policy closes old COH without cross-device spoofing;
+- unavailable-origin policy stops silent transfer/cross-device spoofing;
 - store opening batch and location stock remain unchanged.
 
 ### Slice 7.6: pilot and roll out
+
+Repository implementation and automated proof are complete. Physical rollout
+remains operator work.
 
 Provision each device online once with a unique identity and drawer. Distribute
 the same location/opening state; never create stock opening rows per device.

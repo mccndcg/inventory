@@ -289,7 +289,7 @@ UUIDs; a unique index prevents a second row for the same product in the batch.
 ```ts
 type CashAdjustmentKind =
   | "opening_balance"
-  | "drawer_opening" // Phase 7 capability; local v1 validator rejects it
+  | "drawer_opening"
   | "deposit"
   | "withdrawal"
   | "expense"
