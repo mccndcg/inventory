@@ -8,30 +8,32 @@ is safe, and the proof required at each stage.
 
 ## Read in this order
 
-1. [Product decisions](PRODUCT_DECISIONS.md) — accepted behavior, explicit
+1. [Implementation status](IMPLEMENTATION_STATUS.md) — current completed
+   surfaces, proof, remaining external blockers, and the next sector.
+2. [Product decisions](PRODUCT_DECISIONS.md) — accepted behavior, explicit
    non-goals, architecture guardrails, and decisions still due.
-2. [Domain rules](DOMAIN_RULES.md) — authoritative stock, sale, cash, product,
+3. [Domain rules](DOMAIN_RULES.md) — authoritative stock, sale, cash, product,
    edit, void, and adjustment semantics.
-3. [Architecture](ARCHITECTURE.md) — module boundaries, authority, dependency
+4. [Architecture](ARCHITECTURE.md) — module boundaries, authority, dependency
    direction, and transaction boundaries.
-4. [Data model](DATA_MODEL.md) — target records, indexes, constraints, and
+5. [Data model](DATA_MODEL.md) — target records, indexes, constraints, and
    projections.
-5. [Implementation playbook](IMPLEMENTATION_PLAYBOOK.md) — ordered slices,
+6. [Implementation playbook](IMPLEMENTATION_PLAYBOOK.md) — ordered slices,
    prerequisites, exit gates, stop conditions, and commit discipline.
-6. [Testing](TESTING.md) — Vitest usage and required test matrix.
-7. [Dexie Cloud decommissioning](DEXIE_CLOUD_DECOMMISSION.md) — safe
+7. [Testing](TESTING.md) — Vitest usage and required test matrix.
+8. [Dexie Cloud decommissioning](DEXIE_CLOUD_DECOMMISSION.md) — safe
    repository cleanup and operator-only external actions.
-8. [Legacy cloud runtime inventory](CLOUD_RUNTIME_INVENTORY.md) — executable
+9. [Legacy cloud runtime inventory](CLOUD_RUNTIME_INVENTORY.md) — executable
    cloud references, the production quarantine, and pending external work.
-9. [Fresh-balance cutover](CUTOVER.md) — archive, initialization, verification,
+10. [Fresh-balance cutover](CUTOVER.md) — archive, initialization, verification,
    and rollback.
-10. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
+11. [Future sync contract](SYNC_CONTRACT.md) — protocol constraints for the
    later multi-device phase.
-11. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
+12. [Legacy replacement map](LEGACY_MAP.md) — old tables, modules, and UI paths
     mapped to removal or replacement.
-12. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
+13. [Operations](OPERATIONS.md) — backup, restore, device identity, offline
     operation, and incidents.
-13. [Current baseline](BASELINE.md) — observed repository health and known
+14. [Current baseline](BASELINE.md) — observed repository health and known
     inherited failures.
 
 `FIRST_REVIEW.md` is user-owned historical audit material. It is useful
