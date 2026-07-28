@@ -74,17 +74,6 @@ export const addDexieGood = async (inputGood: DexieGood) => {
     }
 };
 
-export const clearDexieGoods = async () => {
-    try {
-        // Clear all records from the 'dexieGoods' table
-        await db.dexieGoods.clear();
-
-        console.log('All records in dexieGoods have been removed.');
-    } catch (error) {
-        console.error('Error clearing dexieGoods:', error);
-    }
-};
-
 export const getInventoryData = async () => await db.dexieGoods.toArray();
 
 
