@@ -1,5 +1,4 @@
 import { collection, addDoc, getDocs, Firestore } from "firebase/firestore";
-import { firestore_config } from "~/lib/firebase";
 
 
 export function addProduct(db: Firestore) {
