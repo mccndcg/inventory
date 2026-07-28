@@ -4,8 +4,10 @@ Status: normative Phase 7 implementation contract; production rollout gated
 
 Custom synchronization engineering was authorized on 2026-07-28. Production
 provisioning and rollout still start only after the local application and
-fresh initialization pass the external acceptance record. A-022 through A-026
-freeze the initial infrastructure and operating choices.
+fresh initialization pass the external acceptance record. A-024 through A-030
+freeze the current infrastructure and operating choices; A-027/A-028
+supersede the provisional hosted-database and enrollment-token parts of
+A-022/A-023.
 
 ## Goals
 
@@ -34,6 +36,15 @@ Every device is provisioned with a unique, durable identity, one drawer, and
 location membership. Every ordinary mutation creates an outbox operation in
 the same local transaction as the aggregate. Opening finalization creates one
 operation for the complete batch and all of its normalized adjustments.
+
+Before provisioning, the application shell may load but every maintained route
+is covered by the enrollment lock. The shop password is submitted only to the
+HTTPS enrollment endpoint and is never persisted by the browser. Successful
+enrollment stores a unique device credential locally, after which the device
+can unlock and operate indefinitely without connectivity. Consequently,
+password enrollment does not protect an already enrolled Windows/browser
+profile from its local user, and a server revocation cannot affect a device
+until it reconnects.
 
 ```ts
 interface SyncOperation {
@@ -251,11 +262,16 @@ Because devices may remain offline indefinitely, there is no honest guarantee
 that revocation, new policy, bug fixes, or schema changes reach a disconnected
 device. Product and operations messaging must state this plainly.
 
-## Security requirements
+## Host, schedule, and security requirements
 
-The A-022/A-023 backend and authentication decisions require:
+The A-027 through A-030 backend and authentication decisions require:
 
 - encrypted transport;
+- one Node process bound to loopback on the managed Windows shop computer;
+- a Cloudflare Tunnel route with no direct inbound router exposure;
+- a durable SQLite database outside the repository and consistent off-computer
+  backups;
+- a memory-hard salted shop-password hash and rate-limited enrollment;
 - per-device credentials stored outside source control;
 - location-scoped authorization;
 - revocation and credential rotation;
@@ -264,6 +280,11 @@ The A-022/A-023 backend and authentication decisions require:
 - encrypted backups and access-controlled logs;
 - no secret or sensitive payload logging;
 - auditable provisioning, acknowledgement, rejection, and recovery events.
+
+An enrolled client starts a single-flight push-then-pull cycle when the
+application opens, repeats it every 15 minutes while open, and exposes the same
+cycle through a visible manual action. No correctness property depends on a
+browser timer running while the application is closed.
 
 The browser remains an untrusted client. Server validation protects shared
 structure and authorization, not a non-negative inventory invariant.
@@ -309,12 +330,15 @@ Multi-device production remains blocked until automated tests prove:
 
 ## Decisions to freeze before coding
 
-Resolved by A-022 through A-026:
+Resolved by A-024 through A-030:
 
 - HTTPS JSON endpoints under `/sync/v1`;
-- PostgreSQL 17 and the backup objectives in A-025;
+- Windows-hosted Node 24 with built-in SQLite behind Cloudflare Tunnel;
+- one-time whole-app password enrollment with a persistent device credential;
+- foreground 15-minute and manual push-then-pull synchronization;
+- daily consistent off-computer SQLite backup and the objectives in A-030;
 - stable accepted/rejected receipts in one transactional batch;
-- one-time provisioning and hashed device credentials;
+- hashed, rotatable per-device credentials;
 - immutable admin-authenticated unavailable-drawer recovery;
 - current/previous schema window and A-025 limits;
 - explicit product conflicts and duplicate-name flags;
