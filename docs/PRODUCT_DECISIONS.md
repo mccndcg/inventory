@@ -67,6 +67,7 @@ correct and synchronizable.
 | A-029 | The client attempts one push-then-pull cycle immediately after an enrolled application opens and every 15 minutes while it remains open. A visible `Sync now` action runs the same single-flight cycle. Failed transport attempts retain durable work and use the next scheduled or manual opportunity; the design does not depend on browser execution while closed. |
 | A-030 | The SQLite database and server configuration live under an operator-selected protected Windows data directory, never the repository. A consistent daily backup is copied off the shop computer, retaining at least 30 daily and 12 month-end copies. Service installation, backup destination, Tunnel hostname, secret setup, and restore drill remain explicit operator evidence. |
 | A-031 | A later synchronized device is atomically assigned one unique drawer and one immutable, hashed `drawer_opening` at PHP 0.00 during shop-password enrollment. Physical cash is subsequently added through ordinary deposit CRUD. Planned decommissioning is accepted only after the old device synchronizes a zero drawer COH. Immediate credential revocation remains available for a lost device, but an unavailable nonzero drawer is never silently transferred or spoofed; same-device recovery or explicit incident reconciliation is required before replacement. |
+| A-032 | Supersede the Workbox implementation detail in the O-012 decision history, while preserving A-019 through A-021 behavior. Build the offline shell with a repository-owned generated service worker so the complete dependency audit remains clean. Installation is atomic, a replacement waits for operator activation, and the browser acceptance suite proves offline route fallback and interrupted-install safety. |
 
 ## Explicit non-goals
 
@@ -116,6 +117,9 @@ through A-016. Reopen them only through the change protocol below.
   the owner selected a Windows shop-hosted Node/SQLite hub through Cloudflare
   Tunnel, one-time whole-app password enrollment, a persistent per-device
   credential, 15-minute foreground sync, and a manual sync action.
+- 2026-07-29: A-032 replaced the Workbox implementation detail after its
+  current build dependency tree remained vulnerable. Offline behavior and
+  acceptance requirements did not change.
 - 2026-07-28: A-031 resolved ordinary later-drawer commissioning and planned
   replacement with the simplest fresh-balance policy: automatic zero opening,
   normal cash deposits, and zero-before-decommission.

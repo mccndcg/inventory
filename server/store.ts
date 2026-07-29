@@ -495,7 +495,7 @@ export class SyncStore {
     const matchingRows = this.db.prepare(`
       SELECT * FROM devices
       WHERE device_id = ? OR device_code = ? OR drawer_id = ?
-    `).all(deviceId, deviceCode, drawerId) as DeviceRow[];
+    `).all(deviceId, deviceCode, drawerId) as unknown as DeviceRow[];
     if (matchingRows.length) {
       const exact = matchingRows.find(
         (row) =>
@@ -1003,7 +1003,7 @@ export class SyncStore {
       locationId
         ? this.db.prepare("SELECT * FROM devices WHERE location_id = ? ORDER BY device_code").all(locationId)
         : this.db.prepare("SELECT * FROM devices ORDER BY device_code").all()
-    ) as DeviceRow[];
+    ) as unknown as DeviceRow[];
     return rows.map(directoryEntry);
   }
 

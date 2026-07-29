@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { InventoryWorkspace } from "../../features/inventory/InventoryWorkspace";
 
 export default function InventoryRoute() {

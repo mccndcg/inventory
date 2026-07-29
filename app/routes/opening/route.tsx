@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "react-router";
 import { OpeningWorkspace } from "../../features/opening/OpeningWorkspace";
 
 export const meta: MetaFunction = () => [{ title: "Opening | Local Inventory" }];

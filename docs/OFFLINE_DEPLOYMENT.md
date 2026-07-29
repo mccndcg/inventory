@@ -29,9 +29,9 @@ The checked-in `_headers` and `_redirects` files specify the host behavior:
 - missing assets return 404.
 
 Do not replace the explicit redirects with a catch-all asset fallback. During
-an interrupted deployment, Workbox must receive a failure for a missing
-hashed file. Returning `index.html` with status 200 can let a broken worker
-finish installing with HTML cached where JavaScript belongs.
+an interrupted deployment, the service worker must receive a failure for a
+missing hashed file. Returning `index.html` with status 200 can let a broken
+worker finish installing with HTML cached where JavaScript belongs.
 
 ## Install and offline readiness
 

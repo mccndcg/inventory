@@ -34,7 +34,7 @@ export const enrollmentRequestSchema = z.object({
   initialSettings: settingsSchema.optional(),
 }).strict();
 
-export interface EnrollmentRequest extends z.infer<typeof enrollmentRequestSchema> {}
+export type EnrollmentRequest = z.infer<typeof enrollmentRequestSchema>;
 
 export interface EnrollmentResponse {
   credential: string;

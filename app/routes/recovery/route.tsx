@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "react-router";
 import { RecoveryWorkspace } from "../../features/recovery/RecoveryWorkspace";
 
 export const meta: MetaFunction = () => [

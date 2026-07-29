@@ -1,5 +1,18 @@
 # Testing contract
 
+## Dependency security
+
+Run both audit scopes on every dependency change:
+
+```sh
+npm run audit:prod
+npm run audit:all
+```
+
+Both commands fail on any advisory severity. The production-only gate isolates
+deployed runtime exposure; the complete-tree gate also protects development
+and build environments. Do not use `npm audit fix --force`.
+
 Status: normative
 
 ## Installed harness

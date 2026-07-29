@@ -76,6 +76,29 @@ This is an explicit temporary exception, not a clean audit:
 Do not run npm's proposed forced downgrade. Do not treat the production route
 quarantine as a permanent vulnerability waiver.
 
+### Dependency-security closure
+
+On 2026-07-29, the temporary Remix exception was closed. The application shell
+moved from Remix 2 and React Router 6 to React Router 8.3.0, React 19.2.7, and
+Vite 8.1.5. React Router 7 was evaluated but not retained because the current
+advisory database reports a high-severity RSC request-handling vulnerability
+through 8.2.0.
+
+The Workbox-based PWA plugin was also removed. Its latest dependency graph
+still included vulnerable EJS, minimatch, and serialize-javascript chains. A
+repository-owned generated service worker now provides atomic precaching,
+navigation fallback, and user-confirmed activation without those packages.
+
+The closure gates require both scopes to remain clean:
+
+```sh
+npm run audit:prod
+npm run audit:all
+```
+
+At closure, both commands reported zero vulnerabilities. This supersedes the
+temporary framework exception above; it does not waive future advisories.
+
 The Vitest install added the compatible v3 runner while keeping Vite on
 `5.4.14`. Four existing transitive packages moved to newer compatible
 releases. Review package and lockfile diffs in every dependency slice.

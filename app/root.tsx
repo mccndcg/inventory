@@ -3,7 +3,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "@remix-run/react";
+} from "react-router";
 import "./tailwind.css";
 import { OfflineUpdateNotice } from "./offline/OfflineUpdateNotice";
 import { EnrollmentGate } from "./features/sync/EnrollmentGate";
@@ -16,6 +16,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#111827" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.webmanifest" />
         <Meta />
       </head>
       <body suppressHydrationWarning>

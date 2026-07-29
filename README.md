@@ -63,6 +63,8 @@ npm run test:watch
 The intended full gate is:
 
 ```sh
+npm run audit:prod
+npm run audit:all
 npm run test
 npm run typecheck
 npm run lint
@@ -77,7 +79,7 @@ and external blockers.
 
 ## Deployment
 
-The Remix configuration builds a client-only SPA (`ssr: false`). Build and
+The React Router configuration builds a client-only SPA (`ssr: false`). Build and
 locally preview the exact static artifact with:
 
 ```sh

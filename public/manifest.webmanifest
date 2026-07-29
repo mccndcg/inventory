@@ -1,0 +1,24 @@
+{
+  "name": "Inventory and Cash",
+  "short_name": "Inventory",
+  "description": "Local-first inventory, cash sales, and drawer cash.",
+  "theme_color": "#111827",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

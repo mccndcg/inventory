@@ -2,7 +2,7 @@
 
 Status: normative
 
-The recovery keeps the application small: a client-only React/Remix UI,
+The recovery keeps the application small: a client-only React Router UI,
 application services, pure domain functions, and a plain Dexie adapter. A
 custom server is added only in the later synchronization phase.
 
@@ -146,10 +146,10 @@ rows, or duplicate per-product sale history as authority.
 
 ## Runtime and deployment
 
-The current Remix configuration is an SPA. Local persistence alone does not
-guarantee an offline cold start: the browser also needs an installed and
-versioned application shell. Before multi-device production rollout, add and
-test an explicit static deployment/offline-shell strategy.
+The React Router configuration builds an SPA. A repository-owned generated
+service worker atomically precaches the versioned application shell and falls
+back to `index.html` for offline navigation. The browser suite proves warm and
+cold offline starts and rejects an interrupted replacement install.
 
 Local database schema changes require upgrade tests. Application releases must
 not depend on a live server to open existing local data. Unsupported durable
