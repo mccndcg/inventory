@@ -1,5 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router";
 import {
   inventoryDb,
   type InventoryDatabase,
@@ -128,24 +129,24 @@ export function LocalDashboard({
             Create the catalog, count physical stock and drawer cash, then
             approve the exact opening report before transactions begin.
           </p>
-          <a className="mt-2 inline-block underline" href="/opening">
+          <Link className="mt-2 inline-block underline" to="/opening">
             Continue opening workflow
-          </a>
+          </Link>
         </section>
       )}
       <nav className="grid gap-4 md:grid-cols-3">
-        <a className="rounded border p-5 shadow-sm" href="/inventory">
+        <Link className="rounded border p-5 shadow-sm" to="/inventory">
           <strong className="text-xl">Inventory</strong>
           <p>Products, stock adjustments, and derived quantities</p>
-        </a>
-        <a className="rounded border p-5 shadow-sm" href="/sales">
+        </Link>
+        <Link className="rounded border p-5 shadow-sm" to="/sales">
           <strong className="text-xl">Sales</strong>
           <p>Offline cash sales, receipts, edits, and voids</p>
-        </a>
-        <a className="rounded border p-5 shadow-sm" href="/cash">
+        </Link>
+        <Link className="rounded border p-5 shadow-sm" to="/cash">
           <strong className="text-xl">Cash drawer</strong>
           <p>Cash movements and drawer COH</p>
-        </a>
+        </Link>
       </nav>
       <p className="rounded border p-4">
         This device keeps accepting and retaining transactions while offline.
@@ -153,7 +154,7 @@ export function LocalDashboard({
       </p>
       <LocalSystemStatus db={db} />
       <p className="text-sm">
-        <a className="underline" href="/recovery">Backup and recovery</a>
+        <Link className="underline" to="/recovery">Backup and recovery</Link>
       </p>
     </main>
   );

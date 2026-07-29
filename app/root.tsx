@@ -1,4 +1,5 @@
 import {
+  Links,
   Meta,
   Outlet,
   Scripts,
@@ -18,6 +19,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <Meta />
+        <Links />
       </head>
       <body suppressHydrationWarning>
         {children}

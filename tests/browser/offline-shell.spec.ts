@@ -10,7 +10,14 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 const baseURL = "http://127.0.0.1:4173";
-const routes = ["/", "/inventory", "/sales", "/cash", "/opening", "/recovery"];
+const routes = [
+  { path: "/", heading: "Offline Test Shop" },
+  { path: "/inventory", heading: "Inventory" },
+  { path: "/sales", heading: "Sales" },
+  { path: "/cash", heading: "Cash drawer" },
+  { path: "/opening", heading: "Fresh opening balances" },
+  { path: "/recovery", heading: "Backup and recovery" },
+];
 
 async function waitForControlledShell(context: BrowserContext) {
   const page = context.pages()[0] ?? await context.newPage();
@@ -112,6 +119,12 @@ test("installs online and supports warm and cold offline starts", async () => {
     activeContext = await chromium.launchPersistentContext(profile);
     const page = await waitForControlledShell(activeContext);
     await enrollTestDevice(page);
+    await expect(page.locator("h1")).toHaveCSS("font-weight", "700");
+    await page.getByRole("link", { name: "Inventory" }).click();
+    await expect(page).toHaveURL(`${baseURL}/inventory`);
+    await expect(page.getByRole("heading", { name: "Inventory" })).toBeVisible();
+    await page.getByRole("link", { name: "Dashboard" }).click();
+    await expect(page).toHaveURL(`${baseURL}/`);
 
     await activeContext.setOffline(true);
     await page.reload();
@@ -124,8 +137,11 @@ test("installs online and supports warm and cold offline starts", async () => {
     });
     const coldPage = activeContext.pages()[0] ?? await activeContext.newPage();
     for (const route of routes) {
-      await coldPage.goto(`${baseURL}${route}`);
+      await coldPage.goto(`${baseURL}${route.path}`);
       await expect(coldPage.locator("body")).not.toBeEmpty();
+      await expect(
+        coldPage.getByRole("heading", { name: route.heading }),
+      ).toBeVisible();
       await expect(coldPage.locator("body")).not.toContainText(
         "This site can’t be reached",
       );

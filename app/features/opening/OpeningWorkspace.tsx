@@ -1,5 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router";
 import { formatPhp, parsePhp } from "../../domain/money";
 import {
   inventoryDb,
@@ -265,7 +266,7 @@ export function OpeningWorkspace({
           <h2 className="text-xl font-semibold">Opening finalized</h2>
           <p>Approved by {batch.approvedBy}. Corrections now use new adjustments.</p>
           <p className="mt-2 break-all font-mono text-xs">{batch.reportSha256}</p>
-          <a className="mt-4 inline-block underline" href="/">Return to dashboard</a>
+          <Link className="mt-4 inline-block underline" to="/">Return to dashboard</Link>
         </section>
       )}
     </main>

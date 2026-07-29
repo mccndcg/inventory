@@ -5,6 +5,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { Dexie } from "dexie";
+import { MemoryRouter } from "react-router";
 import type { IdSource } from "../../domain/types";
 import { InventoryDatabase } from "../../local-data/database";
 import { LocalDashboard } from "./LocalDashboard";
@@ -35,7 +36,9 @@ describe("local dashboard", () => {
   it("creates stable installation identity without opening balances", async () => {
     const user = userEvent.setup();
     const view = render(
-      <LocalDashboard db={db} dependencies={{ clock, ids }} />,
+      <MemoryRouter>
+        <LocalDashboard db={db} dependencies={{ clock, ids }} />
+      </MemoryRouter>,
     );
     await screen.findByText("Set up this installation");
     await user.type(screen.getByLabelText("Store name"), "Corner Store");
@@ -52,7 +55,11 @@ describe("local dashboard", () => {
     expect(await db.cashAdjustments.count()).toBe(0);
 
     view.unmount();
-    render(<LocalDashboard db={db} dependencies={{ clock, ids }} />);
+    render(
+      <MemoryRouter>
+        <LocalDashboard db={db} dependencies={{ clock, ids }} />
+      </MemoryRouter>,
+    );
     expect(await screen.findByText("Corner Store")).toBeTruthy();
     expect(await db.deviceState.count()).toBe(1);
   });

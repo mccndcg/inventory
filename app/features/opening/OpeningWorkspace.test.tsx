@@ -5,6 +5,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Dexie } from "dexie";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { MemoryRouter } from "react-router";
 import type { IdSource } from "../../domain/types";
 import { InventoryDatabase } from "../../local-data/database";
 import { initializeInstallation } from "../../local-data/installation";
@@ -52,7 +53,11 @@ afterEach(async () => {
 describe("opening workspace", () => {
   it("records, freezes, and finalizes fresh physical counts", async () => {
     const user = userEvent.setup();
-    render(<OpeningWorkspace db={db} dependencies={{ clock, ids }} />);
+    render(
+      <MemoryRouter>
+        <OpeningWorkspace db={db} dependencies={{ clock, ids }} />
+      </MemoryRouter>,
+    );
 
     expect(await screen.findByText("Fresh opening balances")).toBeTruthy();
     const riceCount = screen.getByLabelText("Rice");
