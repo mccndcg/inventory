@@ -48,6 +48,12 @@ npm run build
 npm run build:sync
 ```
 
+`build:sync` starts the generated server on a temporary loopback port and
+checks `/health` before succeeding. If an older `sync-server.mjs` reports
+`Dynamic require of "node:events" is not supported`, pull the current source
+and rebuild it; that artifact predates the required Node ESM compatibility
+bridge.
+
 Copy `docs/templates/SYNC_HOST_CONFIG.example.json` outside the checkout as:
 
 ```text

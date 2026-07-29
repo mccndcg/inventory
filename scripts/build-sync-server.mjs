@@ -12,6 +12,12 @@ await build({
   format: "esm",
   platform: "node",
   target: "node24",
+  banner: {
+    js: [
+      'import { createRequire as __nodeCreateRequire } from "node:module";',
+      "const require = __nodeCreateRequire(import.meta.url);",
+    ].join("\n"),
+  },
   sourcemap: true,
   packages: "bundle",
   external: ["node:sqlite"],

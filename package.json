@@ -6,7 +6,7 @@
   "packageManager": "npm@11.12.1",
   "scripts": {
     "build": "remix vite:build",
-    "build:sync": "node scripts/build-sync-server.mjs",
+    "build:sync": "node scripts/build-sync-server.mjs && node scripts/verify-sync-bundle.mjs",
     "backup:sync": "node build/sync-backup.mjs",
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --no-cache --max-warnings 0 .",
