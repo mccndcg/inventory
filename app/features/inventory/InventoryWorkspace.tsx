@@ -1,6 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useMemo, useState, type FormEvent } from "react";
 import { localOnlyMode } from "../../config";
+import { PRODUCT_CATEGORY_TYPES } from "../../domain/categories";
 import { businessDateFor } from "../../domain/time";
 import { formatPhp, parsePhp } from "../../domain/money";
 import type { StockAdjustmentKind } from "../../domain/types";
@@ -49,6 +50,7 @@ export function InventoryWorkspace({
 }: InventoryWorkspaceProps) {
   const [query, setQuery] = useState("");
   const [showArchived, setShowArchived] = useState(false);
+  const [productModalOpen, setProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product>();
   const [adjustingProduct, setAdjustingProduct] = useState<Product>();
   const [editingAdjustment, setEditingAdjustment] =
@@ -89,9 +91,9 @@ export function InventoryWorkspace({
         ...(localOnlyMode && !editingProduct
           ? { startingQuantity: Number(form.get("startingQuantity") ?? 0) }
           : {}),
-        categories: String(form.get("categories") ?? "")
-          .split(",")
-          .map((category) => category.trim())
+        categories: form
+          .getAll("categories")
+          .map((category) => String(category).trim())
           .filter(Boolean),
       };
       if (editingProduct) {
@@ -101,8 +103,9 @@ export function InventoryWorkspace({
         await createProduct(db, fields, dependencies);
         setNotice("Product created.");
       }
-      setEditingProduct(undefined);
       formElement.reset();
+      setProductModalOpen(false);
+      setEditingProduct(undefined);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Product failed.");
     }
@@ -150,81 +153,140 @@ export function InventoryWorkspace({
     () => rows?.filter(({ product }) => product.tombstone === 0) ?? [],
     [rows],
   );
+  const productCategoryTypes = useMemo(
+    () => [
+      ...new Set([
+        ...PRODUCT_CATEGORY_TYPES,
+        ...(editingProduct?.categories ?? []),
+      ]),
+    ],
+    [editingProduct],
+  );
+
+  function openCreateProduct(): void {
+    setEditingProduct(undefined);
+    setProductModalOpen(true);
+  }
+
+  function openEditProduct(product: Product): void {
+    setEditingProduct(product);
+    setProductModalOpen(true);
+  }
+
+  function closeProductModal(): void {
+    setProductModalOpen(false);
+    setEditingProduct(undefined);
+  }
 
   return (
     <main className="mx-auto max-w-6xl space-y-6 p-4">
       <header>
-        <p className="text-sm text-muted-foreground">Offline local catalog</p>
-        <h1 className="text-3xl font-bold">Inventory</h1>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-sm text-muted-foreground">Offline local catalog</p>
+            <h1 className="text-3xl font-bold">Inventory</h1>
+          </div>
+          <button
+            className="rounded bg-black px-4 py-2 text-white"
+            onClick={openCreateProduct}
+            type="button"
+          >
+            Add product
+          </button>
+        </div>
       </header>
 
       {notice && <p role="status" className="rounded bg-green-100 p-3">{notice}</p>}
       {error && <p role="alert" className="rounded bg-red-100 p-3">{error}</p>}
 
-      <section className="rounded border p-4">
-        <h2 className="mb-3 text-xl font-semibold">
-          {editingProduct ? "Edit product" : "Add product"}
-        </h2>
-        <form className="grid gap-3 md:grid-cols-4" onSubmit={submitProduct}>
-          <label>
-            <span className="block text-sm">Name</span>
-            <input
-              className="w-full rounded border p-2"
-              name="name"
-              required
-              defaultValue={editingProduct?.name ?? ""}
-              key={`name-${editingProduct?.id ?? "new"}`}
-            />
-          </label>
-          <label>
-            <span className="block text-sm">Price (PHP)</span>
-            <input
-              className="w-full rounded border p-2"
-              name="price"
-              required
-              inputMode="decimal"
-              defaultValue={
-                editingProduct
-                  ? (editingProduct.currentPriceMinor / 100).toFixed(2)
-                  : ""
-              }
-              key={`price-${editingProduct?.id ?? "new"}`}
-            />
-          </label>
-          {localOnlyMode && !editingProduct && (
-            <label>
-              <span className="block text-sm">Starting quantity</span>
-              <input
-                className="w-full rounded border p-2"
-                name="startingQuantity"
-                type="number"
-                min="0"
-                step="1"
-                defaultValue="0"
-              />
-            </label>
-          )}
-          <label>
-            <span className="block text-sm">Categories</span>
-            <input
-              className="w-full rounded border p-2"
-              name="categories"
-              defaultValue={editingProduct?.categories.join(", ") ?? ""}
-              key={`categories-${editingProduct?.id ?? "new"}`}
-            />
-          </label>
-          <div className="flex items-end gap-2">
-            <button className="rounded bg-black px-4 py-2 text-white" type="submit">
-              {editingProduct ? "Save product" : "Create product"}
-            </button>
-            {editingProduct && (
-              <button type="button" onClick={() => setEditingProduct(undefined)}>
-                Cancel
+      {productModalOpen && (
+        <div
+          aria-labelledby="product-dialog-title"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+        >
+          <section className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-xl">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-xl font-semibold" id="product-dialog-title">
+                {editingProduct ? "Edit product" : "Add product"}
+              </h2>
+              <button onClick={closeProductModal} type="button">
+                Close
               </button>
-            )}
-          </div>
-        </form>
-      </section>
+            </div>
+            <form className="mt-5 space-y-4" onSubmit={submitProduct}>
+              <div className="grid gap-4 md:grid-cols-2">
+                <label>
+                  <span className="block text-sm">Name</span>
+                  <input
+                    className="w-full rounded border p-2"
+                    name="name"
+                    required
+                    defaultValue={editingProduct?.name ?? ""}
+                    key={`name-${editingProduct?.id ?? "new"}`}
+                  />
+                </label>
+                <label>
+                  <span className="block text-sm">Price (PHP)</span>
+                  <input
+                    className="w-full rounded border p-2"
+                    name="price"
+                    required
+                    inputMode="decimal"
+                    defaultValue={
+                      editingProduct
+                        ? (editingProduct.currentPriceMinor / 100).toFixed(2)
+                        : ""
+                    }
+                    key={`price-${editingProduct?.id ?? "new"}`}
+                  />
+                </label>
+                {localOnlyMode && !editingProduct && (
+                  <label>
+                    <span className="block text-sm">Starting quantity</span>
+                    <input
+                      className="w-full rounded border p-2"
+                      name="startingQuantity"
+                      type="number"
+                      min="0"
+                      step="1"
+                      defaultValue="0"
+                    />
+                  </label>
+                )}
+              </div>
+              <fieldset>
+                <legend className="mb-2 block text-sm font-semibold">Categories</legend>
+                <div className="flex flex-wrap gap-2">
+                  {productCategoryTypes.map((category) => (
+                    <label className="cursor-pointer" key={category}>
+                      <input
+                        className="peer sr-only"
+                        defaultChecked={editingProduct?.categories.includes(category)}
+                        name="categories"
+                        type="checkbox"
+                        value={category}
+                      />
+                      <span className="inline-flex rounded-full border px-3 py-1 text-sm transition peer-checked:border-black peer-checked:bg-black peer-checked:text-white">
+                        {category}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              <div className="flex justify-end gap-2">
+                <button onClick={closeProductModal} type="button">
+                  Cancel
+                </button>
+                <button className="rounded bg-black px-4 py-2 text-white" type="submit">
+                  {editingProduct ? "Save product" : "Create product"}
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
@@ -265,7 +327,19 @@ export function InventoryWorkspace({
                 {rows.map(({ product, stock }) => (
                   <tr className="border-b" key={product.id}>
                     <td className="p-3">
-                      {product.name}
+                      <div>{product.name}</div>
+                      {product.categories.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {product.categories.map((category) => (
+                            <span
+                              className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700"
+                              key={category}
+                            >
+                              {category}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       {product.tombstone === 1 && (
                         <span className="ml-2 text-sm">(archived)</span>
                       )}
@@ -277,7 +351,7 @@ export function InventoryWorkspace({
                     <td className="flex flex-wrap gap-2 p-3">
                       {product.tombstone === 0 ? (
                         <>
-                          <button onClick={() => setEditingProduct(product)}>
+                          <button onClick={() => openEditProduct(product)}>
                             Edit
                           </button>
                           <button onClick={() => setAdjustingProduct(product)}>

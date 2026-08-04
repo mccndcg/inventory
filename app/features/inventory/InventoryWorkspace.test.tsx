@@ -53,12 +53,16 @@ describe("inventory workspace", () => {
     );
 
     expect(await screen.findByText("No products found.")).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: "Add product" }));
     await user.type(screen.getByLabelText("Name"), "Rice");
     await user.type(screen.getByLabelText("Price (PHP)"), "12.50");
-    await user.type(screen.getByLabelText("Categories"), "Food, Staple");
+    await user.click(screen.getByRole("checkbox", { name: "Food" }));
+    await user.click(screen.getByRole("checkbox", { name: "Snacks" }));
     await user.click(screen.getByRole("button", { name: "Create product" }));
     expect(await screen.findByText("Product created.")).toBeTruthy();
     expect(await screen.findByText("PHP 12.50")).toBeTruthy();
+    expect(screen.getByText("Food")).toBeTruthy();
+    expect(screen.getByText("Snacks")).toBeTruthy();
 
     await user.click(screen.getByRole("button", { name: "Adjust stock" }));
     await user.selectOptions(screen.getByLabelText("Kind"), "spoilage");
@@ -91,6 +95,7 @@ describe("inventory workspace", () => {
   it("shows domain failures without committing contradictory adjustments", async () => {
     const user = userEvent.setup();
     render(<InventoryWorkspace db={db} dependencies={{ clock, ids }} />);
+    await user.click(screen.getByRole("button", { name: "Add product" }));
     await user.type(screen.getByLabelText("Name"), "Rice");
     await user.type(screen.getByLabelText("Price (PHP)"), "1");
     await user.click(screen.getByRole("button", { name: "Create product" }));
