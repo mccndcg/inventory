@@ -53,6 +53,17 @@ npm run dev
 Development mode uses the same maintained local routes as the production
 build. Never point development tooling at a production browser profile.
 
+To explore the local CRUD and offline workflows before configuring a sync host,
+create `.env.local` with:
+
+```dotenv
+VITE_LOCAL_ONLY=true
+```
+
+This bypasses first-device enrollment and leaves synchronization disabled for
+that local development session. Do not enable it for a synchronized or
+production deployment.
+
 Run the installed Vitest harness with:
 
 ```sh

@@ -14,6 +14,8 @@ import { browserPersistenceDependencies } from "../../local-data/runtime";
 import type { PersistenceDependencies } from "../../local-data/transactions";
 import { LocalSystemStatus } from "../status/LocalSystemStatus";
 
+const localOnly = import.meta.env.VITE_LOCAL_ONLY === "true";
+
 interface LocalDashboardProps {
   db?: InventoryDatabase;
   dependencies?: PersistenceDependencies;
@@ -150,7 +152,9 @@ export function LocalDashboard({
       </nav>
       <p className="rounded border p-4">
         This device keeps accepting and retaining transactions while offline.
-        Use the synchronization bar above for current delivery status.
+        {localOnly
+          ? " Local-only mode is enabled; synchronization is not configured."
+          : " Use the synchronization bar above for current delivery status."}
       </p>
       <LocalSystemStatus db={db} />
       <p className="text-sm">

@@ -9,6 +9,8 @@ import "./tailwind.css";
 import { OfflineUpdateNotice } from "./offline/OfflineUpdateNotice";
 import { EnrollmentGate } from "./features/sync/EnrollmentGate";
 
+const localOnly = import.meta.env.VITE_LOCAL_ONLY === "true";
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" >
@@ -32,6 +34,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  if (localOnly) {
+    return <Outlet />;
+  }
+
   return (
     <EnrollmentGate>
       <Outlet />
