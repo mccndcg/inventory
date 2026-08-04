@@ -1,5 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useMemo, useState, type FormEvent } from "react";
+import { localOnlyMode } from "../../config";
 import { businessDateFor } from "../../domain/time";
 import { formatPhp, parsePhp } from "../../domain/money";
 import type { StockAdjustmentKind } from "../../domain/types";
@@ -85,6 +86,9 @@ export function InventoryWorkspace({
       const fields = {
         name: String(form.get("name") ?? ""),
         currentPriceMinor: parsePhp(String(form.get("price") ?? "")),
+        ...(localOnlyMode && !editingProduct
+          ? { startingQuantity: Number(form.get("startingQuantity") ?? 0) }
+          : {}),
         categories: String(form.get("categories") ?? "")
           .split(",")
           .map((category) => category.trim())
@@ -187,6 +191,19 @@ export function InventoryWorkspace({
               key={`price-${editingProduct?.id ?? "new"}`}
             />
           </label>
+          {localOnlyMode && !editingProduct && (
+            <label>
+              <span className="block text-sm">Starting quantity</span>
+              <input
+                className="w-full rounded border p-2"
+                name="startingQuantity"
+                type="number"
+                min="0"
+                step="1"
+                defaultValue="0"
+              />
+            </label>
+          )}
           <label>
             <span className="block text-sm">Categories</span>
             <input

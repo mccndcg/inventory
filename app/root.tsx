@@ -6,10 +6,9 @@ import {
   ScrollRestoration,
 } from "react-router";
 import "./tailwind.css";
+import { localOnlyMode } from "./config";
 import { OfflineUpdateNotice } from "./offline/OfflineUpdateNotice";
 import { EnrollmentGate } from "./features/sync/EnrollmentGate";
-
-const localOnly = import.meta.env.VITE_LOCAL_ONLY === "true";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -34,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  if (localOnly) {
+  if (localOnlyMode) {
     return <Outlet />;
   }
 

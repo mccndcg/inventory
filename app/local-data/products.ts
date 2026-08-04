@@ -1,12 +1,16 @@
 import { CURRENCY_CODE, RECORD_SCHEMA_VERSION } from "../domain/constants";
+import { assertSafeInteger } from "../domain/integers";
 import { assertMoneyMinor } from "../domain/money";
-import { currentInstant } from "../domain/time";
+import { businessDateFor, currentInstant } from "../domain/time";
+import { localOnlyMode } from "../config";
 import type { UUID } from "../domain/types";
 import type { InventoryDatabase } from "./database";
 import { RepositoryError } from "./errors";
 import type { Product } from "./models";
+import type { StockAdjustment } from "./models";
 import {
   runAggregateMutation,
+  type PendingOperation,
   type PersistenceDependencies,
 } from "./transactions";
 import { parseProduct } from "./validation";
@@ -14,6 +18,7 @@ import { parseProduct } from "./validation";
 export interface ProductFields {
   name: string;
   currentPriceMinor: number;
+  startingQuantity?: number;
   categories?: readonly string[];
   sku?: string;
   sizeLabel?: string;
@@ -44,15 +49,23 @@ function validateFields(fields: ProductFields) {
       .map((category) => category.normalize("NFC").trim())
       .filter(Boolean),
   )];
+  const startingQuantity = fields.startingQuantity ?? 0;
+  assertSafeInteger(startingQuantity, "Starting quantity", "INVALID_QUANTITY");
+  if (startingQuantity < 0) {
+    throw new RepositoryError("INVALID_RECORD", "Starting quantity cannot be negative.");
+  }
   return {
-    name,
-    normalizedName: normalizeProductName(name),
-    currentPriceMinor: fields.currentPriceMinor,
-    categories,
-    ...(normalizeOptional(fields.sku) ? { sku: normalizeOptional(fields.sku) } : {}),
-    ...(normalizeOptional(fields.sizeLabel)
-      ? { sizeLabel: normalizeOptional(fields.sizeLabel) }
-      : {}),
+    product: {
+      name,
+      normalizedName: normalizeProductName(name),
+      currentPriceMinor: fields.currentPriceMinor,
+      categories,
+      ...(normalizeOptional(fields.sku) ? { sku: normalizeOptional(fields.sku) } : {}),
+      ...(normalizeOptional(fields.sizeLabel)
+        ? { sizeLabel: normalizeOptional(fields.sizeLabel) }
+        : {}),
+    },
+    startingQuantity,
   };
 }
 
@@ -73,12 +86,22 @@ export async function createProduct(
   dependencies: PersistenceDependencies,
 ): Promise<Product> {
   const validated = validateFields(fields);
-  return runAggregateMutation(db, [db.products], dependencies, async ({ device }) => {
+  if (validated.startingQuantity > 0 && !localOnlyMode) {
+    throw new RepositoryError(
+      "INVALID_RECORD",
+      "Starting quantity is available only in local-only mode.",
+    );
+  }
+  return runAggregateMutation(
+    db,
+    [db.products, db.stockAdjustments],
+    dependencies,
+    async ({ device }) => {
     const instant = currentInstant(dependencies.clock);
     const product: Product = {
       id: dependencies.ids.randomUUID(),
       locationId: device.locationId,
-      ...validated,
+      ...validated.product,
       currencyCode: CURRENCY_CODE,
       originDeviceId: device.deviceId,
       revision: 1,
@@ -88,17 +111,47 @@ export async function createProduct(
       updatedAt: instant,
     };
     await db.products.add(product);
-    return {
-      result: product,
-      operation: {
-        aggregateType: "product",
+    const operations: PendingOperation[] = [
+      {
+        aggregateType: "product" as const,
         aggregateId: product.id,
-        action: "upsert",
+        action: "upsert" as const,
         aggregateRevision: product.revision,
         payload: product,
       },
+    ];
+    if (validated.startingQuantity > 0) {
+      const adjustment: StockAdjustment = {
+        id: dependencies.ids.randomUUID(),
+        locationId: device.locationId,
+        productId: product.id,
+        kind: "restock",
+        quantityDelta: validated.startingQuantity,
+        businessDate: businessDateFor(dependencies.clock.now()),
+        occurredAt: instant,
+        notes: "Starting quantity at product creation.",
+        originDeviceId: device.deviceId,
+        revision: 1,
+        recordSchemaVersion: RECORD_SCHEMA_VERSION,
+        tombstone: 0,
+        createdAt: instant,
+        updatedAt: instant,
+      };
+      await db.stockAdjustments.add(adjustment);
+      operations.push({
+        aggregateType: "stock_adjustment" as const,
+        aggregateId: adjustment.id,
+        action: "upsert" as const,
+        aggregateRevision: adjustment.revision,
+        payload: adjustment,
+      });
+    }
+    return {
+      result: product,
+      operation: operations,
     };
-  });
+    },
+  );
 }
 
 export async function updateProduct(
@@ -118,7 +171,7 @@ export async function updateProduct(
     }
     const product: Product = {
       ...existing,
-      ...validated,
+      ...validated.product,
       revision: existing.revision + 1,
       updatedAt: currentInstant(dependencies.clock),
     };

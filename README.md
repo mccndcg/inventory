@@ -61,8 +61,10 @@ VITE_LOCAL_ONLY=true
 ```
 
 This bypasses first-device enrollment and leaves synchronization disabled for
-that local development session. Do not enable it for a synchronized or
-production deployment.
+that local development session. The app creates a default local store and
+drawer automatically, starts cash at `PHP 0.00`, makes opening balances
+optional, and adds a `Starting quantity` field to new products. Do not enable it
+for a synchronized or production deployment.
 
 Run the installed Vitest harness with:
 

@@ -1,6 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router";
+import { localOnlyMode } from "../../config";
 import {
   inventoryDb,
   type InventoryDatabase,
@@ -13,8 +14,6 @@ import { readOpeningBatch } from "../../local-data/opening";
 import { browserPersistenceDependencies } from "../../local-data/runtime";
 import type { PersistenceDependencies } from "../../local-data/transactions";
 import { LocalSystemStatus } from "../status/LocalSystemStatus";
-
-const localOnly = import.meta.env.VITE_LOCAL_ONLY === "true";
 
 interface LocalDashboardProps {
   db?: InventoryDatabase;
@@ -37,6 +36,25 @@ export function LocalDashboard({
       return null;
     }
   }, [db]);
+
+  useEffect(() => {
+    if (!localOnlyMode || installation !== null || installation === undefined) {
+      return;
+    }
+    void initializeInstallation(
+      db,
+      {
+        deviceCode: "LOCAL-1",
+        drawerLabel: "Main drawer",
+        locationId: dependencies.ids.randomUUID(),
+        locationCode: "LOCAL",
+        locationName: "Local store",
+      },
+      dependencies,
+    ).catch((caught) => {
+      setError(caught instanceof Error ? caught.message : "Setup failed.");
+    });
+  }, [db, dependencies, installation]);
 
   async function submitSetup(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -64,15 +82,15 @@ export function LocalDashboard({
   }
 
   if (!installation) {
+    if (localOnlyMode) {
+      return <p className="p-6">Preparing local application…</p>;
+    }
     return (
       <main className="mx-auto max-w-xl space-y-5 p-6">
         <header>
           <p className="text-sm text-muted-foreground">First local device</p>
           <h1 className="text-3xl font-bold">Set up this installation</h1>
-          <p>
-            This creates device and drawer identity only. Fresh stock and cash
-            balances are recorded later through the opening workflow.
-          </p>
+          <p>This creates the local device identity needed for transactions.</p>
         </header>
         {error && <p role="alert" className="rounded bg-red-100 p-3">{error}</p>}
         <form className="space-y-3" onSubmit={submitSetup}>
@@ -124,7 +142,7 @@ export function LocalDashboard({
           {installation.device.drawerLabel}
         </p>
       </header>
-      {installation.opening?.status !== "finalized" && (
+      {!localOnlyMode && installation.opening?.status !== "finalized" && (
         <section className="rounded border border-amber-500 bg-amber-50 p-4">
           <h2 className="text-xl font-semibold">Opening balances required</h2>
           <p>
@@ -152,8 +170,8 @@ export function LocalDashboard({
       </nav>
       <p className="rounded border p-4">
         This device keeps accepting and retaining transactions while offline.
-        {localOnly
-          ? " Local-only mode is enabled; synchronization is not configured."
+        {localOnlyMode
+          ? " Local-only mode is enabled; synchronization and opening balances are optional."
           : " Use the synchronization bar above for current delivery status."}
       </p>
       <LocalSystemStatus db={db} />

@@ -37,7 +37,7 @@ export interface AggregateTransactionContext {
 
 export interface AggregateMutationResult<T> {
   result: T;
-  operation?: PendingOperation;
+  operation?: PendingOperation | readonly PendingOperation[];
 }
 
 function nextSequence(current: number, label: string): number {
@@ -103,44 +103,48 @@ export async function runAggregateMutation<T>(
     if (!mutation.operation) {
       return mutation.result;
     }
-
-    assertSafeInteger(
-      mutation.operation.aggregateRevision,
-      "Aggregate revision",
-      "INVALID_QUANTITY",
-    );
-    if (mutation.operation.aggregateRevision < 1) {
-      throw new RepositoryError(
-        "INVALID_RECORD",
-        "Aggregate revision must be positive.",
-      );
-    }
-
+    const pendingOperations = Array.isArray(mutation.operation)
+      ? mutation.operation
+      : [mutation.operation];
     dependencies.beforeOutbox?.();
-    const operation: OutboxOperation = parseOutboxOperation({
-      operationId: dependencies.ids.randomUUID(),
-      deviceId: device.deviceId,
-      deviceSequence: device.nextOperationSequence,
-      aggregateType: mutation.operation.aggregateType,
-      aggregateId: mutation.operation.aggregateId,
-      action: mutation.operation.action,
-      aggregateRevision: mutation.operation.aggregateRevision,
-      operationSchemaVersion: 1,
-      payload: clonePayload(mutation.operation.payload),
-      createdAt: currentInstant(dependencies.clock),
-      status: "pending",
-      attemptCount: 0,
-      ...(mutation.operation.baseServerVersion
-        ? { baseServerVersion: mutation.operation.baseServerVersion }
-        : {}),
+    const operations: OutboxOperation[] = pendingOperations.map((pending) => {
+      assertSafeInteger(
+        pending.aggregateRevision,
+        "Aggregate revision",
+        "INVALID_QUANTITY",
+      );
+      if (pending.aggregateRevision < 1) {
+        throw new RepositoryError(
+          "INVALID_RECORD",
+          "Aggregate revision must be positive.",
+        );
+      }
+      const operation = parseOutboxOperation({
+        operationId: dependencies.ids.randomUUID(),
+        deviceId: device.deviceId,
+        deviceSequence: device.nextOperationSequence,
+        aggregateType: pending.aggregateType,
+        aggregateId: pending.aggregateId,
+        action: pending.action,
+        aggregateRevision: pending.aggregateRevision,
+        operationSchemaVersion: 1,
+        payload: clonePayload(pending.payload),
+        createdAt: currentInstant(dependencies.clock),
+        status: "pending",
+        attemptCount: 0,
+        ...(pending.baseServerVersion
+          ? { baseServerVersion: pending.baseServerVersion }
+          : {}),
+      });
+      device.nextOperationSequence = nextSequence(
+        device.nextOperationSequence,
+        "Operation sequence",
+      );
+      return operation;
     });
-    device.nextOperationSequence = nextSequence(
-      device.nextOperationSequence,
-      "Operation sequence",
-    );
     await Promise.all([
       db.deviceState.put(device),
-      db.outbox.add(operation),
+      db.outbox.bulkAdd(operations),
     ]);
     return mutation.result;
   });

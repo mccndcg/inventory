@@ -30,6 +30,7 @@ import {
   parseOpeningReportPayload,
   parseProduct,
 } from "./validation";
+import { localOnlyMode } from "../config";
 
 export const APPLICATION_COMMIT =
   import.meta.env.VITE_APP_COMMIT || "development";
@@ -105,8 +106,11 @@ export async function readOpeningBatch(
 
 export async function requireFinalizedOpening(
   db: InventoryDatabase,
-): Promise<OpeningBatch> {
+): Promise<OpeningBatch | undefined> {
   const batch = await readOpeningBatch(db);
+  if (localOnlyMode) {
+    return batch;
+  }
   if (!batch || batch.status !== "finalized") {
     throw new RepositoryError(
       "INVALID_RECORD",
