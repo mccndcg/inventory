@@ -77,6 +77,7 @@ describe("sales workspace", () => {
     await finalizeZeroOpeningForTest(db, { clock, ids });
     const user = userEvent.setup();
     const view = render(<SalesWorkspace db={db} dependencies={{ clock, ids }} />);
+    await user.click(screen.getByRole("button", { name: "New cash sale" }));
     await screen.findByRole("option", { name: "Rice" });
 
     await addDraftLine(user, "Rice", "2", "125");
@@ -132,6 +133,7 @@ describe("sales workspace", () => {
         }}
       />,
     );
+    await user.click(screen.getByRole("button", { name: "New cash sale" }));
     await screen.findByRole("option", { name: "Rice" });
     await addDraftLine(user, "Rice", "1", "1");
     await user.click(screen.getByRole("button", { name: "Complete sale" }));

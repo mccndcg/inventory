@@ -1,5 +1,13 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useMemo, useState, type FormEvent } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../../components/ui/dialog";
 import { formatWholePhp, parseWholePhp } from "../../domain/money";
 import { businessDateFor } from "../../domain/time";
 import {
@@ -32,6 +40,7 @@ export function SalesWorkspace({
   dependencies = browserPersistenceDependencies,
 }: SalesWorkspaceProps) {
   const [lines, setLines] = useState<DraftLine[]>([]);
+  const [saleModalOpen, setSaleModalOpen] = useState(false);
   const [editingSale, setEditingSale] = useState<Sale>();
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -128,6 +137,7 @@ export function SalesWorkspace({
       }
       setLines([]);
       setEditingSale(undefined);
+      setSaleModalOpen(false);
       formElement.reset();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Sale failed.");
@@ -139,23 +149,61 @@ export function SalesWorkspace({
     setLines(items);
     setNotice("");
     setError("");
+    setSaleModalOpen(true);
+  }
+
+  function openNewSale(): void {
+    setEditingSale(undefined);
+    setLines([]);
+    setError("");
+    setSaleModalOpen(true);
+  }
+
+  function closeSaleModal(): void {
+    setSaleModalOpen(false);
+    setEditingSale(undefined);
+    setLines([]);
+    setError("");
   }
 
   return (
     <main className="mx-auto max-w-6xl space-y-6 p-4">
-      <header>
-        <p className="text-sm text-muted-foreground">Cash only · works offline</p>
-        <h1 className="text-3xl font-bold">Sales</h1>
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-sm text-muted-foreground">Cash only · works offline</p>
+          <h1 className="text-3xl font-bold">Sales</h1>
+        </div>
+        <button
+          className="rounded bg-black px-4 py-2 text-white"
+          onClick={openNewSale}
+          type="button"
+        >
+          New cash sale
+        </button>
       </header>
 
       {notice && <p role="status" className="rounded bg-green-100 p-3">{notice}</p>}
       {error && <p role="alert" className="rounded bg-red-100 p-3">{error}</p>}
 
-      <section className="rounded border p-4">
-        <h2 className="text-xl font-semibold">
-          {editingSale ? `Edit ${editingSale.receiptNumber}` : "New cash sale"}
-        </h2>
-        <form className="mt-3 grid gap-3 md:grid-cols-4" onSubmit={addLine}>
+      <Dialog
+        open={saleModalOpen}
+        onOpenChange={(open) => {
+          if (!open) closeSaleModal();
+        }}
+      >
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>
+              {editingSale ? `Edit ${editingSale.receiptNumber}` : "New cash sale"}
+            </DialogTitle>
+            <DialogDescription>
+              Add products and complete the cash sale when the total is correct.
+            </DialogDescription>
+          </DialogHeader>
+
+          {error && <p role="alert" className="mt-4 rounded bg-red-100 p-3">{error}</p>}
+
+          <form className="mt-4 grid gap-3 md:grid-cols-4" onSubmit={addLine}>
           <label>
             <span className="block text-sm">Product</span>
             <select className="w-full rounded border p-2" name="productId" required>
@@ -190,93 +238,86 @@ export function SalesWorkspace({
           <button className="rounded border px-4 py-2" type="submit">
             Add item
           </button>
-        </form>
+          </form>
 
-        {lines.length === 0 ? (
-          <p className="mt-4">No sale items.</p>
-        ) : (
-          <table className="mt-4 w-full text-left">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Line total</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {lines.map((line) => (
-                <tr key={line.productId}>
-                  <td>{line.productName}</td>
-                  <td>
-                    <label>
-                      <span className="sr-only">
-                        Quantity for {line.productName}
-                      </span>
-                      <input
-                        className="w-20 rounded border p-1"
-                        type="number"
-                        min="1"
-                        step="1"
-                        value={line.quantity}
-                        onChange={(event) => {
-                          const quantity = Number(event.target.value);
-                          setLines((current) =>
-                            current.map((candidate) =>
-                              candidate.productId === line.productId
-                                ? { ...candidate, quantity }
-                                : candidate,
-                            ),
-                          );
-                        }}
-                      />
-                    </label>
-                  </td>
-                  <td>{formatWholePhp(line.unitPricePesos)}</td>
-                  <td>{formatWholePhp(line.quantity * line.unitPricePesos)}</td>
-                  <td>
-                    <button
-                      onClick={() =>
-                        setLines((current) =>
-                          current.filter(
-                            ({ productId }) => productId !== line.productId,
-                          ),
-                        )
-                      }
-                      type="button"
-                    >
-                      Remove
-                    </button>
-                  </td>
+          {lines.length === 0 ? (
+            <p className="mt-4">No sale items.</p>
+          ) : (
+            <table className="mt-4 w-full text-left">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Line total</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-
-        <form className="mt-4 flex flex-wrap items-end gap-3" onSubmit={submitSale}>
-          <label>
-            <span className="block text-sm">Notes</span>
-            <input className="rounded border p-2" name="notes" />
-          </label>
-          <strong>Total: {formatWholePhp(draftTotal)}</strong>
-          <button className="rounded bg-black px-4 py-2 text-white" type="submit">
-            {editingSale ? "Save sale" : "Complete sale"}
-          </button>
-          {editingSale && (
-            <button
-              type="button"
-              onClick={() => {
-                setEditingSale(undefined);
-                setLines([]);
-              }}
-            >
-              Cancel edit
-            </button>
+              </thead>
+              <tbody>
+                {lines.map((line) => (
+                  <tr key={line.productId}>
+                    <td>{line.productName}</td>
+                    <td>
+                      <label>
+                        <span className="sr-only">
+                          Quantity for {line.productName}
+                        </span>
+                        <input
+                          className="w-20 rounded border p-1"
+                          type="number"
+                          min="1"
+                          step="1"
+                          value={line.quantity}
+                          onChange={(event) => {
+                            const quantity = Number(event.target.value);
+                            setLines((current) =>
+                              current.map((candidate) =>
+                                candidate.productId === line.productId
+                                  ? { ...candidate, quantity }
+                                  : candidate,
+                              ),
+                            );
+                          }}
+                        />
+                      </label>
+                    </td>
+                    <td>{formatWholePhp(line.unitPricePesos)}</td>
+                    <td>{formatWholePhp(line.quantity * line.unitPricePesos)}</td>
+                    <td>
+                      <button
+                        onClick={() =>
+                          setLines((current) =>
+                            current.filter(
+                              ({ productId }) => productId !== line.productId,
+                            ),
+                          )
+                        }
+                        type="button"
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
-        </form>
-      </section>
+
+          <form className="mt-4 flex flex-wrap items-end gap-3" onSubmit={submitSale}>
+            <label>
+              <span className="block text-sm">Notes</span>
+              <input className="rounded border p-2" name="notes" />
+            </label>
+            <strong>Total: {formatWholePhp(draftTotal)}</strong>
+            <button className="rounded bg-black px-4 py-2 text-white" type="submit">
+              {editingSale ? "Save sale" : "Complete sale"}
+            </button>
+            <DialogClose asChild>
+              <button type="button">Cancel</button>
+            </DialogClose>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <section>
         <h2 className="mb-3 text-xl font-semibold">Sale history</h2>
