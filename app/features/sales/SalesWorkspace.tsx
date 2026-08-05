@@ -112,11 +112,10 @@ export function SalesWorkspace({
     const formElement = event.currentTarget;
     setError("");
     setNotice("");
-    const form = new FormData(event.currentTarget);
     try {
       const fields = {
         businessDate: businessDateFor(dependencies.clock.now()),
-        notes: String(form.get("notes") ?? ""),
+        notes: "",
         items: lines.map(({ productId, quantity, unitPricePesos }) => ({
           productId,
           quantity,
@@ -303,18 +302,16 @@ export function SalesWorkspace({
             </table>
           )}
 
-          <form className="mt-4 flex flex-wrap items-end gap-3" onSubmit={submitSale}>
-            <label>
-              <span className="block text-sm">Notes</span>
-              <input className="rounded border p-2" name="notes" />
-            </label>
-            <strong>Total: {formatWholePhp(draftTotal)}</strong>
-            <button className="rounded bg-black px-4 py-2 text-white" type="submit">
-              {editingSale ? "Save sale" : "Complete sale"}
-            </button>
-            <DialogClose asChild>
-              <button type="button">Cancel</button>
-            </DialogClose>
+          <form className="mt-4 border-t pt-4" onSubmit={submitSale}>
+            <strong className="block">Total: {formatWholePhp(draftTotal)}</strong>
+            <div className="mt-3 flex flex-wrap gap-3">
+              <button className="rounded bg-black px-4 py-2 text-white" type="submit">
+                {editingSale ? "Save sale" : "Complete sale"}
+              </button>
+              <DialogClose asChild>
+                <button type="button">Cancel</button>
+              </DialogClose>
+            </div>
           </form>
         </DialogContent>
       </Dialog>
