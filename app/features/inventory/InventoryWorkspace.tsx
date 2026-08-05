@@ -1,5 +1,13 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../../components/ui/dialog";
+import {
   useMemo,
   useState,
   type FormEvent,
@@ -224,22 +232,22 @@ export function InventoryWorkspace({
       {notice && <p role="status" className="rounded bg-green-100 p-3">{notice}</p>}
       {error && <p role="alert" className="rounded bg-red-100 p-3">{error}</p>}
 
-      {productModalOpen && (
-        <div
-          aria-labelledby="product-dialog-title"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-          role="dialog"
-        >
-          <section className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-xl">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-xl font-semibold" id="product-dialog-title">
+      <Dialog
+        open={productModalOpen}
+        onOpenChange={(open) => {
+          if (!open) closeProductModal();
+        }}
+      >
+        <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>
                 {editingProduct ? "Edit product" : "Add product"}
-              </h2>
-              <button onClick={closeProductModal} type="button">
-                Close
-              </button>
-            </div>
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Manage product details, stock, and availability.
+              </DialogDescription>
+            </DialogHeader>
+            {error && <p role="alert" className="mt-4 rounded bg-red-100 p-3">{error}</p>}
             {editingProduct && (
               <div
                 aria-label="Product actions"
@@ -286,7 +294,7 @@ export function InventoryWorkspace({
                     className="w-full rounded border p-2"
                     name="price"
                     required
-                    inputMode="decimal"
+                    inputMode="numeric"
                     defaultValue={
                       editingProduct
                         ? String(editingProduct.currentPricePesos)
@@ -329,9 +337,9 @@ export function InventoryWorkspace({
                 </div>
               </fieldset>
               <div className="flex justify-end gap-2">
-                <button onClick={closeProductModal} type="button">
-                  Cancel
-                </button>
+                <DialogClose asChild>
+                  <button type="button">Cancel</button>
+                </DialogClose>
                 <button className="rounded bg-black px-4 py-2 text-white" type="submit">
                   {editingProduct ? "Save product" : "Create product"}
                 </button>
@@ -474,9 +482,8 @@ export function InventoryWorkspace({
                 )}
               </section>
             )}
-          </section>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
