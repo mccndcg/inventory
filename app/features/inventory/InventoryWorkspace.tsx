@@ -1,5 +1,10 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { useMemo, useState, type FormEvent } from "react";
+import {
+  useMemo,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+} from "react";
 import { localOnlyMode } from "../../config";
 import { PRODUCT_CATEGORY_TYPES } from "../../domain/categories";
 import { businessDateFor } from "../../domain/time";
@@ -44,6 +49,8 @@ const adjustmentKinds = [
   "correction",
 ] as const;
 
+type ProductTab = "edit" | "stock" | "archive" | "restore";
+
 export function InventoryWorkspace({
   db = inventoryDb,
   dependencies = browserPersistenceDependencies,
@@ -53,6 +60,7 @@ export function InventoryWorkspace({
   const [productModalOpen, setProductModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product>();
   const [adjustingProduct, setAdjustingProduct] = useState<Product>();
+  const [productTab, setProductTab] = useState<ProductTab>("edit");
   const [editingAdjustment, setEditingAdjustment] =
     useState<StockAdjustment>();
   const [notice, setNotice] = useState("");
@@ -165,17 +173,34 @@ export function InventoryWorkspace({
 
   function openCreateProduct(): void {
     setEditingProduct(undefined);
+    setAdjustingProduct(undefined);
+    setProductTab("edit");
     setProductModalOpen(true);
   }
 
-  function openEditProduct(product: Product): void {
+  function openProductModal(product: Product): void {
     setEditingProduct(product);
+    setAdjustingProduct(product);
+    setEditingAdjustment(undefined);
+    setProductTab("edit");
     setProductModalOpen(true);
   }
 
   function closeProductModal(): void {
     setProductModalOpen(false);
     setEditingProduct(undefined);
+    setAdjustingProduct(undefined);
+    setEditingAdjustment(undefined);
+  }
+
+  function openProductModalFromKeyboard(
+    event: KeyboardEvent<HTMLTableRowElement>,
+    product: Product,
+  ): void {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openProductModal(product);
+    }
   }
 
   return (
@@ -215,6 +240,34 @@ export function InventoryWorkspace({
                 Close
               </button>
             </div>
+            {editingProduct && (
+              <div
+                aria-label="Product actions"
+                className="mt-5 flex flex-wrap gap-2 border-b"
+                role="tablist"
+              >
+                {([
+                  ["edit", "Edit product"],
+                  ["stock", "Adjust stock"],
+                  ["archive", "Archive"],
+                  ["restore", "Restore"],
+                ] as const).map(([tab, label]) => (
+                  <button
+                    aria-controls={`product-${tab}-panel`}
+                    aria-selected={productTab === tab}
+                    className="border-b-2 px-3 py-2 aria-selected:border-black"
+                    id={`product-${tab}-tab`}
+                    key={tab}
+                    role="tab"
+                    type="button"
+                    onClick={() => setProductTab(tab)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {(!editingProduct || productTab === "edit") && (
             <form className="mt-5 space-y-4" onSubmit={submitProduct}>
               <div className="grid gap-4 md:grid-cols-2">
                 <label>
@@ -284,6 +337,143 @@ export function InventoryWorkspace({
                 </button>
               </div>
             </form>
+            )}
+            {editingProduct && productTab === "stock" && (
+              <section
+                aria-labelledby="product-stock-tab"
+                className="mt-5 space-y-4"
+                id="product-stock-panel"
+                role="tabpanel"
+              >
+                <h3 className="text-lg font-semibold">Stock adjustments</h3>
+                {editingProduct.tombstone === 0 ? (
+                  <>
+                    <form className="grid gap-3 md:grid-cols-4" onSubmit={submitAdjustment}>
+                      <label>
+                        <span className="block text-sm">Kind</span>
+                        <select
+                          className="w-full rounded border p-2"
+                          name="kind"
+                          defaultValue={editingAdjustment?.kind ?? "restock"}
+                          key={`kind-${editingAdjustment?.id ?? "new"}`}
+                        >
+                          {adjustmentKinds.map((kind) => (
+                            <option key={kind} value={kind}>{kind.replace("_", " ")}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <label>
+                        <span className="block text-sm">Signed quantity</span>
+                        <input
+                          className="w-full rounded border p-2"
+                          name="quantityDelta"
+                          required
+                          type="number"
+                          defaultValue={editingAdjustment?.quantityDelta ?? ""}
+                          key={`delta-${editingAdjustment?.id ?? "new"}`}
+                        />
+                      </label>
+                      <label>
+                        <span className="block text-sm">Notes</span>
+                        <input
+                          className="w-full rounded border p-2"
+                          name="notes"
+                          defaultValue={editingAdjustment?.notes ?? ""}
+                          key={`notes-${editingAdjustment?.id ?? "new"}`}
+                        />
+                      </label>
+                      <button className="rounded bg-black px-4 py-2 text-white" type="submit">
+                        {editingAdjustment ? "Save adjustment" : "Add adjustment"}
+                      </button>
+                    </form>
+                    <ul className="space-y-2">
+                      {adjustments?.map((adjustment) => (
+                        <li className="flex gap-3" key={adjustment.id}>
+                          <span>
+                            {adjustment.kind}: {adjustment.quantityDelta}
+                            {adjustment.tombstone === 1 ? " (void)" : ""}
+                          </span>
+                          {adjustment.kind !== "opening_count" &&
+                            adjustment.tombstone === 0 && (
+                              <>
+                                <button onClick={() => setEditingAdjustment(adjustment)}>
+                                  Edit adjustment
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    await voidStockAdjustment(db, adjustment.id, dependencies);
+                                    setNotice("Stock adjustment voided.");
+                                  }}
+                                >
+                                  Void adjustment
+                                </button>
+                              </>
+                            )}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <p>Restore this product before changing its stock.</p>
+                )}
+              </section>
+            )}
+            {editingProduct && productTab === "archive" && (
+              <section
+                aria-labelledby="product-archive-tab"
+                className="mt-5 space-y-3"
+                id="product-archive-panel"
+                role="tabpanel"
+              >
+                <h3 className="text-lg font-semibold">Archive product</h3>
+                {editingProduct.tombstone === 0 ? (
+                  <>
+                    <p>Archived products are hidden from the active catalog and can be restored later.</p>
+                    <button
+                      className="rounded bg-red-700 px-4 py-2 text-white"
+                      type="button"
+                      onClick={async () => {
+                        await archiveProduct(db, editingProduct.id, dependencies);
+                        setNotice("Product archived.");
+                        closeProductModal();
+                      }}
+                    >
+                      Archive product
+                    </button>
+                  </>
+                ) : (
+                  <p>This product is already archived.</p>
+                )}
+              </section>
+            )}
+            {editingProduct && productTab === "restore" && (
+              <section
+                aria-labelledby="product-restore-tab"
+                className="mt-5 space-y-3"
+                id="product-restore-panel"
+                role="tabpanel"
+              >
+                <h3 className="text-lg font-semibold">Restore product</h3>
+                {editingProduct.tombstone === 1 ? (
+                  <>
+                    <p>Restore this product to return it to the active catalog.</p>
+                    <button
+                      className="rounded bg-black px-4 py-2 text-white"
+                      type="button"
+                      onClick={async () => {
+                        await restoreProduct(db, editingProduct.id, dependencies);
+                        setNotice("Product restored.");
+                        closeProductModal();
+                      }}
+                    >
+                      Restore product
+                    </button>
+                  </>
+                ) : (
+                  <p>This product is already active.</p>
+                )}
+              </section>
+            )}
           </section>
         </div>
       )}
@@ -320,12 +510,19 @@ export function InventoryWorkspace({
                   <th className="p-3">Product</th>
                   <th className="p-3">Price</th>
                   <th className="p-3">Stock</th>
-                  <th className="p-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map(({ product, stock }) => (
-                  <tr className="border-b" key={product.id}>
+                  <tr
+                    aria-label={`Open ${product.name}`}
+                    className="cursor-pointer border-b hover:bg-slate-50 focus:outline-none focus-visible:bg-slate-100"
+                    key={product.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openProductModal(product)}
+                    onKeyDown={(event) => openProductModalFromKeyboard(event, product)}
+                  >
                     <td className="p-3">
                       <div>{product.name}</div>
                       {product.categories.length > 0 && (
@@ -348,35 +545,6 @@ export function InventoryWorkspace({
                     <td className={stock < 0 ? "p-3 font-bold text-red-700" : "p-3"}>
                       {stock}
                     </td>
-                    <td className="flex flex-wrap gap-2 p-3">
-                      {product.tombstone === 0 ? (
-                        <>
-                          <button onClick={() => openEditProduct(product)}>
-                            Edit
-                          </button>
-                          <button onClick={() => setAdjustingProduct(product)}>
-                            Adjust stock
-                          </button>
-                          <button
-                            onClick={async () => {
-                              await archiveProduct(db, product.id, dependencies);
-                              setNotice("Product archived.");
-                            }}
-                          >
-                            Archive
-                          </button>
-                        </>
-                      ) : (
-                        <button
-                          onClick={async () => {
-                            await restoreProduct(db, product.id, dependencies);
-                            setNotice("Product restored.");
-                          }}
-                        >
-                          Restore
-                        </button>
-                      )}
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -385,80 +553,6 @@ export function InventoryWorkspace({
         )}
       </section>
 
-      {adjustingProduct && (
-        <section className="rounded border p-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">
-              Stock adjustments — {adjustingProduct.name}
-            </h2>
-            <button onClick={() => setAdjustingProduct(undefined)}>Close</button>
-          </div>
-          <form className="mt-3 grid gap-3 md:grid-cols-4" onSubmit={submitAdjustment}>
-            <label>
-              <span className="block text-sm">Kind</span>
-              <select
-                className="w-full rounded border p-2"
-                name="kind"
-                defaultValue={editingAdjustment?.kind ?? "restock"}
-                key={`kind-${editingAdjustment?.id ?? "new"}`}
-              >
-                {adjustmentKinds.map((kind) => (
-                  <option key={kind} value={kind}>{kind.replace("_", " ")}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              <span className="block text-sm">Signed quantity</span>
-              <input
-                className="w-full rounded border p-2"
-                name="quantityDelta"
-                required
-                type="number"
-                defaultValue={editingAdjustment?.quantityDelta ?? ""}
-                key={`delta-${editingAdjustment?.id ?? "new"}`}
-              />
-            </label>
-            <label>
-              <span className="block text-sm">Notes</span>
-              <input
-                className="w-full rounded border p-2"
-                name="notes"
-                defaultValue={editingAdjustment?.notes ?? ""}
-                key={`notes-${editingAdjustment?.id ?? "new"}`}
-              />
-            </label>
-            <button className="rounded bg-black px-4 py-2 text-white" type="submit">
-              {editingAdjustment ? "Save adjustment" : "Add adjustment"}
-            </button>
-          </form>
-          <ul className="mt-4 space-y-2">
-            {adjustments?.map((adjustment) => (
-              <li className="flex gap-3" key={adjustment.id}>
-                <span>
-                  {adjustment.kind}: {adjustment.quantityDelta}
-                  {adjustment.tombstone === 1 ? " (void)" : ""}
-                </span>
-                {adjustment.kind !== "opening_count" &&
-                  adjustment.tombstone === 0 && (
-                    <>
-                      <button onClick={() => setEditingAdjustment(adjustment)}>
-                        Edit adjustment
-                      </button>
-                      <button
-                        onClick={async () => {
-                          await voidStockAdjustment(db, adjustment.id, dependencies);
-                          setNotice("Stock adjustment voided.");
-                        }}
-                      >
-                        Void adjustment
-                      </button>
-                    </>
-                  )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
     </main>
   );
 }

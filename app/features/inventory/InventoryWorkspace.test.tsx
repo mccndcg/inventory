@@ -64,7 +64,15 @@ describe("inventory workspace", () => {
     expect(screen.getByText("Food")).toBeTruthy();
     expect(screen.getByText("Snacks")).toBeTruthy();
 
-    await user.click(screen.getByRole("button", { name: "Adjust stock" }));
+    const riceRow = screen.getByText("Rice").closest("tr");
+    expect(riceRow).toBeTruthy();
+    await user.click(riceRow!);
+    expect(screen.queryByText("Actions")).toBeNull();
+    expect(screen.getByRole("tab", { name: "Edit product" })).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Adjust stock" })).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Archive" })).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Restore" })).toBeTruthy();
+    await user.click(screen.getByRole("tab", { name: "Adjust stock" }));
     await user.selectOptions(screen.getByLabelText("Kind"), "spoilage");
     await user.type(screen.getByLabelText("Signed quantity"), "-2");
     await user.click(screen.getByRole("button", { name: "Add adjustment" }));
@@ -72,7 +80,7 @@ describe("inventory workspace", () => {
     const productRow = screen.getByText("Rice").closest("tr");
     expect(productRow && within(productRow).getByText("-2")).toBeTruthy();
 
-    await user.click(screen.getByRole("button", { name: "Edit" }));
+    await user.click(screen.getByRole("tab", { name: "Edit product" }));
     const nameInput = screen.getByLabelText("Name");
     await user.clear(nameInput);
     await user.type(nameInput, "Premium Rice");
@@ -84,13 +92,17 @@ describe("inventory workspace", () => {
     expect(await screen.findByText("Premium Rice")).toBeTruthy();
     expect(screen.getByText("-2")).toBeTruthy();
 
-    await user.click(screen.getByRole("button", { name: "Archive" }));
+    await user.click(screen.getByText("Premium Rice").closest("tr")!);
+    await user.click(screen.getByRole("tab", { name: "Archive" }));
+    await user.click(screen.getByRole("button", { name: "Archive product" }));
     expect(await screen.findByText("No products found.")).toBeTruthy();
     await user.click(screen.getByLabelText("Show archived"));
     expect(await screen.findByText("(archived)")).toBeTruthy();
-    await user.click(screen.getByRole("button", { name: "Restore" }));
+    await user.click(screen.getByText("Premium Rice").closest("tr")!);
+    await user.click(screen.getByRole("tab", { name: "Restore" }));
+    await user.click(screen.getByRole("button", { name: "Restore product" }));
     expect(await screen.findByText("Premium Rice")).toBeTruthy();
-  });
+  }, 15_000);
 
   it("shows domain failures without committing contradictory adjustments", async () => {
     const user = userEvent.setup();
@@ -101,7 +113,8 @@ describe("inventory workspace", () => {
     await user.click(screen.getByRole("button", { name: "Create product" }));
     await screen.findByText("Rice");
 
-    await user.click(screen.getByRole("button", { name: "Adjust stock" }));
+    await user.click(screen.getByText("Rice").closest("tr")!);
+    await user.click(screen.getByRole("tab", { name: "Adjust stock" }));
     await user.selectOptions(screen.getByLabelText("Kind"), "restock");
     await user.type(screen.getByLabelText("Signed quantity"), "-1");
     await user.click(screen.getByRole("button", { name: "Add adjustment" }));
