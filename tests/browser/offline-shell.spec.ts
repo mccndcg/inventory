@@ -17,6 +17,7 @@ const routes = [
   { path: "/cash", heading: "Cash drawer" },
   { path: "/opening", heading: "Fresh opening balances" },
   { path: "/recovery", heading: "Backup and recovery" },
+  { path: "/development", heading: "Development" },
 ];
 
 async function waitForControlledShell(context: BrowserContext) {

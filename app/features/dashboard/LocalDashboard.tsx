@@ -13,7 +13,6 @@ import {
 import { readOpeningBatch } from "../../local-data/opening";
 import { browserPersistenceDependencies } from "../../local-data/runtime";
 import type { PersistenceDependencies } from "../../local-data/transactions";
-import { LocalSystemStatus } from "../status/LocalSystemStatus";
 
 interface LocalDashboardProps {
   db?: InventoryDatabase;
@@ -174,9 +173,10 @@ export function LocalDashboard({
           ? " Local-only mode is enabled; synchronization and opening balances are optional."
           : " Use the synchronization bar above for current delivery status."}
       </p>
-      <LocalSystemStatus db={db} />
       <p className="text-sm">
         <Link className="underline" to="/recovery">Backup and recovery</Link>
+        <span aria-hidden="true"> · </span>
+        <Link className="underline" to="/development">Development</Link>
       </p>
     </main>
   );
