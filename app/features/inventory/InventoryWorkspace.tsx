@@ -8,7 +8,7 @@ import {
 import { localOnlyMode } from "../../config";
 import { PRODUCT_CATEGORY_TYPES } from "../../domain/categories";
 import { businessDateFor } from "../../domain/time";
-import { formatPhp, parsePhp } from "../../domain/money";
+import { formatWholePhp, parseWholePhp } from "../../domain/money";
 import type { StockAdjustmentKind } from "../../domain/types";
 import {
   inventoryDb,
@@ -95,7 +95,7 @@ export function InventoryWorkspace({
     try {
       const fields = {
         name: String(form.get("name") ?? ""),
-        currentPriceMinor: parsePhp(String(form.get("price") ?? "")),
+        currentPricePesos: parseWholePhp(String(form.get("price") ?? "")),
         ...(localOnlyMode && !editingProduct
           ? { startingQuantity: Number(form.get("startingQuantity") ?? 0) }
           : {}),
@@ -281,7 +281,7 @@ export function InventoryWorkspace({
                   />
                 </label>
                 <label>
-                  <span className="block text-sm">Price (PHP)</span>
+                  <span className="block text-sm">Price (whole PHP)</span>
                   <input
                     className="w-full rounded border p-2"
                     name="price"
@@ -289,7 +289,7 @@ export function InventoryWorkspace({
                     inputMode="decimal"
                     defaultValue={
                       editingProduct
-                        ? (editingProduct.currentPriceMinor / 100).toFixed(2)
+                        ? String(editingProduct.currentPricePesos)
                         : ""
                     }
                     key={`price-${editingProduct?.id ?? "new"}`}
@@ -541,7 +541,7 @@ export function InventoryWorkspace({
                         <span className="ml-2 text-sm">(archived)</span>
                       )}
                     </td>
-                    <td className="p-3">{formatPhp(product.currentPriceMinor)}</td>
+                    <td className="p-3">{formatWholePhp(product.currentPricePesos)}</td>
                     <td className={stock < 0 ? "p-3 font-bold text-red-700" : "p-3"}>
                       {stock}
                     </td>

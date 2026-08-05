@@ -52,7 +52,7 @@ describe("product repository", () => {
       db,
       {
         name: "  Café Milk ",
-        currentPriceMinor: 1250,
+        currentPricePesos: 1250,
         categories: [" Drinks ", "Drinks"],
       },
       { clock, ids },
@@ -67,10 +67,10 @@ describe("product repository", () => {
     const updated = await updateProduct(
       db,
       created.id,
-      { name: "Café Milk Large", currentPriceMinor: 1500 },
+      { name: "Café Milk Large", currentPricePesos: 1500 },
       { clock, ids },
     );
-    expect(updated).toMatchObject({ revision: 2, currentPriceMinor: 1500 });
+    expect(updated).toMatchObject({ revision: 2, currentPricePesos: 1500 });
     expect((await archiveProduct(db, created.id, { clock, ids })).tombstone).toBe(
       1,
     );
@@ -84,13 +84,13 @@ describe("product repository", () => {
   it("retains complete historical outbox snapshots", async () => {
     const created = await createProduct(
       db,
-      { name: "Original", currentPriceMinor: 100 },
+      { name: "Original", currentPricePesos: 100 },
       { clock, ids },
     );
     await updateProduct(
       db,
       created.id,
-      { name: "Changed", currentPriceMinor: 200 },
+      { name: "Changed", currentPricePesos: 200 },
       { clock, ids },
     );
     const operations = (await db.outbox.toArray()).sort(
@@ -99,12 +99,12 @@ describe("product repository", () => {
     expect(operations).toHaveLength(2);
     expect(operations[0].payload).toMatchObject({
       name: "Original",
-      currentPriceMinor: 100,
+      currentPricePesos: 100,
       revision: 1,
     });
     expect(operations[1].payload).toMatchObject({
       name: "Changed",
-      currentPriceMinor: 200,
+      currentPricePesos: 200,
       revision: 2,
     });
   });

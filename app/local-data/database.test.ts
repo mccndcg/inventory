@@ -119,6 +119,45 @@ describe("inventory database schema", () => {
     upgraded.close();
   });
 
+  it("renames v2 product and sale prices to whole pesos", async () => {
+    const name = testName("v2-price-upgrade");
+    const previous = new Dexie(name);
+    previous.version(2).stores({
+      deviceState: "&key",
+      products: "&id",
+      saleItems: "&id",
+      outbox: "&operationId",
+    });
+    await previous.open();
+    await previous.table("products").add({
+      id: "product-1",
+      currentPriceMinor: 1055,
+    });
+    await previous.table("saleItems").add({
+      id: "sale-item-1",
+      unitPriceMinor: 1055,
+    });
+    await previous.table("outbox").add({
+      operationId: "operation-1",
+      aggregateType: "product",
+      payload: { currentPriceMinor: 1055 },
+    });
+    previous.close();
+
+    const upgraded = new InventoryDatabase(name);
+    await upgraded.open();
+    expect(await upgraded.products.get("product-1")).toMatchObject({
+      currentPricePesos: 1055,
+    });
+    expect(await upgraded.saleItems.get("sale-item-1")).toMatchObject({
+      unitPricePesos: 1055,
+    });
+    expect(await upgraded.outbox.get("operation-1")).toMatchObject({
+      payload: { currentPricePesos: 1055 },
+    });
+    upgraded.close();
+  });
+
   it("reports a blocked upgrade until the prior connection closes", async () => {
     const name = testName("blocked");
     const prior = await openRawDatabase(name);

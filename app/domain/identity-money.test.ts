@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { createDeviceIdentity, makeReceiptIdentity } from "./identity";
-import { formatPhp, parsePhp, saleTotal } from "./money";
+import {
+  formatPhp,
+  formatWholePhp,
+  parsePhp,
+  parseWholePhp,
+  saleTotalPesos,
+} from "./money";
 import { businessDateFor, currentInstant } from "./time";
 
 const UUIDS = [
@@ -34,18 +40,20 @@ describe("local identity", () => {
   });
 });
 
-describe("PHP minor units", () => {
-  it("parses, formats, and permits zero-price items", () => {
+describe("PHP amounts", () => {
+  it("keeps cash in centavos and prices in whole pesos", () => {
     expect(parsePhp("₱ 1,234.5")).toBe(123450);
     expect(formatPhp(-123450)).toBe("-PHP 1,234.50");
-    expect(saleTotal([{ quantity: 2, unitPriceMinor: 0 }])).toBe(0);
+    expect(parseWholePhp("₱ 1,234")).toBe(1234);
+    expect(formatWholePhp(1234)).toBe("PHP 1,234");
+    expect(saleTotalPesos([{ quantity: 2, unitPricePesos: 0 }])).toBe(0);
   });
 
-  it("rejects precision and integer overflow", () => {
-    expect(() => parsePhp("1.001")).toThrow(/two decimal/);
+  it("rejects fractional prices and integer overflow", () => {
+    expect(() => parseWholePhp("1.50")).toThrow(/whole number/);
     expect(() =>
-      saleTotal([
-        { quantity: Number.MAX_SAFE_INTEGER, unitPriceMinor: 2 },
+      saleTotalPesos([
+        { quantity: Number.MAX_SAFE_INTEGER, unitPricePesos: 2 },
       ]),
     ).toThrow(/overflow/);
   });

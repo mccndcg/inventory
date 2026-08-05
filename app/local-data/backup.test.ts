@@ -72,12 +72,12 @@ afterEach(async () => {
 async function representativeData() {
   const rice = await createProduct(
     db,
-    { name: "Rice", currentPriceMinor: 100, sku: "RICE" },
+    { name: "Rice", currentPricePesos: 100, sku: "RICE" },
     { clock, ids },
   );
   const archived = await createProduct(
     db,
-    { name: "Old product", currentPriceMinor: 0 },
+    { name: "Old product", currentPricePesos: 0 },
     { clock, ids },
   );
   const draft = await createOpeningDraft(
@@ -109,7 +109,7 @@ async function representativeData() {
     db,
     {
       businessDate: "2026-07-28",
-      items: [{ productId: rice.id, quantity: 2, unitPriceMinor: 100 }],
+      items: [{ productId: rice.id, quantity: 2, unitPricePesos: 100 }],
     },
     { clock, ids },
   );
@@ -142,7 +142,7 @@ describe("versioned local backup", () => {
     );
     expect(roundTripped.manifestSha256).toMatch(/^[0-9a-f]{64}$/);
     expect(roundTripped.manifest.projections.stockByProduct[rice.id]).toBe(3);
-    expect(roundTripped.manifest.projections.cashByDrawer[DRAWER_ID]).toBe(1150);
+    expect(roundTripped.manifest.projections.cashByDrawer[DRAWER_ID]).toBe(20950);
     expect(
       roundTripped.payloads.products.find(({ id }) => id === archived.id)
         ?.tombstone,
@@ -175,7 +175,7 @@ describe("versioned local backup", () => {
     expect(await target.products.count()).toBe(2);
     expect(await target.sales.count()).toBe(1);
     expect(await rebuildProductStock(target, rice.id)).toBe(3);
-    expect(await rebuildDrawerCash(target, DRAWER_ID)).toBe(1150);
+    expect(await rebuildDrawerCash(target, DRAWER_ID)).toBe(20950);
     target.close();
     await expect(
       restoreBackupToIsolatedDatabase(backup, targetName),
@@ -189,7 +189,7 @@ describe("versioned local backup", () => {
       db,
       {
         businessDate: "2026-07-28",
-        items: [{ productId: rice.id, quantity: 1, unitPriceMinor: 100 }],
+        items: [{ productId: rice.id, quantity: 1, unitPricePesos: 100 }],
       },
       { clock, ids },
     );

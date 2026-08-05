@@ -1,45 +1,45 @@
 [
   {
     "name": "GynePro",
-    "currentPriceMinor": 1055,
+    "currentPricePesos": 1055,
     "categories": [
       "Etc"
     ]
   },
   {
     "name": "Zoom C",
-    "currentPriceMinor": 10,
+    "currentPricePesos": 10,
     "categories": []
   },
   {
     "name": "Ensure Gold",
-    "currentPriceMinor": 1650,
+    "currentPricePesos": 1650,
     "categories": []
   },
   {
     "name": "Bicycle Playing Cards",
-    "currentPriceMinor": 160,
+    "currentPricePesos": 160,
     "categories": [
       "Etc"
     ]
   },
   {
     "name": "Milk 1/4",
-    "currentPriceMinor": 90,
+    "currentPricePesos": 90,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Milk 1/2",
-    "currentPriceMinor": 175,
+    "currentPricePesos": 175,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Milk 1 kilo",
-    "currentPriceMinor": 350,
+    "currentPricePesos": 350,
     "categories": [
       "Drinkables"
     ],
@@ -47,7 +47,7 @@
   },
   {
     "name": "Bear Brand Adult Plus",
-    "currentPriceMinor": 240,
+    "currentPricePesos": 240,
     "categories": [
       "Drinkables"
     ],
@@ -55,7 +55,7 @@
   },
   {
     "name": "Bear Brand Fortified",
-    "currentPriceMinor": 230,
+    "currentPricePesos": 230,
     "categories": [
       "Drinkables"
     ],
@@ -63,7 +63,7 @@
   },
   {
     "name": "Bear Brand Adult Plus",
-    "currentPriceMinor": 420,
+    "currentPricePesos": 420,
     "categories": [
       "Drinkables"
     ],
@@ -71,7 +71,7 @@
   },
   {
     "name": "Coffee Mate",
-    "currentPriceMinor": 280,
+    "currentPricePesos": 280,
     "categories": [
       "Drinkables"
     ],
@@ -79,7 +79,7 @@
   },
   {
     "name": "Milo",
-    "currentPriceMinor": 275,
+    "currentPricePesos": 275,
     "categories": [
       "Drinkables"
     ],
@@ -87,7 +87,7 @@
   },
   {
     "name": "Gold Kili Ginger Lemon Drink",
-    "currentPriceMinor": 280,
+    "currentPricePesos": 280,
     "categories": [
       "Drinkables"
     ],
@@ -95,7 +95,7 @@
   },
   {
     "name": "Aik Cheong Matcha Latte",
-    "currentPriceMinor": 245,
+    "currentPricePesos": 245,
     "categories": [
       "Drinkables"
     ],
@@ -103,7 +103,7 @@
   },
   {
     "name": "Super Milk Tea Less Sugar",
-    "currentPriceMinor": 260,
+    "currentPricePesos": 260,
     "categories": [
       "Drinkables"
     ],
@@ -111,7 +111,7 @@
   },
   {
     "name": "Old Town White Coffee Less Sugar",
-    "currentPriceMinor": 265,
+    "currentPricePesos": 265,
     "categories": [
       "Drinkables"
     ],
@@ -119,19 +119,19 @@
   },
   {
     "name": "Quaker Quick Cook",
-    "currentPriceMinor": 280,
+    "currentPricePesos": 280,
     "categories": [],
     "sizeLabel": "1 kg"
   },
   {
     "name": "Quaker Instant Oatmeal",
-    "currentPriceMinor": 280,
+    "currentPricePesos": 280,
     "categories": [],
     "sizeLabel": "1 kg"
   },
   {
     "name": "Ocean Spray Cranberry",
-    "currentPriceMinor": 480,
+    "currentPricePesos": 480,
     "categories": [
       "Drinkables"
     ],
@@ -139,106 +139,106 @@
   },
   {
     "name": "Motts Apple Juice",
-    "currentPriceMinor": 395,
+    "currentPricePesos": 395,
     "categories": [],
     "sizeLabel": "2.54 L"
   },
   {
     "name": "Member's Value Himalayan Pink Salt",
-    "currentPriceMinor": 380,
+    "currentPricePesos": 380,
     "categories": [],
     "sizeLabel": "530 g"
   },
   {
     "name": "Bragg Apple Cider Vinegar Large",
-    "currentPriceMinor": 450,
+    "currentPricePesos": 450,
     "categories": [],
     "sizeLabel": "946 ml"
   },
   {
     "name": "Bragg Apple Cider Vinegar Small",
-    "currentPriceMinor": 300,
+    "currentPricePesos": 300,
     "categories": [],
     "sizeLabel": "473 ml"
   },
   {
     "name": "Golden Fiesta Canola Oil",
-    "currentPriceMinor": 150,
+    "currentPricePesos": 150,
     "categories": [],
     "sizeLabel": "1 L"
   },
   {
     "name": "Dona Elena Olive Oil Pomace",
-    "currentPriceMinor": 350,
+    "currentPricePesos": 350,
     "categories": [],
     "sizeLabel": "500 ml"
   },
   {
     "name": "La Masia Extra Virgin Olive Oil",
-    "currentPriceMinor": 350,
+    "currentPricePesos": 350,
     "categories": [],
     "sizeLabel": "500 ml"
   },
   {
     "name": "La Masia Olive Oil Pomace",
-    "currentPriceMinor": 315,
+    "currentPricePesos": 315,
     "categories": [],
     "sizeLabel": "500 ml"
   },
   {
     "name": "Sue Bee Premium Honey",
-    "currentPriceMinor": 350,
+    "currentPricePesos": 350,
     "categories": [],
     "sizeLabel": "680 g"
   },
   {
     "name": "Lotte Luncheon Meat",
-    "currentPriceMinor": 95,
+    "currentPricePesos": 95,
     "categories": []
   },
   {
     "name": "Hansung Luncheon Meat",
-    "currentPriceMinor": 90,
+    "currentPricePesos": 90,
     "categories": []
   },
   {
     "name": "Spam Lite",
-    "currentPriceMinor": 200,
+    "currentPricePesos": 200,
     "categories": [
       "Food"
     ]
   },
   {
     "name": "Spam Original",
-    "currentPriceMinor": 0,
+    "currentPricePesos": 0,
     "categories": []
   },
   {
     "name": "Ox And Palm Luncheon Meat",
-    "currentPriceMinor": 190,
+    "currentPricePesos": 190,
     "categories": [
       "Food"
     ]
   },
   {
     "name": "Maling",
-    "currentPriceMinor": 0,
+    "currentPricePesos": 0,
     "categories": []
   },
   {
     "name": "Palm Corned Beef",
-    "currentPriceMinor": 210,
+    "currentPricePesos": 210,
     "categories": []
   },
   {
     "name": "Libbys Vienna Sausage",
-    "currentPriceMinor": 56,
+    "currentPricePesos": 56,
     "categories": [],
     "sizeLabel": "130 g"
   },
   {
     "name": "Biscoff",
-    "currentPriceMinor": 350,
+    "currentPricePesos": 350,
     "categories": [
       "Food"
     ],
@@ -246,79 +246,79 @@
   },
   {
     "name": "Herman Real Mayonnaise",
-    "currentPriceMinor": 275,
+    "currentPricePesos": 275,
     "categories": [],
     "sizeLabel": "946 ml"
   },
   {
     "name": "Cheez Whiz Pimiento",
-    "currentPriceMinor": 0,
+    "currentPricePesos": 0,
     "categories": [],
     "sizeLabel": "440 g"
   },
   {
     "name": "Skippy Chunky",
-    "currentPriceMinor": 400,
+    "currentPricePesos": 400,
     "categories": [],
     "sizeLabel": "1 kg"
   },
   {
     "name": "Skippy Creamy",
-    "currentPriceMinor": 500,
+    "currentPricePesos": 500,
     "categories": [],
     "sizeLabel": "1.36 kg"
   },
   {
     "name": "Skippy Creamy",
-    "currentPriceMinor": 230,
+    "currentPricePesos": 230,
     "categories": [],
     "sizeLabel": "462 g"
   },
   {
     "name": "Skippy Super Chunk",
-    "currentPriceMinor": 230,
+    "currentPricePesos": 230,
     "categories": [],
     "sizeLabel": "462 g"
   },
   {
     "name": "Good Life Sesame Oil",
-    "currentPriceMinor": 0,
+    "currentPricePesos": 0,
     "categories": [],
     "sizeLabel": "420 ml"
   },
   {
     "name": "Nutella",
-    "currentPriceMinor": 385,
+    "currentPricePesos": 385,
     "categories": [],
     "sizeLabel": "680 g"
   },
   {
     "name": "Nutella",
-    "currentPriceMinor": 250,
+    "currentPricePesos": 250,
     "categories": [],
     "sizeLabel": "350 g"
   },
   {
     "name": "Full Cream Milk",
-    "currentPriceMinor": 350,
+    "currentPricePesos": 350,
     "categories": [],
     "sizeLabel": "1 kg"
   },
   {
     "name": "Full Cream Milk",
-    "currentPriceMinor": 175,
+    "currentPricePesos": 175,
     "categories": [],
     "sizeLabel": "1/2 kg"
   },
   {
     "name": "Full Cream Milk",
-    "currentPriceMinor": 90,
+    "currentPricePesos": 90,
     "categories": [],
     "sizeLabel": "1/4 kg"
   },
   {
     "name": "Alkaline Water Small",
-    "currentPriceMinor": 15,
+    "currentPricePesos": 15,
     "categories": [
       "Drinkables"
     ],
@@ -326,7 +326,7 @@
   },
   {
     "name": "Alkaline Water Large",
-    "currentPriceMinor": 20,
+    "currentPricePesos": 20,
     "categories": [
       "Drinkables"
     ],
@@ -334,50 +334,50 @@
   },
   {
     "name": "Fresh Tissue",
-    "currentPriceMinor": 130,
+    "currentPricePesos": 130,
     "categories": []
   },
   {
     "name": "Honey Citron",
-    "currentPriceMinor": 480,
+    "currentPricePesos": 480,
     "categories": []
   },
   {
     "name": "Maltesers",
-    "currentPriceMinor": 150,
+    "currentPricePesos": 150,
     "categories": []
   },
   {
     "name": "I Qure Herbal Coffee 18 in 1",
-    "currentPriceMinor": 150,
+    "currentPricePesos": 150,
     "categories": [],
     "sizeLabel": "10 sachets"
   },
   {
     "name": "MX3 Coffee Mix",
-    "currentPriceMinor": 170,
+    "currentPricePesos": 170,
     "categories": [],
     "sizeLabel": "10 sachets"
   },
   {
     "name": "MX3 Mangosteen Capsules",
-    "currentPriceMinor": 0,
+    "currentPricePesos": 0,
     "categories": []
   },
   {
     "name": "Gluta Lipo Brand 13 in 1",
-    "currentPriceMinor": 0,
+    "currentPricePesos": 0,
     "categories": []
   },
   {
     "name": "Jimms 5 in 1 Coffee Mix",
-    "currentPriceMinor": 235,
+    "currentPricePesos": 235,
     "categories": [],
     "sizeLabel": "20 sachets"
   },
   {
     "name": "Risen Coffee Mix",
-    "currentPriceMinor": 360,
+    "currentPricePesos": 360,
     "categories": [
       "Drinkables"
     ],
@@ -385,7 +385,7 @@
   },
   {
     "name": "Bona Vita",
-    "currentPriceMinor": 160,
+    "currentPricePesos": 160,
     "categories": [
       "Drinkables"
     ],
@@ -393,25 +393,25 @@
   },
   {
     "name": "Golden Moringa Malunggay Coffee",
-    "currentPriceMinor": 135,
+    "currentPricePesos": 135,
     "categories": [],
     "sizeLabel": "12 sachets"
   },
   {
     "name": "Insulin Herb Cofee Mix",
-    "currentPriceMinor": 150,
+    "currentPricePesos": 150,
     "categories": [],
     "sizeLabel": "10 sachets"
   },
   {
     "name": "Davidoff Rich Aroma",
-    "currentPriceMinor": 750,
+    "currentPricePesos": 750,
     "categories": [],
     "sizeLabel": "100 g"
   },
   {
     "name": "Pioir Ganoderma Coffee 3 in 1",
-    "currentPriceMinor": 480,
+    "currentPricePesos": 480,
     "categories": [
       "Drinkables"
     ],
@@ -419,63 +419,63 @@
   },
   {
     "name": "Lorenzana's Mangosteen Coffee Mix",
-    "currentPriceMinor": 160,
+    "currentPricePesos": 160,
     "categories": [],
     "sizeLabel": "12 sachets"
   },
   {
     "name": "Lorenzana's Mangosteen Guyabano Coffee Mix",
-    "currentPriceMinor": 135,
+    "currentPricePesos": 135,
     "categories": [],
     "sizeLabel": "12 sachets"
   },
   {
     "name": "Lorenzana's Mangosteen Malunggay Coffee Mix",
-    "currentPriceMinor": 0,
+    "currentPricePesos": 0,
     "categories": [],
     "sizeLabel": "12 sachets"
   },
   {
     "name": "Lishou Slimming Coffee",
-    "currentPriceMinor": 250,
+    "currentPricePesos": 250,
     "categories": [],
     "sizeLabel": "15 sachets"
   },
   {
     "name": "Diabetasol",
-    "currentPriceMinor": 1150,
+    "currentPricePesos": 1150,
     "categories": [],
     "sizeLabel": "800 g"
   },
   {
     "name": "Glucerna Gunger Smart",
-    "currentPriceMinor": 1850,
+    "currentPricePesos": 1850,
     "categories": [],
     "sizeLabel": "635 g"
   },
   {
     "name": "Glucerna",
-    "currentPriceMinor": 1700,
+    "currentPricePesos": 1700,
     "categories": []
   },
   {
     "name": "Ensure Gold",
-    "currentPriceMinor": 1700,
+    "currentPricePesos": 1700,
     "categories": []
   },
   {
     "name": "Ensure Gold",
-    "currentPriceMinor": 2650,
+    "currentPricePesos": 2650,
     "categories": []
   },
   {
     "name": "Markcafe 5 in 1",
-    "currentPriceMinor": 210,
+    "currentPricePesos": 210,
     "categories": []
   },
   {
     "name": "Primax",
-    "currentPriceMinor": 250,
+    "currentPricePesos": 250,
     "categories": [
       "Drinkables"
     ],
@@ -483,7 +483,7 @@
   },
   {
     "name": "Lix Detergent",
-    "currentPriceMinor": 450,
+    "currentPricePesos": 450,
     "categories": [
       "Etc"
     ],
@@ -491,26 +491,26 @@
   },
   {
     "name": "Eco Bag Med",
-    "currentPriceMinor": 15,
+    "currentPricePesos": 15,
     "categories": [
       "Etc"
     ]
   },
   {
     "name": "Heartex",
-    "currentPriceMinor": 340,
+    "currentPricePesos": 340,
     "categories": [
       "Etc"
     ]
   },
   {
     "name": "Eco Bag Lg",
-    "currentPriceMinor": 30,
+    "currentPricePesos": 30,
     "categories": []
   },
   {
     "name": "Cadbury Dairy Milk",
-    "currentPriceMinor": 115,
+    "currentPricePesos": 115,
     "categories": [
       "Food"
     ],
@@ -518,7 +518,7 @@
   },
   {
     "name": "Goya",
-    "currentPriceMinor": 18,
+    "currentPricePesos": 18,
     "categories": [
       "Food"
     ],
@@ -526,7 +526,7 @@
   },
   {
     "name": "Toblerone Tiny Dark",
-    "currentPriceMinor": 195,
+    "currentPricePesos": 195,
     "categories": [
       "Food"
     ],
@@ -534,7 +534,7 @@
   },
   {
     "name": "Toblerone Tiny Milk",
-    "currentPriceMinor": 190,
+    "currentPricePesos": 190,
     "categories": [
       "Food"
     ],
@@ -542,7 +542,7 @@
   },
   {
     "name": "Toblerone Tiny White",
-    "currentPriceMinor": 190,
+    "currentPricePesos": 190,
     "categories": [
       "Food"
     ],
@@ -550,7 +550,7 @@
   },
   {
     "name": "Mixed Roasted Nuts",
-    "currentPriceMinor": 125,
+    "currentPricePesos": 125,
     "categories": [
       "Food"
     ],
@@ -558,7 +558,7 @@
   },
   {
     "name": "Blue Diamond Almonds Natural Salted",
-    "currentPriceMinor": 480,
+    "currentPricePesos": 480,
     "categories": [
       "Food"
     ],
@@ -566,7 +566,7 @@
   },
   {
     "name": "Blue Diamond Almonds Roasted Salted",
-    "currentPriceMinor": 480,
+    "currentPricePesos": 480,
     "categories": [
       "Food"
     ],
@@ -574,7 +574,7 @@
   },
   {
     "name": "Shinjiru Jsmooth",
-    "currentPriceMinor": 245,
+    "currentPricePesos": 245,
     "categories": [
       "Beauty"
     ],
@@ -582,7 +582,7 @@
   },
   {
     "name": "Zonrox ColorSafe",
-    "currentPriceMinor": 280,
+    "currentPricePesos": 280,
     "categories": [
       "Etc"
     ],
@@ -590,7 +590,7 @@
   },
   {
     "name": "Zonrox Original",
-    "currentPriceMinor": 200,
+    "currentPricePesos": 200,
     "categories": [
       "Etc"
     ],
@@ -598,7 +598,7 @@
   },
   {
     "name": "Zip Lemon",
-    "currentPriceMinor": 400,
+    "currentPricePesos": 400,
     "categories": [
       "Etc"
     ],
@@ -606,7 +606,7 @@
   },
   {
     "name": "Vunguard Dog Shampoo",
-    "currentPriceMinor": 200,
+    "currentPricePesos": 200,
     "categories": [
       "Etc"
     ],
@@ -614,7 +614,7 @@
   },
   {
     "name": "Lix Dishwashing",
-    "currentPriceMinor": 30,
+    "currentPricePesos": 30,
     "categories": [
       "Etc"
     ],
@@ -622,21 +622,21 @@
   },
   {
     "name": "Toblerone Triangle",
-    "currentPriceMinor": 85,
+    "currentPricePesos": 85,
     "categories": [
       "Food"
     ]
   },
   {
     "name": "Golden Inscents",
-    "currentPriceMinor": 35,
+    "currentPricePesos": 35,
     "categories": [
       "Home"
     ]
   },
   {
     "name": "Kirkland Chondroitin",
-    "currentPriceMinor": 1900,
+    "currentPricePesos": 1900,
     "categories": [
       "Wellness"
     ],
@@ -644,49 +644,49 @@
   },
   {
     "name": "Nestle Cream",
-    "currentPriceMinor": 71,
+    "currentPricePesos": 71,
     "categories": [
       "Condiments"
     ]
   },
   {
     "name": "Adora",
-    "currentPriceMinor": 85,
+    "currentPricePesos": 85,
     "categories": [
       "Food"
     ]
   },
   {
     "name": "Pistacio",
-    "currentPriceMinor": 485,
+    "currentPricePesos": 485,
     "categories": [
       "Food"
     ]
   },
   {
     "name": "Kisses",
-    "currentPriceMinor": 160,
+    "currentPricePesos": 160,
     "categories": [
       "Food"
     ]
   },
   {
     "name": "Twinnings Chamomile",
-    "currentPriceMinor": 250,
+    "currentPricePesos": 250,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Eco Bag Sm",
-    "currentPriceMinor": 10,
+    "currentPricePesos": 10,
     "categories": [
       "Etc"
     ]
   },
   {
     "name": "Nescafe Gold 5 Pouch",
-    "currentPriceMinor": 280,
+    "currentPricePesos": 280,
     "categories": [
       "Drinkables"
     ],
@@ -694,21 +694,21 @@
   },
   {
     "name": "Arm And Hammer Deo Sport",
-    "currentPriceMinor": 180,
+    "currentPricePesos": 180,
     "categories": [
       "Beauty"
     ]
   },
   {
     "name": "Ensure Gold Wheat",
-    "currentPriceMinor": 1600,
+    "currentPricePesos": 1600,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Nescafe Gold",
-    "currentPriceMinor": 475,
+    "currentPricePesos": 475,
     "categories": [
       "Drinkables"
     ],
@@ -716,7 +716,7 @@
   },
   {
     "name": "Alcoright Alcohol",
-    "currentPriceMinor": 200,
+    "currentPricePesos": 200,
     "categories": [
       "Home"
     ],
@@ -724,7 +724,7 @@
   },
   {
     "name": "Black Label",
-    "currentPriceMinor": 1300,
+    "currentPricePesos": 1300,
     "categories": [
       "Drinkables"
     ],
@@ -732,49 +732,49 @@
   },
   {
     "name": "Jims Sugarfree 5 in 1",
-    "currentPriceMinor": 300,
+    "currentPricePesos": 300,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Yamang Bukid Turmeric",
-    "currentPriceMinor": 450,
+    "currentPricePesos": 450,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Bebiko Wet Wipes",
-    "currentPriceMinor": 50,
+    "currentPricePesos": 50,
     "categories": [
       "Home"
     ]
   },
   {
     "name": "Colgate",
-    "currentPriceMinor": 150,
+    "currentPricePesos": 150,
     "categories": [
       "Home"
     ]
   },
   {
     "name": "Chamomile Twinnings",
-    "currentPriceMinor": 250,
+    "currentPricePesos": 250,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Irish Spring",
-    "currentPriceMinor": 50,
+    "currentPricePesos": 50,
     "categories": [
       "Home"
     ]
   },
   {
     "name": "Linda Tissue",
-    "currentPriceMinor": 120,
+    "currentPricePesos": 120,
     "categories": [
       "Home"
     ],
@@ -782,7 +782,7 @@
   },
   {
     "name": "St. Ives Renewing Body Lotion",
-    "currentPriceMinor": 340,
+    "currentPricePesos": 340,
     "categories": [
       "Home"
     ],
@@ -790,7 +790,7 @@
   },
   {
     "name": "Cream Silk Triple Keratin Rescue",
-    "currentPriceMinor": 120,
+    "currentPricePesos": 120,
     "categories": [
       "Home"
     ],
@@ -798,7 +798,7 @@
   },
   {
     "name": "Neutrogena Body Oil",
-    "currentPriceMinor": 360,
+    "currentPricePesos": 360,
     "categories": [
       "Home"
     ],
@@ -806,7 +806,7 @@
   },
   {
     "name": "Pantene Collagen Damage Repair",
-    "currentPriceMinor": 200,
+    "currentPricePesos": 200,
     "categories": [
       "Beauty"
     ],
@@ -814,7 +814,7 @@
   },
   {
     "name": "Darah Body Lotion",
-    "currentPriceMinor": 300,
+    "currentPricePesos": 300,
     "categories": [
       "Beauty"
     ],
@@ -822,7 +822,7 @@
   },
   {
     "name": "Cream Silk Triple Keratin Bleach Enhaner",
-    "currentPriceMinor": 1,
+    "currentPricePesos": 1,
     "categories": [
       "Beauty"
     ],
@@ -830,7 +830,7 @@
   },
   {
     "name": "Vaseline Gluta-Hya Dewy Radiance",
-    "currentPriceMinor": 300,
+    "currentPricePesos": 300,
     "categories": [
       "Beauty"
     ],
@@ -838,7 +838,7 @@
   },
   {
     "name": "Myra Classic Moisturizing Lotion",
-    "currentPriceMinor": 140,
+    "currentPricePesos": 140,
     "categories": [
       "Beauty"
     ],
@@ -846,7 +846,7 @@
   },
   {
     "name": "Sweet and Fit Stevia",
-    "currentPriceMinor": 175,
+    "currentPricePesos": 175,
     "categories": [
       "Drinkables"
     ],
@@ -854,7 +854,7 @@
   },
   {
     "name": "Kinoki Cleansing Detox Foot Pads",
-    "currentPriceMinor": 300,
+    "currentPricePesos": 300,
     "categories": [
       "Beauty"
     ],
@@ -862,7 +862,7 @@
   },
   {
     "name": "Biofitea Laxative",
-    "currentPriceMinor": 170,
+    "currentPricePesos": 170,
     "categories": [
       "Drinkables"
     ],
@@ -870,7 +870,7 @@
   },
   {
     "name": "Old Spice High Endurance Dry Cream",
-    "currentPriceMinor": 150,
+    "currentPricePesos": 150,
     "categories": [
       "Beauty"
     ],
@@ -878,21 +878,21 @@
   },
   {
     "name": "Jicsam 5 in 1 Malunggay & Banaba",
-    "currentPriceMinor": 130,
+    "currentPricePesos": 130,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Golden Seed Serpentina",
-    "currentPriceMinor": 210,
+    "currentPricePesos": 210,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Dove Intensive Lotion",
-    "currentPriceMinor": 275,
+    "currentPricePesos": 275,
     "categories": [
       "Beauty"
     ],
@@ -900,14 +900,14 @@
   },
   {
     "name": "Sadoer Collagen Facecream",
-    "currentPriceMinor": 230,
+    "currentPricePesos": 230,
     "categories": [
       "Beauty"
     ]
   },
   {
     "name": "Collagen Glow",
-    "currentPriceMinor": 350,
+    "currentPricePesos": 350,
     "categories": [
       "Beauty"
     ],
@@ -915,7 +915,7 @@
   },
   {
     "name": "Neocell Super Collage",
-    "currentPriceMinor": 450,
+    "currentPricePesos": 450,
     "categories": [
       "Beauty"
     ],
@@ -923,7 +923,7 @@
   },
   {
     "name": "Neocell Super Collagen",
-    "currentPriceMinor": 950,
+    "currentPricePesos": 950,
     "categories": [
       "Beauty"
     ],
@@ -931,7 +931,7 @@
   },
   {
     "name": "Kirkland Vitamin C",
-    "currentPriceMinor": 1150,
+    "currentPricePesos": 1150,
     "categories": [
       "Wellness"
     ],
@@ -939,7 +939,7 @@
   },
   {
     "name": "Kirkland Daily Multi",
-    "currentPriceMinor": 1400,
+    "currentPricePesos": 1400,
     "categories": [
       "Wellness"
     ],
@@ -947,7 +947,7 @@
   },
   {
     "name": "Kirkland Glucosamine",
-    "currentPriceMinor": 1900,
+    "currentPricePesos": 1900,
     "categories": [
       "Beauty"
     ],
@@ -955,7 +955,7 @@
   },
   {
     "name": "Kirkland Calcium Magnesium and Zinc",
-    "currentPriceMinor": 1300,
+    "currentPricePesos": 1300,
     "categories": [
       "Wellness"
     ],
@@ -963,7 +963,7 @@
   },
   {
     "name": "Kirkland Vitamin E",
-    "currentPriceMinor": 950,
+    "currentPricePesos": 950,
     "categories": [
       "Wellness"
     ],
@@ -971,7 +971,7 @@
   },
   {
     "name": "Alaska Garlic Oil",
-    "currentPriceMinor": 120,
+    "currentPricePesos": 120,
     "categories": [
       "Wellness"
     ],
@@ -979,7 +979,7 @@
   },
   {
     "name": "Alaska Fish Oil",
-    "currentPriceMinor": 120,
+    "currentPricePesos": 120,
     "categories": [
       "Wellness"
     ],
@@ -987,7 +987,7 @@
   },
   {
     "name": "Prolife Vitamin E",
-    "currentPriceMinor": 120,
+    "currentPricePesos": 120,
     "categories": [
       "Wellness"
     ],
@@ -995,7 +995,7 @@
   },
   {
     "name": "Myra E Vitamin E",
-    "currentPriceMinor": 330,
+    "currentPricePesos": 330,
     "categories": [
       "Beauty",
       "Wellness"
@@ -1004,7 +1004,7 @@
   },
   {
     "name": "Scotts Vitamin C",
-    "currentPriceMinor": 230,
+    "currentPricePesos": 230,
     "categories": [
       "Wellness"
     ],
@@ -1012,14 +1012,14 @@
   },
   {
     "name": "Barley Fitgum",
-    "currentPriceMinor": 275,
+    "currentPricePesos": 275,
     "categories": [
       "Drinkables"
     ]
   },
   {
     "name": "Smart Choice",
-    "currentPriceMinor": 340,
+    "currentPricePesos": 340,
     "categories": [
       "Home"
     ]

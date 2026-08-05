@@ -21,6 +21,26 @@ export function assertMoneyMinor(
   return value;
 }
 
+export function assertWholePesos(value: number): number {
+  return assertSafeInteger(value, "Peso amount");
+}
+
+export function parseWholePhp(value: string): number {
+  const normalized = value.trim().replace(/^(?:PHP|₱)\s*/iu, "").replace(/,/g, "");
+  if (!/^(?:0|[1-9]\d*)$/.test(normalized)) {
+    throw new DomainError(
+      "INVALID_AMOUNT",
+      "PHP price must be a whole number of pesos.",
+    );
+  }
+  return assertWholePesos(Number(normalized));
+}
+
+export function formatWholePhp(pesos: number): string {
+  assertWholePesos(pesos);
+  return `${CURRENCY_CODE} ${pesos.toLocaleString("en-US")}`;
+}
+
 export function parsePhp(value: string): number {
   const normalized = value.trim().replace(/^(?:PHP|₱)\s*/iu, "").replace(/,/g, "");
   if (!/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test(normalized)) {
@@ -46,7 +66,7 @@ export function formatPhp(minor: number): string {
   return `${sign}${CURRENCY_CODE} ${whole}.${fraction}`;
 }
 
-export function saleTotal(items: readonly PricedItem[]): number {
+export function saleTotalPesos(items: readonly PricedItem[]): number {
   return items.reduce((total, item) => {
     assertSafeInteger(item.quantity, "Sale quantity", "INVALID_QUANTITY");
     if (item.quantity < 1) {
@@ -55,10 +75,10 @@ export function saleTotal(items: readonly PricedItem[]): number {
         "Sale quantity must be positive.",
       );
     }
-    assertMoneyMinor(item.unitPriceMinor);
+    assertWholePesos(item.unitPricePesos);
     return safeAdd(
       total,
-      safeMultiply(item.quantity, item.unitPriceMinor),
+      safeMultiply(item.quantity, item.unitPricePesos),
     );
   }, 0);
 }

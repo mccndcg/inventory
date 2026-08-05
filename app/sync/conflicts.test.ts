@@ -20,7 +20,7 @@ describe("product conflict choice", () => {
       locationId,
       name: "Local rice",
       normalizedName: "local rice",
-      currentPriceMinor: 100,
+      currentPricePesos: 100,
       currencyCode: "PHP",
       categories: [],
       originDeviceId: deviceId,

@@ -31,7 +31,7 @@ export interface ReceiptIdentity {
 
 export interface PricedItem {
   quantity: number;
-  unitPriceMinor: number;
+  unitPricePesos: number;
 }
 
 export type StockAdjustmentKind =

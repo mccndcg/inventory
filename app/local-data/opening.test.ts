@@ -58,12 +58,12 @@ afterEach(async () => {
 async function createCatalog() {
   const rice = await createProduct(
     db,
-    { name: "Rice", currentPriceMinor: 2500, sku: "RICE" },
+    { name: "Rice", currentPricePesos: 2500, sku: "RICE" },
     { clock, ids },
   );
   const soap = await createProduct(
     db,
-    { name: "Soap", currentPriceMinor: 1000 },
+    { name: "Soap", currentPricePesos: 1000 },
     { clock, ids },
   );
   return { rice, soap };

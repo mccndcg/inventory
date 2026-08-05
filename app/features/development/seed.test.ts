@@ -50,6 +50,7 @@ describe("development product seed", () => {
       skipped: false,
     });
     expect(await db.products.count()).toBe(147);
+    expect((await db.products.toArray())[0]?.currentPricePesos).toBe(1055);
     expect(await db.stockAdjustments.count()).toBe(0);
     expect(await db.outbox.count()).toBe(147);
   });

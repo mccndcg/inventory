@@ -83,7 +83,7 @@ describe("offline client synchronization", () => {
     });
     const rice = await createProduct(
       first,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       dependencies,
     );
     const draft = await createOpeningDraft(
@@ -131,7 +131,7 @@ describe("offline client synchronization", () => {
       createSale(
         first,
         {
-          items: [{ productId: rice.id, quantity: 1, unitPriceMinor: 100 }],
+          items: [{ productId: rice.id, quantity: 1, unitPricePesos: 100 }],
           businessDate: "2026-07-28",
         },
         dependencies,
@@ -139,7 +139,7 @@ describe("offline client synchronization", () => {
       createSale(
         second,
         {
-          items: [{ productId: rice.id, quantity: 1, unitPriceMinor: 100 }],
+          items: [{ productId: rice.id, quantity: 1, unitPricePesos: 100 }],
           businessDate: "2026-07-28",
         },
         dependencies,
@@ -153,10 +153,10 @@ describe("offline client synchronization", () => {
     expect(await second.sales.count()).toBe(2);
     expect(await rebuildProductStock(first, rice.id)).toBe(-1);
     expect(await rebuildProductStock(second, rice.id)).toBe(-1);
-    expect(await rebuildDrawerCash(first, drawerId)).toBe(100);
+    expect(await rebuildDrawerCash(first, drawerId)).toBe(10000);
     expect(
       await rebuildDrawerCash(second, secondIdentity?.drawerId ?? ""),
-    ).toBe(100);
+    ).toBe(10000);
     expect(await first.remoteShadows.count()).toBe(0);
     expect(await second.remoteShadows.count()).toBe(0);
 
@@ -205,7 +205,7 @@ describe("offline client synchronization", () => {
     });
     await createProduct(
       first,
-      { name: "Soap", currentPriceMinor: 2500 },
+      { name: "Soap", currentPricePesos: 2500 },
       dependencies,
     );
     const before = await first.syncState.get("server");
@@ -227,7 +227,7 @@ describe("offline client synchronization", () => {
     });
     const product = await createProduct(
       first,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       dependencies,
     );
     await syncNow(first);
@@ -242,13 +242,13 @@ describe("offline client synchronization", () => {
     await updateProduct(
       first,
       product.id,
-      { name: "Rice A", currentPriceMinor: 100 },
+      { name: "Rice A", currentPricePesos: 100 },
       dependencies,
     );
     await updateProduct(
       second,
       product.id,
-      { name: "Rice B", currentPriceMinor: 100 },
+      { name: "Rice B", currentPricePesos: 100 },
       dependencies,
     );
     await syncNow(first);

@@ -124,7 +124,7 @@ export async function keepLocalProduct(
         ...conflict.server,
         name: conflict.local.name,
         normalizedName: conflict.local.normalizedName,
-        currentPriceMinor: conflict.local.currentPriceMinor,
+        currentPricePesos: conflict.local.currentPricePesos,
         categories: conflict.local.categories,
         revision: conflict.server.revision + 1,
         updatedAt: currentInstant(dependencies.clock),

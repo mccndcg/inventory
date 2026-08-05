@@ -56,7 +56,7 @@ async function writeTechnicalProduct(label: string, fail = false) {
       locationId: LOCATION_ID,
       name: label,
       normalizedName: label.toLocaleLowerCase(),
-      currentPriceMinor: 0,
+      currentPricePesos: 0,
       currencyCode: "PHP" as const,
       categories: [],
       originDeviceId: device.deviceId,

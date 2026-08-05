@@ -1,6 +1,6 @@
 import { DomainError } from "./errors";
 import { assertSafeInteger, safeAdd } from "./integers";
-import { saleTotal } from "./money";
+import { saleTotalPesos } from "./money";
 import type {
   CashAdjustmentKind,
   CashAdjustmentProjection,
@@ -44,7 +44,10 @@ export function projectDrawerCash(
     .reduce((total, row) => safeAdd(total, row.amountMinor), 0);
   return sales
     .filter((sale) => sale.drawerId === drawerId && sale.tombstone === 0)
-    .reduce((total, sale) => safeAdd(total, saleTotal(sale.items)), adjusted);
+    .reduce(
+      (total, sale) => safeAdd(total, saleTotalPesos(sale.items) * 100),
+      adjusted,
+    );
 }
 
 export function projectLocationCash(

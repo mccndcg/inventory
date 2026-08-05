@@ -55,12 +55,12 @@ describe("inventory workspace", () => {
     expect(await screen.findByText("No products found.")).toBeTruthy();
     await user.click(screen.getByRole("button", { name: "Add product" }));
     await user.type(screen.getByLabelText("Name"), "Rice");
-    await user.type(screen.getByLabelText("Price (PHP)"), "12.50");
+    await user.type(screen.getByLabelText("Price (whole PHP)"), "13");
     await user.click(screen.getByRole("checkbox", { name: "Food" }));
     await user.click(screen.getByRole("checkbox", { name: "Snacks" }));
     await user.click(screen.getByRole("button", { name: "Create product" }));
     expect(await screen.findByText("Product created.")).toBeTruthy();
-    expect(await screen.findByText("PHP 12.50")).toBeTruthy();
+    expect(await screen.findByText("PHP 13")).toBeTruthy();
     expect(screen.getByText("Food")).toBeTruthy();
     expect(screen.getByText("Snacks")).toBeTruthy();
 
@@ -109,7 +109,7 @@ describe("inventory workspace", () => {
     render(<InventoryWorkspace db={db} dependencies={{ clock, ids }} />);
     await user.click(screen.getByRole("button", { name: "Add product" }));
     await user.type(screen.getByLabelText("Name"), "Rice");
-    await user.type(screen.getByLabelText("Price (PHP)"), "1");
+    await user.type(screen.getByLabelText("Price (whole PHP)"), "1");
     await user.click(screen.getByRole("button", { name: "Create product" }));
     await screen.findByText("Rice");
 

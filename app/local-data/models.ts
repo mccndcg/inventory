@@ -130,7 +130,7 @@ export interface Product extends SyncableRecord {
   locationId: UUID;
   name: string;
   normalizedName: string;
-  currentPriceMinor: number;
+  currentPricePesos: number;
   currencyCode: CurrencyCode;
   categories: string[];
   sku?: string;
@@ -155,7 +155,7 @@ export interface SaleItem {
   productId: UUID;
   productNameSnapshot: string;
   quantity: number;
-  unitPriceMinor: number;
+  unitPricePesos: number;
   currencyCode: CurrencyCode;
   position: number;
 }

@@ -38,7 +38,7 @@ beforeEach(async () => {
   );
   await createProduct(
     db,
-    { name: "Rice", currentPriceMinor: 2500 },
+    { name: "Rice", currentPricePesos: 2500 },
     { clock, ids },
   );
 });

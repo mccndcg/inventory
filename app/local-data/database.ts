@@ -17,7 +17,37 @@ import type {
 
 export const INVENTORY_DATABASE_NAME = "inventory_local";
 export const LEGACY_DATABASE_NAME = "goods";
-export const DATABASE_VERSION = 2;
+export const DATABASE_VERSION = 3;
+
+function renamePriceField(
+  record: Record<string, unknown>,
+  oldField: "currentPriceMinor" | "unitPriceMinor",
+  newField: "currentPricePesos" | "unitPricePesos",
+): void {
+  if (typeof record[oldField] === "number") {
+    record[newField] = record[oldField];
+    delete record[oldField];
+  }
+}
+
+function migratePricePayload(payload: unknown, aggregateType: string): void {
+  if (!payload || typeof payload !== "object") return;
+  const record = payload as Record<string, unknown>;
+  if (aggregateType === "product") {
+    renamePriceField(record, "currentPriceMinor", "currentPricePesos");
+  }
+  if (aggregateType === "sale" && Array.isArray(record.items)) {
+    record.items.forEach((item) => {
+      if (item && typeof item === "object") {
+        renamePriceField(
+          item as Record<string, unknown>,
+          "unitPriceMinor",
+          "unitPricePesos",
+        );
+      }
+    });
+  }
+}
 
 export class InventoryDatabase extends Dexie {
   deviceState!: Table<DeviceState, "current">;
@@ -55,7 +85,7 @@ export class InventoryDatabase extends Dexie {
         "&operationId,&[deviceId+deviceSequence],status,aggregateType,aggregateId,createdAt",
       syncState: "&key",
     });
-    this.version(DATABASE_VERSION).stores({
+    this.version(2).stores({
       deviceCredentials: "&key",
       deviceDirectory: "&deviceId,&drawerId,locationId,status",
       remoteShadows: "&key,aggregateType,aggregateId,receivedAt",
@@ -63,6 +93,33 @@ export class InventoryDatabase extends Dexie {
       await transaction.table("deviceState").update("current", {
         localSchemaVersion: DATABASE_VERSION,
       });
+    });
+    this.version(DATABASE_VERSION).stores({}).upgrade(async (transaction) => {
+      await Promise.all([
+        transaction.table("deviceState").update("current", {
+          localSchemaVersion: DATABASE_VERSION,
+        }),
+        transaction.table("products").toCollection().modify((product) => {
+          renamePriceField(
+            product as Record<string, unknown>,
+            "currentPriceMinor",
+            "currentPricePesos",
+          );
+        }),
+        transaction.table("saleItems").toCollection().modify((item) => {
+          renamePriceField(
+            item as Record<string, unknown>,
+            "unitPriceMinor",
+            "unitPricePesos",
+          );
+        }),
+        transaction.table("outbox").toCollection().modify((operation) => {
+          migratePricePayload(
+            (operation as { payload?: unknown }).payload,
+            (operation as { aggregateType?: string }).aggregateType ?? "",
+          );
+        }),
+      ]);
     });
   }
 }

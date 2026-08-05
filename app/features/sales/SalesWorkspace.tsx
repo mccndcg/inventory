@@ -1,6 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { useMemo, useState, type FormEvent } from "react";
-import { formatPhp, parsePhp } from "../../domain/money";
+import { formatWholePhp, parseWholePhp } from "../../domain/money";
 import { businessDateFor } from "../../domain/time";
 import {
   inventoryDb,
@@ -45,7 +45,7 @@ export function SalesWorkspace({
   const draftTotal = useMemo(
     () =>
       lines.reduce(
-        (total, line) => total + line.quantity * line.unitPriceMinor,
+        (total, line) => total + line.quantity * line.unitPricePesos,
         0,
       ),
     [lines],
@@ -64,7 +64,7 @@ export function SalesWorkspace({
     }
     try {
       const quantity = Number(form.get("quantity"));
-      const unitPriceMinor = parsePhp(String(form.get("unitPrice")));
+      const unitPricePesos = parseWholePhp(String(form.get("unitPrice")));
       if (!Number.isSafeInteger(quantity) || quantity < 1) {
         throw new Error("Quantity must be a positive whole number.");
       }
@@ -78,7 +78,7 @@ export function SalesWorkspace({
                 ? {
                     ...line,
                     quantity: line.quantity + quantity,
-                    unitPriceMinor,
+                    unitPricePesos,
                   }
                 : line,
             )
@@ -88,7 +88,7 @@ export function SalesWorkspace({
                 productId: product.id,
                 productName: product.name,
                 quantity,
-                unitPriceMinor,
+                unitPricePesos,
               },
             ];
       });
@@ -108,10 +108,10 @@ export function SalesWorkspace({
       const fields = {
         businessDate: businessDateFor(dependencies.clock.now()),
         notes: String(form.get("notes") ?? ""),
-        items: lines.map(({ productId, quantity, unitPriceMinor }) => ({
+        items: lines.map(({ productId, quantity, unitPricePesos }) => ({
           productId,
           quantity,
-          unitPriceMinor,
+          unitPricePesos,
         })),
       };
       if (editingSale) {
@@ -179,11 +179,11 @@ export function SalesWorkspace({
             />
           </label>
           <label>
-            <span className="block text-sm">Charged price (PHP)</span>
+            <span className="block text-sm">Charged price (whole PHP)</span>
             <input
               className="w-full rounded border p-2"
               name="unitPrice"
-              inputMode="decimal"
+              inputMode="numeric"
               required
             />
           </label>
@@ -233,8 +233,8 @@ export function SalesWorkspace({
                       />
                     </label>
                   </td>
-                  <td>{formatPhp(line.unitPriceMinor)}</td>
-                  <td>{formatPhp(line.quantity * line.unitPriceMinor)}</td>
+                  <td>{formatWholePhp(line.unitPricePesos)}</td>
+                  <td>{formatWholePhp(line.quantity * line.unitPricePesos)}</td>
                   <td>
                     <button
                       onClick={() =>
@@ -260,7 +260,7 @@ export function SalesWorkspace({
             <span className="block text-sm">Notes</span>
             <input className="rounded border p-2" name="notes" />
           </label>
-          <strong>Total: {formatPhp(draftTotal)}</strong>
+          <strong>Total: {formatWholePhp(draftTotal)}</strong>
           <button className="rounded bg-black px-4 py-2 text-white" type="submit">
             {editingSale ? "Save sale" : "Complete sale"}
           </button>
@@ -293,13 +293,13 @@ export function SalesWorkspace({
                   )}
                   <p>{aggregate.sale.businessDate}</p>
                 </div>
-                <strong>{formatPhp(aggregate.totalMinor)}</strong>
+                <strong>{formatWholePhp(aggregate.totalPesos)}</strong>
               </div>
               <ul>
                 {aggregate.items.map((item) => (
                   <li key={item.id}>
                     {item.productNameSnapshot} × {item.quantity} at{" "}
-                    {formatPhp(item.unitPriceMinor)}
+                    {formatWholePhp(item.unitPricePesos)}
                   </li>
                 ))}
               </ul>
@@ -313,7 +313,7 @@ export function SalesWorkspace({
                           productId: item.productId,
                           productName: item.productNameSnapshot,
                           quantity: item.quantity,
-                          unitPriceMinor: item.unitPriceMinor,
+                          unitPricePesos: item.unitPricePesos,
                         })),
                       )
                     }

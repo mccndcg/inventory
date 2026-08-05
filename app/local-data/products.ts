@@ -1,6 +1,6 @@
 import { CURRENCY_CODE, RECORD_SCHEMA_VERSION } from "../domain/constants";
 import { assertSafeInteger } from "../domain/integers";
-import { assertMoneyMinor } from "../domain/money";
+import { assertWholePesos } from "../domain/money";
 import { businessDateFor, currentInstant } from "../domain/time";
 import { localOnlyMode } from "../config";
 import type { UUID } from "../domain/types";
@@ -17,7 +17,7 @@ import { parseProduct } from "./validation";
 
 export interface ProductFields {
   name: string;
-  currentPriceMinor: number;
+  currentPricePesos: number;
   startingQuantity?: number;
   categories?: readonly string[];
   sku?: string;
@@ -43,7 +43,7 @@ function validateFields(fields: ProductFields) {
   if (!name) {
     throw new RepositoryError("INVALID_RECORD", "Product name is required.");
   }
-  assertMoneyMinor(fields.currentPriceMinor);
+  assertWholePesos(fields.currentPricePesos);
   const categories = [...new Set(
     (fields.categories ?? [])
       .map((category) => category.normalize("NFC").trim())
@@ -58,7 +58,7 @@ function validateFields(fields: ProductFields) {
     product: {
       name,
       normalizedName: normalizeProductName(name),
-      currentPriceMinor: fields.currentPriceMinor,
+      currentPricePesos: fields.currentPricePesos,
       categories,
       ...(normalizeOptional(fields.sku) ? { sku: normalizeOptional(fields.sku) } : {}),
       ...(normalizeOptional(fields.sizeLabel)

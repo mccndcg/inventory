@@ -4,7 +4,7 @@ import {
   RECORD_SCHEMA_VERSION,
 } from "../domain/constants";
 import { assertSafeInteger } from "../domain/integers";
-import { assertMoneyMinor, saleTotal } from "../domain/money";
+import { assertWholePesos, saleTotalPesos } from "../domain/money";
 import { assertBusinessDate, currentInstant, toIsoInstant } from "../domain/time";
 import type { BusinessDate, UUID } from "../domain/types";
 import type { InventoryDatabase } from "./database";
@@ -20,7 +20,7 @@ import { parseProduct, parseSale, parseSaleItem } from "./validation";
 export interface SaleItemInput {
   productId: UUID;
   quantity: number;
-  unitPriceMinor: number;
+  unitPricePesos: number;
 }
 
 export interface SaleFields {
@@ -33,7 +33,7 @@ export interface SaleFields {
 export interface SaleAggregate {
   sale: Sale;
   items: SaleItem[];
-  totalMinor: number;
+  totalPesos: number;
 }
 
 function validateFields(fields: SaleFields, defaultOccurredAt: Date) {
@@ -59,10 +59,10 @@ function validateFields(fields: SaleFields, defaultOccurredAt: Date) {
         "Sale quantity must be positive.",
       );
     }
-    assertMoneyMinor(item.unitPriceMinor);
+    assertWholePesos(item.unitPricePesos);
     return { ...item };
   });
-  saleTotal(items);
+  saleTotalPesos(items);
   const notes = fields.notes?.normalize("NFC").trim();
   return {
     items,
@@ -107,7 +107,7 @@ function makeItems(
     productId: item.productId,
     productNameSnapshot: products.get(item.productId)?.name ?? "",
     quantity: item.quantity,
-    unitPriceMinor: item.unitPriceMinor,
+    unitPricePesos: item.unitPricePesos,
     currencyCode: CURRENCY_CODE,
     position,
   }));
@@ -161,7 +161,7 @@ export async function createSale(
       );
       await Promise.all([db.sales.add(sale), db.saleItems.bulkAdd(items)]);
       return {
-        result: { sale, items, totalMinor: saleTotal(items) },
+        result: { sale, items, totalPesos: saleTotalPesos(items) },
         operation: {
           aggregateType: "sale",
           aggregateId: sale.id,
@@ -211,7 +211,7 @@ export async function readSale(
   const items = (
     await db.saleItems.where("saleId").equals(id).sortBy("position")
   ).map(parseSaleItem);
-  return { sale, items, totalMinor: saleTotal(items) };
+  return { sale, items, totalPesos: saleTotalPesos(items) };
 }
 
 export async function updateSale(
@@ -258,7 +258,7 @@ export async function updateSale(
       await db.saleItems.where("saleId").equals(sale.id).delete();
       await Promise.all([db.sales.put(sale), db.saleItems.bulkAdd(items)]);
       return {
-        result: { sale, items, totalMinor: saleTotal(items) },
+        result: { sale, items, totalPesos: saleTotalPesos(items) },
         operation: {
           aggregateType: "sale",
           aggregateId: sale.id,
@@ -296,7 +296,7 @@ export async function voidSale(
         .sortBy("position")).map(parseSaleItem);
       if (existing.tombstone === 1) {
         return {
-          result: { sale: existing, items, totalMinor: saleTotal(items) },
+          result: { sale: existing, items, totalPesos: saleTotalPesos(items) },
         };
       }
       const instant = currentInstant(dependencies.clock);
@@ -309,7 +309,7 @@ export async function voidSale(
       };
       await db.sales.put(sale);
       return {
-        result: { sale, items, totalMinor: saleTotal(items) },
+        result: { sale, items, totalPesos: saleTotalPesos(items) },
         operation: {
           aggregateType: "sale",
           aggregateId: sale.id,
@@ -336,7 +336,7 @@ export async function listSales(
       const items = (
         await db.saleItems.where("saleId").equals(sale.id).sortBy("position")
       ).map(parseSaleItem);
-      return { sale, items, totalMinor: saleTotal(items) };
+      return { sale, items, totalPesos: saleTotalPesos(items) };
     }),
   );
 }

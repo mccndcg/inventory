@@ -49,7 +49,7 @@ describe("stock adjustment repository", () => {
   it("creates, edits, voids, and rebuilds signed stock", async () => {
     const product = await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });
@@ -85,7 +85,7 @@ describe("stock adjustment repository", () => {
   it("rejects wrong signs, foreign ownership, and immutable opening rows", async () => {
     const product = await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });
@@ -132,7 +132,7 @@ describe("stock adjustment repository", () => {
   it("rolls back the adjustment, operation, and sequence on failure", async () => {
     const product = await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });

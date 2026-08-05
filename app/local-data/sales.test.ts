@@ -49,12 +49,12 @@ describe("atomic sale repository", () => {
   it("creates multi-item sales with receipt, name, and charged-price snapshots", async () => {
     const rice = await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     const freebie = await createProduct(
       db,
-      { name: "Freebie", currentPriceMinor: 50 },
+      { name: "Freebie", currentPricePesos: 50 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });
@@ -63,35 +63,35 @@ describe("atomic sale repository", () => {
       {
         businessDate: "2026-07-28",
         items: [
-          { productId: rice.id, quantity: 2, unitPriceMinor: 125 },
-          { productId: freebie.id, quantity: 1, unitPriceMinor: 0 },
+          { productId: rice.id, quantity: 2, unitPricePesos: 125 },
+          { productId: freebie.id, quantity: 1, unitPricePesos: 0 },
         ],
       },
       { clock, ids },
     );
     expect(aggregate.sale.receiptNumber).toBe("POS-A-000001");
-    expect(aggregate.totalMinor).toBe(250);
+    expect(aggregate.totalPesos).toBe(250);
     expect(aggregate.items).toMatchObject([
-      { productNameSnapshot: "Rice", unitPriceMinor: 125 },
-      { productNameSnapshot: "Freebie", unitPriceMinor: 0 },
+      { productNameSnapshot: "Rice", unitPricePesos: 125 },
+      { productNameSnapshot: "Freebie", unitPricePesos: 0 },
     ]);
     await updateProduct(
       db,
       rice.id,
-      { name: "Renamed", currentPriceMinor: 999 },
+      { name: "Renamed", currentPricePesos: 999 },
       { clock, ids },
     );
     const stored = await readSale(db, aggregate.sale.id);
     expect(stored?.items[0]).toMatchObject({
       productNameSnapshot: "Rice",
-      unitPriceMinor: 125,
+      unitPricePesos: 125,
     });
   });
 
   it("replaces all children on edit, updates stock/COH, and voids idempotently", async () => {
     const product = await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });
@@ -109,19 +109,19 @@ describe("atomic sale repository", () => {
       db,
       {
         businessDate: "2026-07-28",
-        items: [{ productId: product.id, quantity: 1, unitPriceMinor: 100 }],
+        items: [{ productId: product.id, quantity: 1, unitPricePesos: 100 }],
       },
       { clock, ids },
     );
     expect(await rebuildProductStock(db, product.id)).toBe(0);
-    expect(await rebuildDrawerCash(db, created.sale.drawerId)).toBe(100);
+    expect(await rebuildDrawerCash(db, created.sale.drawerId)).toBe(10000);
 
     const edited = await updateSale(
       db,
       created.sale.id,
       {
         businessDate: "2026-07-28",
-        items: [{ productId: product.id, quantity: 2, unitPriceMinor: 150 }],
+        items: [{ productId: product.id, quantity: 2, unitPricePesos: 150 }],
       },
       { clock, ids },
     );
@@ -130,7 +130,7 @@ describe("atomic sale repository", () => {
       1,
     );
     expect(await rebuildProductStock(db, product.id)).toBe(-1);
-    expect(await rebuildDrawerCash(db, created.sale.drawerId)).toBe(300);
+    expect(await rebuildDrawerCash(db, created.sale.drawerId)).toBe(30000);
 
     const voided = await voidSale(db, created.sale.id, { clock, ids });
     const operationsAfterVoid = await db.outbox.count();
@@ -144,7 +144,7 @@ describe("atomic sale repository", () => {
   it("rejects duplicate products and archived products", async () => {
     const product = await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });
@@ -154,8 +154,8 @@ describe("atomic sale repository", () => {
         {
           businessDate: "2026-07-28",
           items: [
-            { productId: product.id, quantity: 1, unitPriceMinor: 100 },
-            { productId: product.id, quantity: 1, unitPriceMinor: 100 },
+            { productId: product.id, quantity: 1, unitPricePesos: 100 },
+            { productId: product.id, quantity: 1, unitPricePesos: 100 },
           ],
         },
         { clock, ids },
@@ -167,7 +167,7 @@ describe("atomic sale repository", () => {
         db,
         {
           businessDate: "2026-07-28",
-          items: [{ productId: product.id, quantity: 1, unitPriceMinor: 100 }],
+          items: [{ productId: product.id, quantity: 1, unitPricePesos: 100 }],
         },
         { clock, ids },
       ),
@@ -177,7 +177,7 @@ describe("atomic sale repository", () => {
   it("rolls back receipt, header, children, and outbox on failure", async () => {
     const product = await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });
@@ -188,7 +188,7 @@ describe("atomic sale repository", () => {
         db,
         {
           businessDate: "2026-07-28",
-          items: [{ productId: product.id, quantity: 1, unitPriceMinor: 100 }],
+          items: [{ productId: product.id, quantity: 1, unitPricePesos: 100 }],
         },
         {
           clock,

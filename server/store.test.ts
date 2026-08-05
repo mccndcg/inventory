@@ -27,7 +27,7 @@ function product(revision = 1, lastServerVersion?: string): Product {
     locationId,
     name: revision === 1 ? "Rice" : "Rice Premium",
     normalizedName: revision === 1 ? "rice" : "rice premium",
-    currentPriceMinor: 5000,
+    currentPricePesos: 5000,
     currencyCode: "PHP",
     categories: [],
     originDeviceId: deviceA,
@@ -203,7 +203,7 @@ describe("SQLite synchronization store", () => {
       productId,
       productNameSnapshot: "Rice",
       quantity: 999,
-      unitPriceMinor: 5000,
+      unitPricePesos: 5000,
       currencyCode: "PHP",
       position: 0,
     };

@@ -41,25 +41,25 @@ describe("cash rules", () => {
     const sales = [
       {
         drawerId: DRAWER_A,
-        items: [{ quantity: 2, unitPriceMinor: 300 }],
+        items: [{ quantity: 2, unitPricePesos: 300 }],
         tombstone: 0 as const,
       },
       {
         drawerId: DRAWER_A,
-        items: [{ quantity: 1, unitPriceMinor: 999 }],
+        items: [{ quantity: 1, unitPricePesos: 999 }],
         tombstone: 1 as const,
       },
       {
         drawerId: DRAWER_B,
-        items: [{ quantity: 1, unitPriceMinor: 100 }],
+        items: [{ quantity: 1, unitPricePesos: 100 }],
         tombstone: 0 as const,
       },
     ];
 
-    expect(projectDrawerCash(DRAWER_A, adjustments, sales)).toBe(1850);
-    expect(projectDrawerCash(DRAWER_B, adjustments, sales)).toBe(2100);
+    expect(projectDrawerCash(DRAWER_A, adjustments, sales)).toBe(61250);
+    expect(projectDrawerCash(DRAWER_B, adjustments, sales)).toBe(12000);
     expect(projectLocationCash([DRAWER_A, DRAWER_B], adjustments, sales)).toBe(
-      3950,
+      73250,
     );
   });
 });

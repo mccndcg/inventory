@@ -185,7 +185,7 @@ const productSchema = z.object({
   locationId: uuid,
   name: z.string().min(1),
   normalizedName: z.string().min(1),
-  currentPriceMinor: safeInteger.nonnegative(),
+  currentPricePesos: safeInteger.nonnegative(),
   currencyCode: z.literal(CURRENCY_CODE),
   categories: z.array(z.string().min(1)),
   sku: z.string().min(1).optional(),
@@ -218,7 +218,7 @@ const saleItemSchema = z.object({
   productId: uuid,
   productNameSnapshot: z.string().min(1),
   quantity: positiveInteger,
-  unitPriceMinor: safeInteger.nonnegative(),
+  unitPricePesos: safeInteger.nonnegative(),
   currencyCode: z.literal(CURRENCY_CODE),
   position: safeInteger.nonnegative(),
 }).strict();

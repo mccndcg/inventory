@@ -54,7 +54,7 @@ async function addDraftLine(
 ) {
   await user.selectOptions(screen.getByLabelText("Product"), productName);
   const quantityInput = screen.getByLabelText("Quantity");
-  const priceInput = screen.getByLabelText("Charged price (PHP)");
+  const priceInput = screen.getByLabelText("Charged price (whole PHP)");
   await user.clear(quantityInput);
   await user.type(quantityInput, quantity);
   await user.clear(priceInput);
@@ -66,12 +66,12 @@ describe("sales workspace", () => {
   it("creates, combines, reloads, edits, oversells, and voids cash sales", async () => {
     const rice = await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     await createProduct(
       db,
-      { name: "Freebie", currentPriceMinor: 0 },
+      { name: "Freebie", currentPricePesos: 0 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });
@@ -79,8 +79,8 @@ describe("sales workspace", () => {
     const view = render(<SalesWorkspace db={db} dependencies={{ clock, ids }} />);
     await screen.findByRole("option", { name: "Rice" });
 
-    await addDraftLine(user, "Rice", "2", "1.25");
-    await addDraftLine(user, "Rice", "1", "1.25");
+    await addDraftLine(user, "Rice", "2", "125");
+    await addDraftLine(user, "Rice", "1", "125");
     expect((screen.getByLabelText("Quantity for Rice") as HTMLInputElement).value)
       .toBe("3");
     await addDraftLine(user, "Freebie", "1", "0");
@@ -114,7 +114,7 @@ describe("sales workspace", () => {
   it("reports transaction failure without consuming a receipt", async () => {
     await createProduct(
       db,
-      { name: "Rice", currentPriceMinor: 100 },
+      { name: "Rice", currentPricePesos: 100 },
       { clock, ids },
     );
     await finalizeZeroOpeningForTest(db, { clock, ids });
